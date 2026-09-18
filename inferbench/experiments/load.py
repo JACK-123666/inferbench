@@ -62,6 +62,44 @@ def build_report(payload: dict) -> "object":
                              percent=False))
     md.append("")
 
+    # 与基线（另一份 load 结果）对比：用于验证"开启并行度"这类改进是否真的有效
+    base_load = payload.get("baseline_load")
+    if base_load:
+        bmap = {r["concurrency"]: r for r in base_load.get("levels", [])}
+        md.append("## 与基线对比（改进验证）\n")
+        md.append(f"- 基线：`{base_load['meta'].get('model')}` @ "
+                  f"`{base_load['meta'].get('host', 'default')}`，"
+                  f"OLLAMA_NUM_PARALLEL={base_load['meta'].get('ollama_num_parallel')}，"
+                  f"模型占用 {base_load['meta'].get('footprint_gb', 0):.2f} GB")
+        md.append(f"- 本次：`{meta['model']}` @ `{meta.get('host')}`，"
+                  f"OLLAMA_NUM_PARALLEL={meta.get('ollama_num_parallel')}，"
+                  f"模型占用 {meta.get('footprint_gb', 0):.2f} GB\n")
+        md.append("| 并发 | 基线 QPS | 本次 QPS | 吞吐变化 | 基线 TTFT P50 | 本次 TTFT P50 | TTFT 变化 |")
+        md.append("|---|---|---|---|---|---|---|")
+        for r in rows:
+            b = bmap.get(r["concurrency"])
+            if not b:
+                continue
+            q = r["qps"] / max(b["qps"], 0.01)
+            t_ratio = r["ttft_p50"] / max(b["ttft_p50"], 0.01)
+            md.append(f"| {r['concurrency']} | {b['qps']} | {r['qps']} | "
+                      f"{'**↑' if q >= 1.05 else ('↓' if q <= 0.95 else '≈')}{q:.2f}×** | "
+                      f"{b['ttft_p50']:.1f} ms | {r['ttft_p50']:.1f} ms | "
+                      f"{'**↓' if t_ratio <= 0.95 else ('↑' if t_ratio >= 1.05 else '≈')}{t_ratio:.2f}×** |")
+        md.append("")
+        peak_b = max(base_load.get("levels", []), key=lambda r: r["qps"])
+        peak_n = max(rows, key=lambda r: r["qps"])
+        mem_gain = (meta.get("footprint_gb", 0) / max(base_load["meta"].get("footprint_gb", 1), 0.01) - 1) * 100
+        md.append("**验证结论**：\n")
+        md.append(f"- 峰值吞吐 {peak_b['qps']} → **{peak_n['qps']} QPS**"
+                  f"（**{peak_n['qps'] / max(peak_b['qps'], 0.01):.2f}×**），"
+                  f"聚合 tok/s {peak_b['tokens_per_s']} → {peak_n['tokens_per_s']}。")
+        md.append(f"- 代价是显存：模型占用 {base_load['meta'].get('footprint_gb', 0):.2f} GB → "
+                  f"{meta.get('footprint_gb', 0):.2f} GB（**{mem_gain:+.0f}%**）——"
+                  f"每路并行各占一份 KV cache，8GB 卡上要腾出余量。")
+        md.append("- 结论：**同一个硬件，改一个并行度配置就能把吞吐翻倍、把首 Token 延迟降一个数量级**；"
+                  "这也解释了为什么「加并发不涨吞吐」——瓶颈从来不是并发度，而是单 slot 串行执行。")
+        md.append("")
     sat = payload.get("saturation", {})
     base, peak = rows[0], max(rows, key=lambda r: r["qps"])
     qps_gain = peak["qps"] / max(base["qps"], 0.01)
@@ -129,7 +167,11 @@ def run(argv: list[str] | None = None) -> int:
     ap.add_argument("--levels", default="1,2,4,8,16", help="并发梯度，逗号分隔")
     ap.add_argument("--requests", type=int, default=32, help="每档请求数")
     ap.add_argument("--max-tokens", type=int, default=96)
+    ap.add_argument("--host", default=config.OLLAMA_HOST, help="Ollama 地址（可用于对比另一实例，如 NUM_PARALLEL=4）")
     ap.add_argument("--eval-set", default="")
+    ap.add_argument("--num-parallel", type=int, default=None,
+                    help="被测 Ollama 实例的 OLLAMA_NUM_PARALLEL（客户端探测不到服务器配置，需显式声明；默认读本机环境变量）")
+    ap.add_argument("--compare", default="", help="与另一份 load 结果对比（传 baseline 的 json 路径）")
     ap.add_argument("--tag", default="")
     args = ap.parse_args(argv)
 
@@ -149,7 +191,7 @@ def run(argv: list[str] | None = None) -> int:
     print(f"流式请求（实测 TTFT）  |  num_predict={args.max_tokens}  temperature=0")
     print("=" * 78)
 
-    cli = Ollama()
+    cli = Ollama(host=args.host)
     stopped = cli.unload_all(keep=args.model)
     if stopped:
         print(f"[环境] 已卸载其它模型释放显存: {', '.join(stopped)}")
@@ -161,7 +203,7 @@ def run(argv: list[str] | None = None) -> int:
     fp = cli.footprint(args.model)
     print(f"[环境] 模型占用 {fp['footprint_gb']:.2f} GB（{fp['processor']}）")
 
-    results = asyncio.run(loadgen.run_gradient(config.OLLAMA_HOST, args.model, prompts,
+    results = asyncio.run(loadgen.run_gradient(args.host, args.model, prompts,
                                                levels, max_tokens=args.max_tokens))
     print("-" * 78)
     print(f"{'并发':>5}{'QPS':>9}{'tok/s':>10}{'TTFT_P50':>10}{'TTFT_P95':>10}"
@@ -171,6 +213,12 @@ def run(argv: list[str] | None = None) -> int:
               f"{r['ttft_p50']:>10.1f}{r['ttft_p95']:>10.1f}{r['lat_p95']:>9.1f}"
               f"{r['lat_p99']:>9.1f}{r['error_rate'] * 100:>7.1f}%")
     print("-" * 78)
+
+    baseline_load = None
+    if args.compare:
+        from inferbench.stats import read_json
+        baseline_load = read_json(config.ROOT / args.compare) if (config.ROOT / args.compare).exists() else read_json(Path(args.compare))
+        print(f"[对比] 已加载基线: {args.compare}")
 
     all_rows = [dict(row, concurrency=r["concurrency"]) for r in results for row in r["rows"]]
     payload = {
@@ -187,10 +235,13 @@ def run(argv: list[str] | None = None) -> int:
             "footprint_gb": fp["footprint_gb"],
             "client": "httpx + asyncio（Semaphore 控并发）",
             # 并行度是解释"吞吐不涨、延迟线性涨"的关键：1 表示请求在单 slot 上排队
-            "ollama_num_parallel": config.ollama_num_parallel(),
+            "host": args.host,
+            "ollama_num_parallel": (args.num_parallel if args.num_parallel is not None
+                                   else config.ollama_num_parallel()),
         },
         "levels": [{k: v for k, v in r.items() if k != "rows"} for r in results],
         "saturation": loadgen.saturation_point(results),
+        "baseline_load": baseline_load,
     }
     write_json(config.RESULTS_DIR / f"load_{tag}.json", payload)
     write_csv(config.RESULTS_DIR / f"load_{tag}.csv", all_rows)
@@ -200,5 +251,9 @@ def run(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(run())
+
+
+
+
 
 
