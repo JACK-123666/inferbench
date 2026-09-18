@@ -1,0 +1,100 @@
+{"id": 0, "text": "什么是向量数据库？", "intent": "knowledge_retrieval", "hard": false, "source": "synapse"}
+{"id": 1, "text": "解释一下RAG是什么", "intent": "knowledge_retrieval", "hard": false, "source": "synapse"}
+{"id": 2, "text": "Redis和MySQL有什么区别？", "intent": "knowledge_retrieval", "hard": false, "source": "synapse"}
+{"id": 3, "text": "帮我查一下多Agent架构的原理", "intent": "knowledge_retrieval", "hard": false, "source": "synapse"}
+{"id": 4, "text": "什么是LoRA微调？", "intent": "knowledge_retrieval", "hard": false, "source": "synapse"}
+{"id": 5, "text": "Docker和Kubernetes的区别", "intent": "knowledge_retrieval", "hard": false, "source": "synapse"}
+{"id": 6, "text": "如何部署FastAPI服务？", "intent": "knowledge_retrieval", "hard": false, "source": "synapse"}
+{"id": 7, "text": "帮我找关于机器学习的资料", "intent": "knowledge_retrieval", "hard": false, "source": "synapse"}
+{"id": 8, "text": "检索一下相关的技术文档", "intent": "knowledge_retrieval", "hard": false, "source": "synapse"}
+{"id": 9, "text": "什么是Transformer架构？", "intent": "knowledge_retrieval", "hard": false, "source": "synapse"}
+{"id": 10, "text": "了解prompt工程的基本概念", "intent": "knowledge_retrieval", "hard": false, "source": "synapse"}
+{"id": 11, "text": "what is a vector database?", "intent": "knowledge_retrieval", "hard": false, "source": "synapse"}
+{"id": 12, "text": "How does authentication work in this system?", "intent": "knowledge_retrieval", "hard": false, "source": "synapse"}
+{"id": 13, "text": "what is the difference between Redis and Memcached", "intent": "knowledge_retrieval", "hard": false, "source": "synapse"}
+{"id": 14, "text": "explain chain of thought prompting", "intent": "knowledge_retrieval", "hard": false, "source": "synapse"}
+{"id": 15, "text": "这个技术方案是什么意思？", "intent": "knowledge_retrieval", "hard": false, "source": "synapse"}
+{"id": 16, "text": "查一下最新的AI新闻", "intent": "knowledge_retrieval", "hard": false, "source": "synapse"}
+{"id": 17, "text": "我想了解嵌入式系统", "intent": "knowledge_retrieval", "hard": false, "source": "synapse"}
+{"id": 18, "text": "讲解一下NLP的发展历程", "intent": "knowledge_retrieval", "hard": false, "source": "synapse"}
+{"id": 19, "text": "什么是大语言模型？", "intent": "knowledge_retrieval", "hard": false, "source": "synapse"}
+{"id": 20, "text": "那个东西的原理是什么？", "intent": "knowledge_retrieval", "hard": true, "source": "synapse"}
+{"id": 21, "text": "这个功能怎么用？", "intent": "knowledge_retrieval", "hard": true, "source": "synapse"}
+{"id": 22, "text": "我上次看的那篇文章在讲什么来着？", "intent": "knowledge_retrieval", "hard": true, "source": "synapse"}
+{"id": 23, "text": "有没有关于这个话题的资料？", "intent": "knowledge_retrieval", "hard": true, "source": "synapse"}
+{"id": 24, "text": "能再讲详细一点吗？", "intent": "knowledge_retrieval", "hard": true, "source": "synapse"}
+{"id": 25, "text": "解释下为什么需要Rerank", "intent": "knowledge_retrieval", "hard": true, "source": "synapse"}
+{"id": 26, "text": "how does that work?", "intent": "knowledge_retrieval", "hard": true, "source": "synapse"}
+{"id": 27, "text": "can you explain that concept to me?", "intent": "knowledge_retrieval", "hard": true, "source": "synapse"}
+{"id": 28, "text": "请介绍一下这个项目", "intent": "knowledge_retrieval", "hard": true, "source": "synapse"}
+{"id": 29, "text": "我想知道这个系统的架构是怎么设计的", "intent": "knowledge_retrieval", "hard": true, "source": "synapse"}
+{"id": 30, "text": "帮我总结一下这段对话", "intent": "summarize", "hard": false, "source": "synapse"}
+{"id": 31, "text": "把这篇文档压缩成摘要", "intent": "summarize", "hard": false, "source": "synapse"}
+{"id": 32, "text": "概括一下会议要点", "intent": "summarize", "hard": false, "source": "synapse"}
+{"id": 33, "text": "总结一下这篇文章的主要内容", "intent": "summarize", "hard": false, "source": "synapse"}
+{"id": 34, "text": "提炼一下重点", "intent": "summarize", "hard": false, "source": "synapse"}
+{"id": 35, "text": "简要概括", "intent": "summarize", "hard": false, "source": "synapse"}
+{"id": 36, "text": "归纳一下这几个观点", "intent": "summarize", "hard": false, "source": "synapse"}
+{"id": 37, "text": "帮我写个摘要", "intent": "summarize", "hard": false, "source": "synapse"}
+{"id": 38, "text": "这段文字讲了什么，简短说", "intent": "summarize", "hard": false, "source": "synapse"}
+{"id": 39, "text": "summarize the key points of this article", "intent": "summarize", "hard": false, "source": "synapse"}
+{"id": 40, "text": "give me a brief summary of the document", "intent": "summarize", "hard": false, "source": "synapse"}
+{"id": 41, "text": "can you condense this text?", "intent": "summarize", "hard": false, "source": "synapse"}
+{"id": 42, "text": "把聊天记录整理成要点", "intent": "summarize", "hard": false, "source": "synapse"}
+{"id": 43, "text": "帮我总结PDF内容", "intent": "summarize", "hard": false, "source": "synapse"}
+{"id": 44, "text": "总结一下市场报告", "intent": "summarize", "hard": false, "source": "synapse"}
+{"id": 45, "text": "太长了我没时间看，帮我概括一下", "intent": "summarize", "hard": true, "source": "synapse"}
+{"id": 46, "text": "说了这么多，中心思想是什么？", "intent": "summarize", "hard": true, "source": "synapse"}
+{"id": 47, "text": "用三句话概括", "intent": "summarize", "hard": true, "source": "synapse"}
+{"id": 48, "text": "帮我提炼核心观点", "intent": "summarize", "hard": true, "source": "synapse"}
+{"id": 49, "text": "这段内容信息量太大，压缩一下", "intent": "summarize", "hard": true, "source": "synapse"}
+{"id": 50, "text": "你好", "intent": "small_talk", "hard": false, "source": "synapse"}
+{"id": 51, "text": "嗨", "intent": "small_talk", "hard": false, "source": "synapse"}
+{"id": 52, "text": "谢谢", "intent": "small_talk", "hard": false, "source": "synapse"}
+{"id": 53, "text": "再见", "intent": "small_talk", "hard": false, "source": "synapse"}
+{"id": 54, "text": "早上好", "intent": "small_talk", "hard": false, "source": "synapse"}
+{"id": 55, "text": "今天天气怎么样", "intent": "small_talk", "hard": false, "source": "synapse"}
+{"id": 56, "text": "你是谁", "intent": "small_talk", "hard": false, "source": "synapse"}
+{"id": 57, "text": "哈哈", "intent": "small_talk", "hard": false, "source": "synapse"}
+{"id": 58, "text": "好的", "intent": "small_talk", "hard": false, "source": "synapse"}
+{"id": 59, "text": "辛苦了", "intent": "small_talk", "hard": false, "source": "synapse"}
+{"id": 60, "text": "hello", "intent": "small_talk", "hard": false, "source": "synapse"}
+{"id": 61, "text": "hi there", "intent": "small_talk", "hard": false, "source": "synapse"}
+{"id": 62, "text": "thanks a lot", "intent": "small_talk", "hard": false, "source": "synapse"}
+{"id": 63, "text": "how are you", "intent": "small_talk", "hard": false, "source": "synapse"}
+{"id": 64, "text": "拜拜", "intent": "small_talk", "hard": false, "source": "synapse"}
+{"id": 65, "text": "晚上好", "intent": "small_talk", "hard": false, "source": "synapse"}
+{"id": 66, "text": "你叫什么名字", "intent": "small_talk", "hard": false, "source": "synapse"}
+{"id": 67, "text": "在吗", "intent": "small_talk", "hard": false, "source": "synapse"}
+{"id": 68, "text": "然后呢？", "intent": "small_talk", "hard": true, "source": "synapse"}
+{"id": 69, "text": "继续", "intent": "small_talk", "hard": true, "source": "synapse"}
+{"id": 70, "text": "说说看", "intent": "small_talk", "hard": true, "source": "synapse"}
+{"id": 71, "text": "哦是吗", "intent": "small_talk", "hard": true, "source": "synapse"}
+{"id": 72, "text": "就这样吧", "intent": "small_talk", "hard": true, "source": "synapse"}
+{"id": 73, "text": "你在干嘛", "intent": "small_talk", "hard": true, "source": "synapse"}
+{"id": 74, "text": "真不错", "intent": "small_talk", "hard": true, "source": "synapse"}
+{"id": 75, "text": "有意思", "intent": "small_talk", "hard": true, "source": "synapse"}
+{"id": 76, "text": "什么是检索增强生成", "intent": "knowledge_retrieval", "hard": false, "source": "synapse"}
+{"id": 77, "text": "帮我查一下prompt里temperature参数", "intent": "knowledge_retrieval", "hard": false, "source": "synapse"}
+{"id": 78, "text": "ChromaDB和Milvus怎么选", "intent": "knowledge_retrieval", "hard": false, "source": "synapse"}
+{"id": 79, "text": "解释一下attention机制", "intent": "knowledge_retrieval", "hard": false, "source": "synapse"}
+{"id": 80, "text": "了解了解微调的原理", "intent": "knowledge_retrieval", "hard": false, "source": "synapse"}
+{"id": 81, "text": "介绍一下Redis的持久化方式", "intent": "knowledge_retrieval", "hard": false, "source": "synapse"}
+{"id": 82, "text": "SQL和NoSQL的区别", "intent": "knowledge_retrieval", "hard": false, "source": "synapse"}
+{"id": 83, "text": "什么是余弦相似度", "intent": "knowledge_retrieval", "hard": false, "source": "synapse"}
+{"id": 84, "text": "帮我找找相关的论文", "intent": "knowledge_retrieval", "hard": false, "source": "synapse"}
+{"id": 85, "text": "什么是多模态模型", "intent": "knowledge_retrieval", "hard": false, "source": "synapse"}
+{"id": 86, "text": "解释一下Z-score异常检测", "intent": "knowledge_retrieval", "hard": false, "source": "synapse"}
+{"id": 87, "text": "帮我概括这段代码的作用", "intent": "summarize", "hard": false, "source": "synapse"}
+{"id": 88, "text": "简述一下会议纪要", "intent": "summarize", "hard": false, "source": "synapse"}
+{"id": 89, "text": "把这份报告浓缩成一段话", "intent": "summarize", "hard": false, "source": "synapse"}
+{"id": 90, "text": "归纳总结我的需求", "intent": "summarize", "hard": false, "source": "synapse"}
+{"id": 91, "text": "简短总结一下背景", "intent": "summarize", "hard": false, "source": "synapse"}
+{"id": 92, "text": "帮我整理一下读书笔记要点", "intent": "summarize", "hard": false, "source": "synapse"}
+{"id": 93, "text": "总结一下这周的进度", "intent": "summarize", "hard": false, "source": "synapse"}
+{"id": 94, "text": "哈喽", "intent": "small_talk", "hard": false, "source": "synapse"}
+{"id": 95, "text": "谢谢你的帮助", "intent": "small_talk", "hard": false, "source": "synapse"}
+{"id": 96, "text": "太棒了", "intent": "small_talk", "hard": false, "source": "synapse"}
+{"id": 97, "text": "嗯嗯", "intent": "small_talk", "hard": false, "source": "synapse"}
+{"id": 98, "text": "晚安", "intent": "small_talk", "hard": false, "source": "synapse"}
+{"id": 99, "text": "哈哈好的", "intent": "small_talk", "hard": false, "source": "synapse"}

@@ -1,0 +1,295 @@
+{
+  "tag": "full",
+  "created_at": "2026-09-18 12:00:01",
+  "meta": {
+    "target": "qwen3:1.7b",
+    "target_gb": 1.27,
+    "draft": "qwen3:0.6b",
+    "draft_gb": 0.49,
+    "prompts_per_workload": {
+      "A-结构化抽取": 6,
+      "B-自由摘要": 6
+    },
+    "n_ctx": 4096,
+    "np": 1,
+    "note": "llama-server 由 Ollama 自带构建提供；GGUF 直接复用 Ollama 的 blob，无需额外下载"
+  },
+  "runs": [
+    {
+      "config": "base",
+      "spec_type": "none",
+      "draft_model": "-",
+      "spec_n_max": null,
+      "workloads": {
+        "A-结构化抽取": {
+          "n": 6,
+          "decode_tps_median": 154.2,
+          "decode_tps_p95": 155.0,
+          "ttft_ms_median": 16.4,
+          "wall_ms_median": 1074.3,
+          "accept_rate_median": 0.0,
+          "draft_tokens": 0.0,
+          "accepted_tokens": 0.0,
+          "predicted_tokens": 960
+        },
+        "B-自由摘要": {
+          "n": 6,
+          "decode_tps_median": 152.5,
+          "decode_tps_p95": 154.8,
+          "ttft_ms_median": 18.1,
+          "wall_ms_median": 1353.0,
+          "accept_rate_median": 0.0,
+          "draft_tokens": 0.0,
+          "accepted_tokens": 0.0,
+          "predicted_tokens": 1200
+        }
+      },
+      "error": "",
+      "load_s": 2.4,
+      "output_hashes": {
+        "A-结构化抽取|0": "f03bae85275146cb",
+        "A-结构化抽取|1": "4ad9da15f4086f25",
+        "A-结构化抽取|2": "26d3302c155f81ac",
+        "A-结构化抽取|3": "1e595effe47617c1",
+        "A-结构化抽取|4": "e7d3c6c799ef00b2",
+        "A-结构化抽取|5": "2cc1e537ef55a6d8",
+        "B-自由摘要|0": "38a197f4a3c16d45",
+        "B-自由摘要|1": "a5c972a21e385186",
+        "B-自由摘要|2": "609fb9d0187ce840",
+        "B-自由摘要|3": "8822466dfd6a9923",
+        "B-自由摘要|4": "e0dd7e01b2de38c6",
+        "B-自由摘要|5": "dded79a424217709"
+      }
+    },
+    {
+      "config": "base2",
+      "spec_type": "none",
+      "draft_model": "-",
+      "spec_n_max": null,
+      "workloads": {
+        "A-结构化抽取": {
+          "n": 6,
+          "decode_tps_median": 155.3,
+          "decode_tps_p95": 157.0,
+          "ttft_ms_median": 16.9,
+          "wall_ms_median": 1056.9,
+          "accept_rate_median": 0.0,
+          "draft_tokens": 0.0,
+          "accepted_tokens": 0.0,
+          "predicted_tokens": 960
+        },
+        "B-自由摘要": {
+          "n": 6,
+          "decode_tps_median": 152.2,
+          "decode_tps_p95": 153.2,
+          "ttft_ms_median": 17.4,
+          "wall_ms_median": 1354.8,
+          "accept_rate_median": 0.0,
+          "draft_tokens": 0.0,
+          "accepted_tokens": 0.0,
+          "predicted_tokens": 1200
+        }
+      },
+      "error": "",
+      "load_s": 2.3,
+      "output_hashes": {
+        "A-结构化抽取|0": "f03bae85275146cb",
+        "A-结构化抽取|1": "4ad9da15f4086f25",
+        "A-结构化抽取|2": "26d3302c155f81ac",
+        "A-结构化抽取|3": "1e595effe47617c1",
+        "A-结构化抽取|4": "e7d3c6c799ef00b2",
+        "A-结构化抽取|5": "2cc1e537ef55a6d8",
+        "B-自由摘要|0": "38a197f4a3c16d45",
+        "B-自由摘要|1": "a5c972a21e385186",
+        "B-自由摘要|2": "609fb9d0187ce840",
+        "B-自由摘要|3": "8822466dfd6a9923",
+        "B-自由摘要|4": "e0dd7e01b2de38c6",
+        "B-自由摘要|5": "dded79a424217709"
+      }
+    },
+    {
+      "config": "draft-k3",
+      "spec_type": "draft-simple",
+      "draft_model": "qwen3:0.6b",
+      "spec_n_max": 3,
+      "workloads": {
+        "A-结构化抽取": {
+          "n": 6,
+          "decode_tps_median": 107.4,
+          "decode_tps_p95": 121.6,
+          "ttft_ms_median": 23.8,
+          "wall_ms_median": 1559.3,
+          "accept_rate_median": 69.9,
+          "draft_tokens": 911.0,
+          "accepted_tokens": 648.0,
+          "predicted_tokens": 960
+        },
+        "B-自由摘要": {
+          "n": 6,
+          "decode_tps_median": 100.2,
+          "decode_tps_p95": 114.8,
+          "ttft_ms_median": 27.0,
+          "wall_ms_median": 2060.4,
+          "accept_rate_median": 65.3,
+          "draft_tokens": 1228.0,
+          "accepted_tokens": 779.0,
+          "predicted_tokens": 1200
+        }
+      },
+      "error": "",
+      "load_s": 3.6,
+      "output_hashes": {
+        "A-结构化抽取|0": "f03bae85275146cb",
+        "A-结构化抽取|1": "af7d9fd3c00c242f",
+        "A-结构化抽取|2": "d3839d4d04902afb",
+        "A-结构化抽取|3": "512fc1090ee07698",
+        "A-结构化抽取|4": "537a595b3a65d399",
+        "A-结构化抽取|5": "2cc1e537ef55a6d8",
+        "B-自由摘要|0": "9a7c39c412a68d3d",
+        "B-自由摘要|1": "59776c8aa1de1c63",
+        "B-自由摘要|2": "8f5c5f825fecea1f",
+        "B-自由摘要|3": "8822466dfd6a9923",
+        "B-自由摘要|4": "a7aac2bfd0c14de8",
+        "B-自由摘要|5": "d50dac663485568f"
+      }
+    },
+    {
+      "config": "draft-k8",
+      "spec_type": "draft-simple",
+      "draft_model": "qwen3:0.6b",
+      "spec_n_max": 8,
+      "workloads": {
+        "A-结构化抽取": {
+          "n": 6,
+          "decode_tps_median": 109.2,
+          "decode_tps_p95": 119.9,
+          "ttft_ms_median": 26.0,
+          "wall_ms_median": 1549.7,
+          "accept_rate_median": 56.6,
+          "draft_tokens": 1520.0,
+          "accepted_tokens": 761.0,
+          "predicted_tokens": 960
+        },
+        "B-自由摘要": {
+          "n": 6,
+          "decode_tps_median": 94.8,
+          "decode_tps_p95": 112.2,
+          "ttft_ms_median": 25.0,
+          "wall_ms_median": 2168.3,
+          "accept_rate_median": 45.7,
+          "draft_tokens": 2181.0,
+          "accepted_tokens": 919.0,
+          "predicted_tokens": 1200
+        }
+      },
+      "error": "",
+      "load_s": 3.5,
+      "output_hashes": {
+        "A-结构化抽取|0": "76eaa8bc9379e410",
+        "A-结构化抽取|1": "af7d9fd3c00c242f",
+        "A-结构化抽取|2": "f9cfd2cc368581f1",
+        "A-结构化抽取|3": "1e595effe47617c1",
+        "A-结构化抽取|4": "537a595b3a65d399",
+        "A-结构化抽取|5": "36c224bec3231486",
+        "B-自由摘要|0": "f13f3d0796d9bf21",
+        "B-自由摘要|1": "49ce339c5683bcd4",
+        "B-自由摘要|2": "78cfea014db99cd0",
+        "B-自由摘要|3": "9e3f66c5bcb79c47",
+        "B-自由摘要|4": "83db26525461ed37",
+        "B-自由摘要|5": "af5eb8bbf9404fae"
+      }
+    },
+    {
+      "config": "draft-k16",
+      "spec_type": "draft-simple",
+      "draft_model": "qwen3:0.6b",
+      "spec_n_max": 16,
+      "workloads": {
+        "A-结构化抽取": {
+          "n": 6,
+          "decode_tps_median": 76.5,
+          "decode_tps_p95": 104.4,
+          "ttft_ms_median": 23.7,
+          "wall_ms_median": 2148.4,
+          "accept_rate_median": 30.8,
+          "draft_tokens": 2563.0,
+          "accepted_tokens": 786.0,
+          "predicted_tokens": 960
+        },
+        "B-自由摘要": {
+          "n": 6,
+          "decode_tps_median": 57.3,
+          "decode_tps_p95": 81.8,
+          "ttft_ms_median": 24.0,
+          "wall_ms_median": 3838.7,
+          "accept_rate_median": 22.0,
+          "draft_tokens": 4596.0,
+          "accepted_tokens": 898.0,
+          "predicted_tokens": 1200
+        }
+      },
+      "error": "",
+      "load_s": 3.6,
+      "output_hashes": {
+        "A-结构化抽取|0": "3538a112cfa805eb",
+        "A-结构化抽取|1": "af7d9fd3c00c242f",
+        "A-结构化抽取|2": "129f5d18a0bb9064",
+        "A-结构化抽取|3": "1e595effe47617c1",
+        "A-结构化抽取|4": "61737bce2f27b835",
+        "A-结构化抽取|5": "d1b0404eedac9bc0",
+        "B-自由摘要|0": "2149710f73bc5761",
+        "B-自由摘要|1": "a39559a8151c665f",
+        "B-自由摘要|2": "c822b07c4c52920d",
+        "B-自由摘要|3": "2fd049d6f4d5d427",
+        "B-自由摘要|4": "68063964efd45f87",
+        "B-自由摘要|5": "574b6b8df1a16b6a"
+      }
+    },
+    {
+      "config": "ngram",
+      "spec_type": "ngram-simple",
+      "draft_model": "-",
+      "spec_n_max": null,
+      "workloads": {
+        "A-结构化抽取": {
+          "n": 6,
+          "decode_tps_median": 282.0,
+          "decode_tps_p95": 578.9,
+          "ttft_ms_median": 17.1,
+          "wall_ms_median": 627.0,
+          "accept_rate_median": 100.0,
+          "draft_tokens": 552.0,
+          "accepted_tokens": 468.0,
+          "predicted_tokens": 960
+        },
+        "B-自由摘要": {
+          "n": 6,
+          "decode_tps_median": 181.2,
+          "decode_tps_p95": 376.2,
+          "ttft_ms_median": 17.4,
+          "wall_ms_median": 1145.2,
+          "accept_rate_median": 94.2,
+          "draft_tokens": 360.0,
+          "accepted_tokens": 313.0,
+          "predicted_tokens": 1200
+        }
+      },
+      "error": "",
+      "load_s": 2.4,
+      "output_hashes": {
+        "A-结构化抽取|0": "f03bae85275146cb",
+        "A-结构化抽取|1": "4ad9da15f4086f25",
+        "A-结构化抽取|2": "26d3302c155f81ac",
+        "A-结构化抽取|3": "1e595effe47617c1",
+        "A-结构化抽取|4": "537a595b3a65d399",
+        "A-结构化抽取|5": "2cc1e537ef55a6d8",
+        "B-自由摘要|0": "38a197f4a3c16d45",
+        "B-自由摘要|1": "a5c972a21e385186",
+        "B-自由摘要|2": "609fb9d0187ce840",
+        "B-自由摘要|3": "8822466dfd6a9923",
+        "B-自由摘要|4": "e0dd7e01b2de38c6",
+        "B-自由摘要|5": "dded79a424217709"
+      }
+    }
+  ]
+}

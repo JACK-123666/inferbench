@@ -1,0 +1,17 @@
+﻿# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# 编辑器
+.vscode/
+.idea/
+
+# 系统
+Thumbs.db
+.DS_Store
+
+# 说明：data/ 和 results/ 故意**不忽略**——
+# 评测集缓存与实验结果是这个工程的"证据"，应当随代码一起提交（可复现）。

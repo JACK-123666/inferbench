@@ -1,0 +1,601 @@
+﻿gate,idx,text,kind,gold,pred,hit,sim,correct,single_correct,false_hit_cause,source_gold,latency_ms,prompt_tokens,output_tokens
+off,0,嘿,para1,small_talk,small_talk,False,-1.0,True,True,,,91.07,163,4
+off,1,请为我撰写一个摘要,para2,summarize,summarize,False,0.3628,True,True,,,97.14,168,4
+off,2,晚上好。,para1,small_talk,small_talk,False,0.5098,True,True,,,96.0,165,4
+off,3,你好，我是你的助手，随时为你服务。,para1,small_talk,small_talk,False,0.4886,True,True,,,84.54,172,4
+off,4,简要概括市场报告,para1,summarize,summarize,False,0.6921,True,True,,,96.16,167,4
+off,5,请简要介绍这个项目,para2,knowledge_retrieval,summarize,False,0.6236,False,False,,,86.87,168,4
+off,6,请帮我查询多Agent架构的原理。,para2,knowledge_retrieval,knowledge_retrieval,False,0.4004,True,True,,,105.1,171,5
+off,7,what is a vector database?,base,knowledge_retrieval,knowledge_retrieval,False,0.4153,True,True,,,102.55,168,5
+off,8,describe the process of prompting in the chain of thought,para2,knowledge_retrieval,summarize,False,0.5006,False,False,,,167.23,172,4
+off,9,早上好,base,small_talk,small_talk,False,0.8825,True,True,,,124.38,164,4
+off,10,How does the system implement authentication?,para2,knowledge_retrieval,knowledge_retrieval,False,0.4641,True,True,,,119.89,169,5
+off,11,How does the system implement authentication?,para1,knowledge_retrieval,knowledge_retrieval,True,0.9998,True,True,,knowledge_retrieval,75.78,0,0
+off,12,帮我查一下prompt里temperature参数,base,knowledge_retrieval,knowledge_retrieval,False,0.5696,True,True,,,110.28,169,5
+off,13,嘿，你好,para1,small_talk,small_talk,False,0.6654,True,True,,,79.02,165,4
+off,14,整理并归纳我的需求,para1,summarize,summarize,False,0.5894,True,True,,,104.84,167,4
+off,15,把这份报告浓缩成一段话,base,summarize,summarize,False,0.78,True,True,,,88.9,169,4
+off,16,有没有相关的内容可供参考？,para2,knowledge_retrieval,knowledge_retrieval,False,0.5121,True,True,,,124.15,168,5
+off,17,如何配置FastAPI服务？,para1,knowledge_retrieval,knowledge_retrieval,False,0.3947,True,True,,,248.52,168,5
+off,18,真棒！,para2,small_talk,small_talk,False,0.4947,True,True,,,142.84,165,4
+off,19,有趣且引人入胜,para2,small_talk,small_talk,False,0.5647,True,True,,,108.53,168,4
+off,20,你是谁？,para1,small_talk,small_talk,False,0.5128,True,True,,,89.34,165,4
+off,21,你是谁,base,small_talk,small_talk,True,0.9479,True,False,,small_talk,52.92,0,0
+off,22,能再讲详细一点吗？,base,knowledge_retrieval,small_talk,False,0.5635,False,False,,,105.18,169,4
+off,23,谢谢,base,small_talk,small_talk,False,0.57,True,True,,,127.42,163,4
+off,24,简要介绍Redis的持久化机制,para1,knowledge_retrieval,knowledge_retrieval,False,0.4962,True,True,,,223.38,170,5
+off,25,我想了解这个系统的架构是如何构建的。,para2,knowledge_retrieval,knowledge_retrieval,False,0.6186,True,True,,,122.77,171,5
+off,26,简要概括市场报告,para2,summarize,summarize,True,1.0,True,True,,summarize,65.12,0,0
+off,27,give me a brief summary of the document,base,summarize,summarize,False,0.6321,True,True,,,250.29,170,4
+off,28,请问什么是向量数据库,perturb1,knowledge_retrieval,knowledge_retrieval,False,0.888,True,True,,,127.2,167,5
+off,29,这个技术方案指的是什么？,para1,knowledge_retrieval,knowledge_retrieval,False,0.6035,True,True,,,118.24,168,5
+off,30,真棒！,para1,small_talk,small_talk,True,1.0,True,True,,small_talk,56.91,0,0
+off,31,你有什么名字？,para1,small_talk,small_talk,False,0.6636,True,True,,,97.69,166,4
+off,32,晚安，安睡吧。,para2,small_talk,small_talk,False,0.5614,True,True,,,79.71,169,4
+off,33,晚安,base,small_talk,small_talk,False,0.8572,True,True,,,78.75,164,4
+off,34,hello谢谢,perturb2,small_talk,small_talk,False,0.7177,True,True,,,94.37,164,4
+off,35,哈哈,base,small_talk,small_talk,False,0.7757,True,True,,,152.64,163,4
+off,36,中心思想是什么？,para1,summarize,small_talk,False,0.5199,False,False,,,152.31,166,4
+off,37,这段内容信息量太大，压缩一下,base,summarize,small_talk,False,0.658,False,False,,,107.86,170,4
+off,38,在吗,base,small_talk,small_talk,False,0.5587,True,True,,,91.98,164,4
+off,39,提取关键信息,para1,summarize,small_talk,False,0.6207,False,False,,,102.35,165,4
+off,40,如何部署FastAPI服务？,base,knowledge_retrieval,knowledge_retrieval,False,0.9067,True,True,,,93.23,168,5
+off,41,这段文字讲了什么，简短说,base,summarize,small_talk,False,0.6255,False,False,,,146.5,171,10
+off,42,说明Z-score异常检测方法,para2,knowledge_retrieval,knowledge_retrieval,False,0.501,True,True,,,100.36,168,5
+off,43,我想了解这个系统的架构是如何构建的。,para1,knowledge_retrieval,knowledge_retrieval,True,1.0,True,True,,knowledge_retrieval,73.11,0,0
+off,44,请帮我查找相关的论文。,para2,knowledge_retrieval,knowledge_retrieval,False,0.6669,True,True,,,104.1,168,5
+off,45,能否再详细一点呢？,para2,knowledge_retrieval,small_talk,False,0.9165,False,False,,,88.47,168,4
+off,46,晚上好,base,small_talk,small_talk,True,0.9482,True,True,,small_talk,61.4,0,0
+off,47,提取关键信息,para2,summarize,small_talk,True,1.0,False,False,A_继承后端错误,summarize,77.42,0,0
+off,48,查找相关的技术资料,para1,knowledge_retrieval,knowledge_retrieval,False,0.6868,True,True,,,94.38,166,5
+off,49,说明为何需要进行Rerank,para2,knowledge_retrieval,knowledge_retrieval,False,0.5676,True,True,,,119.67,169,5
+off,50,简要说明会议纪要,para2,summarize,summarize,False,0.7059,True,True,,,113.61,168,4
+off,51,我上次看的那篇文章在讲什么来着？,base,knowledge_retrieval,knowledge_retrieval,False,0.6252,True,True,,,106.56,174,5
+off,52,查找相关的技术资料,para2,knowledge_retrieval,knowledge_retrieval,True,1.0,True,True,,knowledge_retrieval,65.19,0,0
+off,53,请帮我查询多Agent架构的原理,para1,knowledge_retrieval,knowledge_retrieval,True,0.9876,True,True,,knowledge_retrieval,56.88,0,0
+off,54,Docker和Kubernetes的区别,base,knowledge_retrieval,knowledge_retrieval,False,0.5222,True,True,,,92.54,168,5
+off,55,can you condense this text?,base,summarize,summarize,False,0.6065,True,True,,,83.56,169,4
+off,56,查一下最新的AI新闻,base,knowledge_retrieval,knowledge_retrieval,False,0.526,True,True,,,88.44,167,5
+off,57,请解释RAG的定义。,para2,knowledge_retrieval,knowledge_retrieval,False,0.4987,True,True,,,98.04,169,5
+off,58,你叫什么名字,base,small_talk,small_talk,False,0.7595,True,True,,,85.36,166,4
+off,59,我想了解嵌入式系统相关知识。,para2,knowledge_retrieval,knowledge_retrieval,False,0.5309,True,True,,,104.88,171,5
+off,60,What is a vector database?,para1,knowledge_retrieval,knowledge_retrieval,True,0.9889,True,True,,knowledge_retrieval,77.05,0,0
+off,61,什么是多模态模型呀,perturb1,knowledge_retrieval,knowledge_retrieval,False,0.5654,True,True,,,108.05,168,5
+off,62,解释一下RAG是什么,base,knowledge_retrieval,knowledge_retrieval,True,0.9545,True,True,,knowledge_retrieval,63.42,0,0
+off,63,can you explain that concept to me?,base,knowledge_retrieval,knowledge_retrieval,False,0.563,True,True,,,96.55,170,5
+off,64,就这样吧，不过换个说法。,para1,small_talk,small_talk,False,0.5088,True,True,,,91.83,169,4
+off,65,你正在做什么,para2,small_talk,small_talk,False,0.6087,True,True,,,91.65,165,4
+off,66,笑笑,para2,small_talk,small_talk,False,0.7499,True,True,,,116.84,163,4
+off,67,简要概括,base,summarize,small_talk,False,0.7848,False,False,,,98.19,165,4
+off,68,简明扼要地概述,para1,summarize,small_talk,False,0.8901,False,False,,,114.49,168,4
+off,69,哦是吗,base,small_talk,small_talk,False,0.661,True,True,,,119.37,165,4
+off,70,归纳总结我的需求,base,summarize,summarize,True,0.9675,True,True,,summarize,91.38,0,0
+off,71,请整理读书笔记的要点,para1,summarize,summarize,False,0.6625,True,True,,,152.87,168,4
+off,72,辛苦了，感谢您的付出。,para1,small_talk,small_talk,False,0.6515,True,True,,,100.5,169,4
+off,73,衷心感谢您。,para2,small_talk,small_talk,False,0.7672,True,True,,,105.66,166,4
+off,74,帮我提炼核心观点,base,summarize,summarize,False,0.7388,True,True,,,94.33,166,4
+off,75,把这篇文档压缩成摘要,base,summarize,summarize,False,0.8225,True,True,,,114.37,168,4
+off,76,概括一下会议要点,base,summarize,summarize,False,0.8431,True,True,,,93.8,166,4
+off,77,麻烦问一下什么是LoRA微调呢？,perturb1,knowledge_retrieval,knowledge_retrieval,False,0.5642,True,True,,,125.02,172,5
+off,78,是吗？,para1,small_talk,small_talk,False,0.8226,True,True,,,81.47,165,4
+off,79,将这份报告精炼为一段简洁的文字,para1,summarize,summarize,True,0.9446,True,True,,summarize,50.42,0,0
+off,80,请将PDF文件内容进行总结,para2,summarize,summarize,False,0.7149,True,True,,,93.14,169,4
+off,81,请将这段对话进行总结。,para1,summarize,small_talk,False,0.6066,False,False,,,93.94,169,4
+off,82,再会,para2,small_talk,small_talk,False,0.5335,True,True,,,91.97,164,4
+off,83,帮我概括这段代码的作用,base,summarize,summarize,False,0.5876,True,True,,,80.28,167,4
+off,84,Redis和MySQL有什么区别？,base,knowledge_retrieval,knowledge_retrieval,False,0.6623,True,True,,,117.63,168,5
+off,85,大语言模型是指能够理解和生成人类语言的机器学习模型。,para2,knowledge_retrieval,knowledge_retrieval,False,0.4835,True,True,,,121.12,176,5
+off,86,将这篇文档浓缩成摘要,para1,summarize,summarize,True,0.9498,True,True,,summarize,108.39,0,0
+off,87,今天天气怎么样,base,small_talk,small_talk,False,0.5536,True,True,,,103.12,165,4
+off,88,辛苦了,base,small_talk,small_talk,False,0.8207,True,True,,,95.61,164,4
+off,89,概述NLP的发展历程,para1,knowledge_retrieval,summarize,False,0.5441,False,False,,,83.56,167,4
+off,90,请介绍一下这个项目,base,knowledge_retrieval,knowledge_retrieval,False,0.8894,True,True,,,96.52,166,5
+off,91,概括这篇文章的核心要点,para1,summarize,summarize,False,0.8154,True,True,,,88.66,166,4
+off,92,聊聊吧,para1,small_talk,small_talk,False,0.5746,True,True,,,98.86,164,4
+off,93,检索一下相关的技术文档,base,knowledge_retrieval,knowledge_retrieval,False,0.8959,True,True,,,124.28,167,5
+off,94,哈哈好的,base,small_talk,small_talk,False,0.7395,True,True,,,114.89,164,4
+off,95,你有什么名字？,para2,small_talk,small_talk,True,1.0,True,True,,small_talk,75.66,0,0
+off,96,掌握Prompt工程的核心原理,para1,knowledge_retrieval,knowledge_retrieval,False,0.6726,True,True,,,97.08,167,5
+off,97,那个东西的原理是什么？,base,knowledge_retrieval,knowledge_retrieval,False,0.6093,True,True,,,116.36,168,5
+off,98,总结一下这篇文章的主要内容,base,summarize,summarize,False,0.8404,True,True,,,118.86,167,4
+off,99,能否再详细一点呢？,para1,knowledge_retrieval,small_talk,True,1.0,False,False,A_继承后端错误,knowledge_retrieval,78.7,0,0
+off,100,感谢您给予的帮助,para1,small_talk,small_talk,False,0.7812,True,True,,,83.75,166,4
+off,101,解释一下attention机制,base,knowledge_retrieval,knowledge_retrieval,False,0.4883,True,True,,,88.15,166,5
+off,102,有没有关于这个话题的资料？,base,knowledge_retrieval,knowledge_retrieval,False,0.7401,True,True,,,128.73,169,5
+off,103,良好,para1,small_talk,small_talk,False,0.6635,True,True,,,124.6,163,4
+off,104,这个东西的运作原理是什么？,para2,knowledge_retrieval,knowledge_retrieval,True,0.9384,True,True,,knowledge_retrieval,81.07,0,0
+off,105,请简要说明这个项目的相关内容,para1,knowledge_retrieval,summarize,False,0.8652,False,False,,,95.55,169,4
+off,106,就这样吧,base,small_talk,small_talk,False,0.7849,True,True,,,82.24,164,4
+off,107,是吗？,para2,small_talk,small_talk,True,1.0,True,True,,small_talk,82.38,0,0
+off,108,这个功能怎么使用？,para2,knowledge_retrieval,small_talk,False,0.6273,False,False,,,126.27,167,5
+off,109,capture the main ideas of the article,para1,summarize,summarize,False,0.6869,True,True,,,93.02,169,4
+off,110,总结我的需求并进行归纳,para2,summarize,summarize,False,0.9164,True,True,,,96.65,168,4
+off,111,好，没关系。,para2,small_talk,small_talk,False,0.6087,True,True,,,98.99,166,4
+off,112,再见,base,small_talk,small_talk,False,0.6549,True,True,,,94.65,163,4
+off,113,帮我找找相关的论文,base,knowledge_retrieval,knowledge_retrieval,True,0.9427,True,True,,knowledge_retrieval,65.43,0,0
+off,114,provide a concise overview of the document,para2,summarize,summarize,False,0.8529,True,True,,,103.4,169,4
+off,115,Redis和MySQL之间有何不同？,para1,knowledge_retrieval,knowledge_retrieval,True,0.9908,True,True,,knowledge_retrieval,72.81,0,0
+off,116,了解了解微调的原理,base,knowledge_retrieval,knowledge_retrieval,False,0.6942,True,True,,,121.79,168,5
+off,117,帮我总结一下这段对话,base,summarize,summarize,False,0.9107,True,True,,,96.29,167,4
+off,118,帮我查一下多Agent架构的原理,base,knowledge_retrieval,knowledge_retrieval,True,0.9761,True,True,,knowledge_retrieval,63.56,0,0
+off,119,好，没关系。,para1,small_talk,small_talk,True,1.0,True,True,,small_talk,89.36,0,0
+off,120,感谢您给予的帮助,para2,small_talk,small_talk,True,1.0,True,True,,small_talk,72.58,0,0
+off,121,你正在做什么,para1,small_talk,small_talk,True,1.0,True,True,,small_talk,71.48,0,0
+off,122,真不错，确实不错,para1,small_talk,small_talk,False,0.727,True,True,,,80.2,167,4
+off,123,有没有相关的内容可供参考？,para1,knowledge_retrieval,knowledge_retrieval,True,1.0,True,True,,knowledge_retrieval,68.31,0,0
+off,124,拜拜,base,small_talk,small_talk,False,0.7121,True,True,,,89.27,164,4
+off,125,说明Z-score异常检测方法,para1,knowledge_retrieval,knowledge_retrieval,True,1.0,True,True,,knowledge_retrieval,74.46,0,0
+off,126,describe the process of prompting in the chain of thought,para1,knowledge_retrieval,summarize,True,1.0,False,False,A_继承后端错误,knowledge_retrieval,81.58,0,0
+off,127,余弦相似度是什么？,para2,knowledge_retrieval,knowledge_retrieval,False,0.4678,True,True,,,137.14,168,5
+off,128,什么是大语言模型？,base,knowledge_retrieval,knowledge_retrieval,False,0.8125,True,True,,,102.81,167,5
+off,129,什么是检索增强生成,base,knowledge_retrieval,knowledge_retrieval,False,0.612,True,True,,,106.81,166,5
+off,130,了解prompt工程的基本概念,base,knowledge_retrieval,knowledge_retrieval,True,0.942,True,True,,knowledge_retrieval,65.08,0,0
+off,131,这段文字主要阐述了什么，用简短的话说明。,para1,summarize,knowledge_retrieval,False,0.8872,False,False,,,98.63,175,3
+off,132,总结一下市场报告,base,summarize,summarize,False,0.9133,True,True,,,108.35,166,4
+off,133,请问什么是多模态模型呢？,perturb2,knowledge_retrieval,knowledge_retrieval,True,0.9795,True,True,,knowledge_retrieval,98.92,0,0
+off,134,说明一下attention机制,para1,knowledge_retrieval,knowledge_retrieval,True,0.9621,True,True,,knowledge_retrieval,86.08,0,0
+off,135,你在干嘛,base,small_talk,small_talk,False,0.824,True,True,,,86.99,164,4
+off,136,how does that function?,para1,knowledge_retrieval,knowledge_retrieval,False,0.6385,True,True,,,123.4,167,5
+off,137,太棒了,base,small_talk,small_talk,False,0.8588,True,True,,,110.3,165,4
+off,138,说明一下attention机制,para2,knowledge_retrieval,knowledge_retrieval,True,0.9621,True,True,,knowledge_retrieval,69.06,0,0
+off,139,然后呢？,base,small_talk,small_talk,False,0.6153,True,True,,,161.2,165,4
+off,140,衷心感谢您。,para1,small_talk,small_talk,True,1.0,True,True,,small_talk,65.44,0,0
+off,141,辛苦了，感谢您的付出。,para2,small_talk,small_talk,True,1.0,True,True,,small_talk,84.93,0,0
+off,142,explain chain of thought prompting,base,knowledge_retrieval,knowledge_retrieval,False,0.8917,True,True,,,97.28,167,5
+off,143,中心思想到底是什么？,para2,summarize,small_talk,True,0.9884,False,False,A_继承后端错误,summarize,82.28,0,0
+off,144,provide a concise overview of the document,para1,summarize,summarize,True,1.0,True,True,,summarize,93.04,0,0
+off,145,请提取关键要点,para2,summarize,small_talk,False,0.8562,False,False,,,141.1,166,4
+off,146,掌握Prompt工程的核心原理,para2,knowledge_retrieval,knowledge_retrieval,True,1.0,True,True,,knowledge_retrieval,60.88,0,0
+off,147,简要说明会议纪要,para1,summarize,summarize,True,1.0,True,True,,summarize,76.96,0,0
+off,148,Docker与Kubernetes的区别,para2,knowledge_retrieval,knowledge_retrieval,True,0.9939,True,True,,knowledge_retrieval,85.13,0,0
+off,149,can you reduce the text to its essential elements?,para1,summarize,small_talk,False,0.7719,False,False,,,111.74,172,4
+off,150,帮我找关于机器学习的资料,base,knowledge_retrieval,knowledge_retrieval,False,0.6949,True,True,,,111.93,169,5
+off,151,如何配置FastAPI服务？,para2,knowledge_retrieval,knowledge_retrieval,True,1.0,True,True,,knowledge_retrieval,79.61,0,0
+off,152,介绍一下Redis的持久化方式,base,knowledge_retrieval,knowledge_retrieval,False,0.9053,True,True,,,117.02,168,5
+off,153,你是谁？,para2,small_talk,small_talk,True,1.0,True,True,,small_talk,73.03,0,0
+off,154,LoRA微调是指通过调整模型中少量参数进行微调，以适应特定任务或数据集。,para2,knowledge_retrieval,knowledge_retrieval,False,0.8862,True,True,,,128.49,185,5
+off,155,这个东西的运作原理是什么？,para1,knowledge_retrieval,knowledge_retrieval,True,0.9384,True,True,,knowledge_retrieval,58.73,0,0
+off,156,how does that work?,base,knowledge_retrieval,small_talk,False,0.8377,False,False,,,92.31,167,4
+off,157,就这样吧，不过换个说法。,para2,small_talk,small_talk,True,1.0,True,True,,small_talk,65.97,0,0
+off,158,嘿，你好,para2,small_talk,small_talk,True,1.0,True,True,,small_talk,66.92,0,0
+off,159,解释RAG的含义,para1,knowledge_retrieval,knowledge_retrieval,True,0.9339,True,True,,knowledge_retrieval,63.83,0,0
+off,160,请概括这段代码的功能,para1,summarize,summarize,True,0.9267,True,True,,summarize,62.13,0,0
+off,161,could you please clarify that concept for me?,para1,knowledge_retrieval,knowledge_retrieval,False,0.8417,True,True,,,101.35,171,5
+off,162,嗨,base,small_talk,small_talk,False,0.8626,True,True,,,89.45,163,4
+off,163,hello,base,small_talk,small_talk,False,0.6715,True,True,,,91.87,163,4
+off,164,晚上好，问候。,para2,small_talk,small_talk,False,0.9007,True,True,,,97.15,167,4
+off,165,解释一下Z-score异常检测,base,knowledge_retrieval,knowledge_retrieval,True,0.9513,True,True,,knowledge_retrieval,65.82,0,0
+off,166,What is the difference between Redis and Memcached?,para2,knowledge_retrieval,knowledge_retrieval,False,0.769,True,True,,,101.96,172,5
+off,167,将这篇文档浓缩成摘要,para2,summarize,summarize,True,0.9498,True,True,,summarize,75.52,0,0
+off,168,持续地进行,para2,small_talk,small_talk,False,0.5605,True,True,,,92.93,165,4
+off,169,查阅最新发布的AI相关资讯,para2,knowledge_retrieval,knowledge_retrieval,False,0.8872,True,True,,,134.36,168,5
+off,170,嘿,para2,small_talk,small_talk,True,1.0,True,True,,small_talk,59.88,0,0
+off,171,我想问下嗯嗯呀,perturb1,small_talk,small_talk,False,0.5905,True,True,,,86.29,168,4
+off,172,清晨问候,para1,small_talk,small_talk,False,0.7304,True,True,,,86.35,164,4
+off,173,说明为何需要进行Rerank,para1,knowledge_retrieval,knowledge_retrieval,True,1.0,True,True,,knowledge_retrieval,62.09,0,0
+off,174,继续进行,para1,small_talk,small_talk,False,0.7531,True,True,,,82.08,164,4
+off,175,什么是Transformer架构？,base,knowledge_retrieval,knowledge_retrieval,False,0.5361,True,True,,,104.55,166,5
+off,176,帮我总结PDF内容,base,summarize,summarize,True,0.9433,True,True,,summarize,63.69,0,0
+off,177,这个技术方案是什么意思？,base,knowledge_retrieval,knowledge_retrieval,True,0.9767,True,True,,knowledge_retrieval,59.05,0,0
+off,178,将聊天记录归纳为要点,para2,summarize,small_talk,False,0.7565,False,False,,,87.87,168,4
+off,179,掌握微调的基本原理,para2,knowledge_retrieval,knowledge_retrieval,True,0.927,True,True,,knowledge_retrieval,87.9,0,0
+off,180,什么是向量数据库？,base,knowledge_retrieval,knowledge_retrieval,True,0.9641,True,True,,knowledge_retrieval,79.71,0,0
+off,181,请整理读书笔记的要点内容,para2,summarize,summarize,True,0.9914,True,True,,summarize,66.0,0,0
+off,182,继续,base,small_talk,small_talk,False,0.8963,True,True,,,94.72,163,4
+off,183,帮我写个摘要,base,summarize,summarize,True,0.9477,True,True,,summarize,63.98,0,0
+off,184,解释下为什么需要Rerank,base,knowledge_retrieval,knowledge_retrieval,True,0.9672,True,True,,knowledge_retrieval,85.38,0,0
+off,185,请帮我查找相关的论文。,para1,knowledge_retrieval,knowledge_retrieval,True,1.0,True,True,,knowledge_retrieval,64.8,0,0
+off,186,请概括这段代码的功能,para2,summarize,summarize,True,0.9267,True,True,,summarize,74.89,0,0
+off,187,请介绍Redis的持久化机制,para2,knowledge_retrieval,knowledge_retrieval,True,0.9739,True,True,,knowledge_retrieval,86.36,0,0
+off,188,SQL与NoSQL的区别,para2,knowledge_retrieval,knowledge_retrieval,False,0.7474,True,True,,,97.46,167,5
+off,189,有意思,base,small_talk,small_talk,False,0.6828,True,True,,,108.16,163,4
+off,190,聊聊吧,para2,small_talk,small_talk,True,1.0,True,True,,small_talk,57.26,0,0
+off,191,Transformer架构是一种基于自注意力机制的深度学习模型架构。,para2,knowledge_retrieval,knowledge_retrieval,False,0.7729,True,True,,,114.46,175,5
+off,192,hello there,para1,small_talk,small_talk,False,0.8672,True,True,,,95.03,164,4
+off,193,那么，接下来呢？,para1,small_talk,small_talk,False,0.7816,True,True,,,107.76,167,4
+off,194,你好，什么是向量数据库呢？,perturb2,knowledge_retrieval,knowledge_retrieval,True,0.9705,True,True,,knowledge_retrieval,90.81,0,0
+off,195,用三句话概括,base,summarize,small_talk,False,0.8004,False,False,,,94.18,166,4
+off,196,这个功能怎么使用？,para1,knowledge_retrieval,small_talk,True,1.0,False,False,A_继承后端错误,knowledge_retrieval,90.18,0,0
+off,197,嗯嗯,base,small_talk,small_talk,False,0.748,True,True,,,110.9,164,4
+off,198,简要概括背景内容,para2,summarize,summarize,False,0.8648,True,True,,,113.7,167,4
+off,199,在吗呢？,perturb2,small_talk,small_talk,False,0.9063,True,True,,,88.01,166,4
+off,200,简要归纳会议主要议题,para1,summarize,summarize,True,0.9233,True,True,,summarize,65.23,0,0
+off,201,回顾本周的工作进展,para2,summarize,summarize,False,0.6248,True,True,,,109.83,166,4
+off,202,SQL与NoSQL的区别,para1,knowledge_retrieval,knowledge_retrieval,True,1.0,True,True,,knowledge_retrieval,64.59,0,0
+off,203,你好，你好。,para2,small_talk,small_talk,False,0.6805,True,True,,,100.18,166,4
+off,204,归纳一下这几个观点,base,summarize,summarize,False,0.7288,True,True,,,112.3,166,4
+off,205,好的,base,small_talk,small_talk,False,0.9023,True,True,,,100.05,163,4
+off,206,麻烦问一下在吗,perturb1,small_talk,small_talk,False,0.8114,True,True,,,95.86,167,4
+off,207,帮我整理一下读书笔记要点,base,summarize,summarize,True,0.9515,True,True,,summarize,109.37,0,0
+off,208,再会,para1,small_talk,small_talk,True,1.0,True,True,,small_talk,92.17,0,0
+off,209,what is the difference between Redis and Memcached,base,knowledge_retrieval,knowledge_retrieval,True,0.9882,True,True,,knowledge_retrieval,91.84,0,0
+off,210,什么是多模态模型,base,knowledge_retrieval,knowledge_retrieval,True,0.9745,True,True,,knowledge_retrieval,89.35,0,0
+off,211,什么是LoRA微调？,base,knowledge_retrieval,knowledge_retrieval,True,0.9738,True,True,,knowledge_retrieval,66.69,0,0
+off,212,感谢你的帮助,para1,small_talk,small_talk,False,0.9054,True,True,,,108.92,165,4
+off,213,总结一下这周的进度,base,summarize,summarize,False,0.8706,True,True,,,107.9,168,4
+off,214,把聊天记录整理成要点,base,summarize,small_talk,True,0.9725,False,False,A_继承后端错误,summarize,60.8,0,0
+off,215,请将PDF文档内容进行总结,para1,summarize,summarize,True,0.979,True,True,,summarize,61.97,0,0
+off,216,什么是检索增强生成谢谢,perturb1,knowledge_retrieval,knowledge_retrieval,True,0.9526,True,True,,knowledge_retrieval,57.59,0,0
+off,217,概述NLP的发展历程,para2,knowledge_retrieval,summarize,True,1.0,False,False,A_继承后端错误,knowledge_retrieval,57.34,0,0
+off,218,请将这段对话进行总结。,para2,summarize,small_talk,True,1.0,False,False,A_继承后端错误,summarize,57.53,0,0
+off,219,什么是余弦相似度,base,knowledge_retrieval,knowledge_retrieval,True,0.9376,True,True,,knowledge_retrieval,65.71,0,0
+off,220,真不错,base,small_talk,small_talk,False,0.9139,True,True,,,86.39,164,4
+off,221,概括这几个要点,para1,summarize,summarize,False,0.8451,True,True,,,95.78,165,4
+off,222,这段内容信息量太大，需要进行压缩。,para2,summarize,small_talk,True,0.9752,False,False,A_继承后端错误,summarize,65.47,0,0
+off,223,请问how are you呢？,perturb2,small_talk,small_talk,False,0.6511,True,True,,,90.26,168,4
+off,224,麻烦问一下什么是检索增强生成谢谢,perturb2,knowledge_retrieval,knowledge_retrieval,True,0.938,True,True,,knowledge_retrieval,56.96,0,0
+off,225,内容过于冗长，我无法花时间阅读，麻烦帮我简要概括一下。,para2,summarize,summarize,False,0.718,True,True,,,119.86,180,4
+off,226,用三句话进行概括。,para2,summarize,small_talk,True,0.9352,False,False,A_继承后端错误,summarize,55.77,0,0
+off,227,请问how are you,perturb1,small_talk,small_talk,True,0.9311,True,True,,small_talk,82.53,0,0
+off,228,感谢你的帮助,para2,small_talk,small_talk,True,1.0,True,True,,small_talk,52.98,0,0
+off,229,回顾本周的工作进展,para1,summarize,summarize,True,1.0,True,True,,summarize,50.48,0,0
+off,230,我上一次读的那篇论文是讲什么内容的呢？,para1,knowledge_retrieval,knowledge_retrieval,False,0.833,True,True,,,89.52,177,5
+off,231,简述一下会议纪要,base,summarize,summarize,True,0.953,True,True,,summarize,69.15,0,0
+off,232,summarize the key points of this article,base,summarize,summarize,False,0.7023,True,True,,,85.65,171,4
+off,233,清晨问候,para2,small_talk,small_talk,True,1.0,True,True,,small_talk,51.21,0,0
+off,234,ChromaDB和Milvus怎么选,base,knowledge_retrieval,knowledge_retrieval,False,0.6558,True,True,,,98.21,171,5
+off,235,有趣且引人入胜,para1,small_talk,small_talk,True,1.0,True,True,,small_talk,55.66,0,0
+off,236,概括这篇文章的核心要点,para2,summarize,summarize,True,1.0,True,True,,summarize,53.78,0,0
+off,237,将聊天记录归纳为要点,para1,summarize,small_talk,True,1.0,False,False,A_继承后端错误,summarize,52.98,0,0
+off,238,今天天气如何？,para2,small_talk,small_talk,False,0.9121,True,True,,,109.03,166,4
+off,239,SQL和NoSQL的区别,base,knowledge_retrieval,knowledge_retrieval,True,0.9851,True,True,,knowledge_retrieval,54.48,0,0
+off,240,余弦相似度是什么？,para1,knowledge_retrieval,knowledge_retrieval,True,1.0,True,True,,knowledge_retrieval,54.5,0,0
+off,241,你好，嗯嗯呢？,perturb2,small_talk,small_talk,False,0.728,True,True,,,104.67,168,4
+off,242,真不错，很赞,para2,small_talk,small_talk,True,0.9315,True,True,,small_talk,51.27,0,0
+off,243,请提取关键要点,para1,summarize,small_talk,True,1.0,False,False,A_继承后端错误,summarize,53.49,0,0
+off,244,掌握微调的基本原理,para1,knowledge_retrieval,knowledge_retrieval,True,0.927,True,True,,knowledge_retrieval,74.73,0,0
+off,245,请查证prompt中temperature参数的设置,para2,knowledge_retrieval,knowledge_retrieval,True,0.9631,True,True,,knowledge_retrieval,54.3,0,0
+off,246,讲解一下NLP的发展历程,base,knowledge_retrieval,summarize,True,0.982,False,True,A_继承后端错误,knowledge_retrieval,67.02,0,0
+off,247,Docker与Kubernetes的区别,para1,knowledge_retrieval,knowledge_retrieval,True,0.9939,True,True,,knowledge_retrieval,51.71,0,0
+off,248,我上一次读的那篇论文是讲什么内容的呢？,para2,knowledge_retrieval,knowledge_retrieval,True,1.0,True,True,,knowledge_retrieval,55.31,0,0
+off,249,提炼一下重点,base,summarize,small_talk,False,0.8709,False,False,,,113.33,165,4
+off,250,what is the process?,para2,knowledge_retrieval,knowledge_retrieval,False,0.6941,True,True,,,96.46,167,5
+off,251,那么，接下来呢？,para2,small_talk,small_talk,True,1.0,True,True,,small_talk,52.31,0,0
+off,252,Redis和MySQL之间有什么不同？,para2,knowledge_retrieval,knowledge_retrieval,True,0.9909,True,True,,knowledge_retrieval,55.99,0,0
+off,253,说说看,base,small_talk,small_talk,False,0.6028,True,True,,,83.04,165,4
+off,254,大语言模型是什么？,para1,knowledge_retrieval,knowledge_retrieval,True,0.9219,True,True,,knowledge_retrieval,60.03,0,0
+off,255,什么是Transformer模型？,para1,knowledge_retrieval,knowledge_retrieval,False,0.8686,True,True,,,93.25,166,5
+off,256,今天天气如何？,para1,small_talk,small_talk,True,1.0,True,True,,small_talk,52.55,0,0
+off,257,请为我撰写一个摘要,para1,summarize,summarize,True,1.0,True,True,,summarize,52.55,0,0
+off,258,说了这么多，中心思想是什么？,base,summarize,small_talk,False,0.8706,False,False,,,91.52,169,4
+off,259,简短总结一下背景,base,summarize,summarize,False,0.8218,True,True,,,90.24,167,4
+off,260,ChromaDB和Milvus该如何选择,para2,knowledge_retrieval,knowledge_retrieval,True,0.998,True,True,,knowledge_retrieval,52.82,0,0
+off,261,将这份报告精炼为一段简洁的文字,para2,summarize,summarize,True,0.9446,True,True,,summarize,54.36,0,0
+off,262,Could you condense this text?,para2,summarize,summarize,True,0.9533,True,True,,summarize,57.11,0,0
+off,263,我想知道这个系统的架构是怎么设计的,base,knowledge_retrieval,knowledge_retrieval,False,0.8864,True,True,,,94.4,170,5
+off,264,How does authentication work in this system?,base,knowledge_retrieval,knowledge_retrieval,False,0.9123,True,True,,,91.28,170,5
+off,265,内容过于冗长，我无法花时间阅读，麻烦帮忙简要概括一下。,para1,summarize,summarize,True,0.9958,True,True,,summarize,83.5,0,0
+off,266,简明扼要地概述,para2,summarize,small_talk,True,0.9999,False,False,A_继承后端错误,summarize,69.3,0,0
+off,267,请问hello,perturb1,small_talk,,False,0.8205,False,False,,,71.12,164,2
+off,268,how are you,base,small_talk,small_talk,False,0.8171,True,True,,,92.25,165,4
+off,269,could you please clarify that concept for me?,para2,knowledge_retrieval,knowledge_retrieval,True,1.0,True,True,,knowledge_retrieval,57.17,0,0
+off,270,thanks a lot,base,small_talk,small_talk,False,0.7134,True,True,,,101.85,165,4
+off,271,请查证prompt中temperature参数的设置,para1,knowledge_retrieval,knowledge_retrieval,True,0.9631,True,True,,knowledge_retrieval,58.73,0,0
+off,272,用三句话进行概括。,para1,summarize,small_talk,True,0.9352,False,False,A_继承后端错误,summarize,52.59,0,0
+off,273,晚安，好梦。,para1,small_talk,small_talk,False,0.8537,True,True,,,110.81,168,4
+off,274,我想了解嵌入式系统,base,knowledge_retrieval,knowledge_retrieval,False,0.8757,True,True,,,82.26,168,5
+off,275,提炼本文的主要内容,para2,summarize,summarize,False,0.8381,True,True,,,90.58,166,4
+off,276,谢谢你的帮助,base,small_talk,small_talk,True,0.9592,True,True,,small_talk,55.59,0,0
+off,277,这段内容信息量太大，需要进行压缩。,para1,summarize,small_talk,True,0.9752,False,False,A_继承后端错误,summarize,58.5,0,0
+off,278,这段文字主要阐述了什么，用简短的话说明。,para2,summarize,knowledge_retrieval,True,1.0,False,False,A_继承后端错误,summarize,74.86,0,0
+off,279,请提供关于机器学习的资料。,para2,knowledge_retrieval,knowledge_retrieval,False,0.8632,True,True,,,119.98,170,5
+off,280,什么是向量数据库？,para2,knowledge_retrieval,knowledge_retrieval,True,0.9641,True,True,,knowledge_retrieval,50.36,0,0
+off,281,简要归纳会议主要议题,para2,summarize,summarize,True,0.9233,True,True,,summarize,50.72,0,0
+off,282,hello there,para2,small_talk,small_talk,True,1.0,True,True,,small_talk,68.71,0,0
+off,283,你好,base,small_talk,small_talk,False,0.7067,True,True,,,88.49,163,4
+off,284,哈喽,base,small_talk,small_talk,False,0.7493,True,True,,,73.49,164,4
+off,285,What is the difference between Redis and Memcached?,para1,knowledge_retrieval,knowledge_retrieval,True,1.0,True,True,,knowledge_retrieval,53.95,0,0
+off,286,再见,para1,small_talk,small_talk,True,1.0,True,True,,small_talk,56.04,0,0
+off,287,这个功能怎么用？,base,knowledge_retrieval,small_talk,True,0.9897,False,False,A_继承后端错误,knowledge_retrieval,51.2,0,0
+off,288,简要概述背景内容,para1,summarize,summarize,True,0.9654,True,True,,summarize,52.15,0,0
+off,289,ChromaDB和Milvus该如何选择,para1,knowledge_retrieval,knowledge_retrieval,True,0.998,True,True,,knowledge_retrieval,86.01,0,0
+off,290,请提供关于机器学习的资料。,para1,knowledge_retrieval,knowledge_retrieval,True,1.0,True,True,,knowledge_retrieval,60.97,0,0
+off,291,太长了我没时间看，帮我概括一下,base,summarize,summarize,False,0.8116,True,True,,,90.6,172,4
+off,292,良好,para2,small_talk,small_talk,True,1.0,True,True,,small_talk,60.66,0,0
+off,293,hi there,base,small_talk,small_talk,True,0.9375,True,True,,small_talk,72.53,0,0
+off,294,查阅最新发布的AI相关资讯,para1,knowledge_retrieval,knowledge_retrieval,True,1.0,True,True,,knowledge_retrieval,60.62,0,0
+off,295,再见,para2,small_talk,small_talk,True,1.0,True,True,,small_talk,50.27,0,0
+off,296,这个技术方案的具体含义是什么？,para2,knowledge_retrieval,knowledge_retrieval,True,0.9306,True,True,,knowledge_retrieval,58.47,0,0
+off,297,我想了解嵌入式系统相关知识。,para1,knowledge_retrieval,knowledge_retrieval,True,1.0,True,True,,knowledge_retrieval,60.17,0,0
+off,298,笑笑,para1,small_talk,small_talk,True,1.0,True,True,,small_talk,80.19,0,0
+off,299,总结这几个主要观点,para2,summarize,summarize,False,0.8527,True,True,,,83.01,166,4
+on,0,嘿,para1,small_talk,small_talk,False,-1.0,True,True,,,201.18,489,12
+on,1,请为我撰写一个摘要,para2,summarize,summarize,False,0.3628,True,True,,,183.84,504,12
+on,2,晚上好。,para1,small_talk,small_talk,False,0.5098,True,True,,,185.54,495,12
+on,3,你好，我是你的助手，随时为你服务。,para1,small_talk,small_talk,False,0.4886,True,True,,,164.12,516,12
+on,4,简要概括市场报告,para1,summarize,summarize,False,0.6921,True,True,,,169.7,501,12
+on,5,请简要介绍这个项目,para2,knowledge_retrieval,summarize,False,0.6236,False,False,,,194.63,504,12
+on,6,请帮我查询多Agent架构的原理。,para2,knowledge_retrieval,knowledge_retrieval,False,0.4004,True,True,,,204.29,513,15
+on,7,what is a vector database?,base,knowledge_retrieval,knowledge_retrieval,False,0.4153,True,True,,,217.55,504,15
+on,8,describe the process of prompting in the chain of thought,para2,knowledge_retrieval,summarize,False,0.5006,False,False,,,195.32,516,12
+on,9,早上好,base,small_talk,small_talk,False,0.8825,True,True,,,163.57,492,12
+on,10,How does the system implement authentication?,para2,knowledge_retrieval,knowledge_retrieval,False,0.4641,True,True,,,203.88,507,15
+on,11,How does the system implement authentication?,para1,knowledge_retrieval,knowledge_retrieval,True,0.9998,True,True,,knowledge_retrieval,53.02,0,0
+on,12,帮我查一下prompt里temperature参数,base,knowledge_retrieval,knowledge_retrieval,False,0.5696,True,True,,,204.23,507,15
+on,13,嘿，你好,para1,small_talk,small_talk,False,0.6654,True,True,,,152.44,495,12
+on,14,整理并归纳我的需求,para1,summarize,summarize,False,0.5894,True,True,,,205.14,501,12
+on,15,把这份报告浓缩成一段话,base,summarize,summarize,False,0.78,True,True,,,168.5,507,12
+on,16,有没有相关的内容可供参考？,para2,knowledge_retrieval,knowledge_retrieval,False,0.5121,True,True,,,196.97,504,15
+on,17,如何配置FastAPI服务？,para1,knowledge_retrieval,knowledge_retrieval,False,0.3947,True,True,,,219.33,504,15
+on,18,真棒！,para2,small_talk,small_talk,False,0.4947,True,True,,,232.17,495,12
+on,19,有趣且引人入胜,para2,small_talk,small_talk,False,0.5647,True,True,,,160.08,504,12
+on,20,你是谁？,para1,small_talk,small_talk,False,0.5128,True,True,,,147.75,495,12
+on,21,你是谁,base,small_talk,small_talk,True,0.9479,True,False,,small_talk,38.44,0,0
+on,22,能再讲详细一点吗？,base,knowledge_retrieval,small_talk,False,0.5635,False,False,,,172.88,507,12
+on,23,谢谢,base,small_talk,small_talk,False,0.57,True,True,,,193.32,489,12
+on,24,简要介绍Redis的持久化机制,para1,knowledge_retrieval,knowledge_retrieval,False,0.4962,True,True,,,203.54,510,15
+on,25,我想了解这个系统的架构是如何构建的。,para2,knowledge_retrieval,knowledge_retrieval,False,0.6186,True,True,,,217.06,513,15
+on,26,简要概括市场报告,para2,summarize,summarize,True,1.0,True,True,,summarize,47.87,0,0
+on,27,give me a brief summary of the document,base,summarize,summarize,False,0.6321,True,True,,,177.57,510,12
+on,28,请问什么是向量数据库,perturb1,knowledge_retrieval,knowledge_retrieval,False,0.888,True,True,,,211.8,501,15
+on,29,这个技术方案指的是什么？,para1,knowledge_retrieval,knowledge_retrieval,False,0.6035,True,True,,,199.97,504,15
+on,30,真棒！,para1,small_talk,small_talk,True,1.0,True,True,,small_talk,64.07,0,0
+on,31,你有什么名字？,para1,small_talk,small_talk,False,0.6636,True,True,,,210.55,498,12
+on,32,晚安，安睡吧。,para2,small_talk,small_talk,False,0.5614,True,True,,,150.85,507,12
+on,33,晚安,base,small_talk,small_talk,False,0.8572,True,True,,,160.15,492,12
+on,34,hello谢谢,perturb2,small_talk,small_talk,False,0.7177,True,True,,,171.35,492,12
+on,35,哈哈,base,small_talk,small_talk,False,0.7757,True,True,,,192.06,489,12
+on,36,中心思想是什么？,para1,summarize,small_talk,False,0.5199,False,False,,,211.75,498,12
+on,37,这段内容信息量太大，压缩一下,base,summarize,small_talk,False,0.658,False,False,,,204.98,510,12
+on,38,在吗,base,small_talk,small_talk,False,0.5587,True,True,,,203.51,492,12
+on,39,提取关键信息,para1,summarize,small_talk,False,0.6207,False,False,,,175.41,495,12
+on,40,如何部署FastAPI服务？,base,knowledge_retrieval,knowledge_retrieval,False,0.9067,True,True,,,203.76,504,15
+on,41,这段文字讲了什么，简短说,base,summarize,small_talk,False,0.6255,False,False,,,321.45,513,30
+on,42,说明Z-score异常检测方法,para2,knowledge_retrieval,knowledge_retrieval,False,0.501,True,True,,,182.47,504,15
+on,43,我想了解这个系统的架构是如何构建的。,para1,knowledge_retrieval,knowledge_retrieval,True,1.0,True,True,,knowledge_retrieval,48.0,0,0
+on,44,请帮我查找相关的论文。,para2,knowledge_retrieval,knowledge_retrieval,False,0.6669,True,True,,,221.64,504,15
+on,45,能否再详细一点呢？,para2,knowledge_retrieval,small_talk,False,0.9165,False,False,,,161.71,504,12
+on,46,晚上好,base,small_talk,small_talk,True,0.9482,True,True,,small_talk,57.04,0,0
+on,47,提取关键信息,para2,summarize,small_talk,True,1.0,False,False,A_继承后端错误,summarize,43.68,0,0
+on,48,查找相关的技术资料,para1,knowledge_retrieval,knowledge_retrieval,False,0.6868,True,True,,,195.39,498,15
+on,49,说明为何需要进行Rerank,para2,knowledge_retrieval,knowledge_retrieval,False,0.5676,True,True,,,267.84,507,15
+on,50,简要说明会议纪要,para2,summarize,summarize,False,0.7059,True,True,,,198.71,504,12
+on,51,我上次看的那篇文章在讲什么来着？,base,knowledge_retrieval,knowledge_retrieval,False,0.6252,True,True,,,188.84,522,15
+on,52,查找相关的技术资料,para2,knowledge_retrieval,knowledge_retrieval,True,1.0,True,True,,knowledge_retrieval,67.05,0,0
+on,53,请帮我查询多Agent架构的原理,para1,knowledge_retrieval,knowledge_retrieval,True,0.9876,True,True,,knowledge_retrieval,57.99,0,0
+on,54,Docker和Kubernetes的区别,base,knowledge_retrieval,knowledge_retrieval,False,0.5222,True,True,,,215.07,504,15
+on,55,can you condense this text?,base,summarize,summarize,False,0.6065,True,True,,,178.35,507,12
+on,56,查一下最新的AI新闻,base,knowledge_retrieval,knowledge_retrieval,False,0.526,True,True,,,164.97,501,15
+on,57,请解释RAG的定义。,para2,knowledge_retrieval,knowledge_retrieval,False,0.4987,True,True,,,212.7,507,15
+on,58,你叫什么名字,base,small_talk,small_talk,False,0.7595,True,True,,,168.23,498,12
+on,59,我想了解嵌入式系统相关知识。,para2,knowledge_retrieval,knowledge_retrieval,False,0.5309,True,True,,,220.72,513,15
+on,60,What is a vector database?,para1,knowledge_retrieval,knowledge_retrieval,True,0.9889,True,True,,knowledge_retrieval,57.7,0,0
+on,61,什么是多模态模型呀,perturb1,knowledge_retrieval,knowledge_retrieval,False,0.5654,True,True,,,206.61,504,15
+on,62,解释一下RAG是什么,base,knowledge_retrieval,knowledge_retrieval,True,0.9545,True,True,,knowledge_retrieval,57.38,0,0
+on,63,can you explain that concept to me?,base,knowledge_retrieval,knowledge_retrieval,False,0.563,True,True,,,196.83,510,15
+on,64,就这样吧，不过换个说法。,para1,small_talk,small_talk,False,0.5088,True,True,,,200.62,507,12
+on,65,你正在做什么,para2,small_talk,small_talk,False,0.6087,True,True,,,178.58,495,12
+on,66,笑笑,para2,small_talk,small_talk,False,0.7499,True,True,,,220.76,489,12
+on,67,简要概括,base,summarize,small_talk,False,0.7848,False,False,,,208.32,495,12
+on,68,简明扼要地概述,para1,summarize,small_talk,False,0.8901,False,False,,,216.76,504,12
+on,69,哦是吗,base,small_talk,small_talk,False,0.661,True,True,,,187.13,495,12
+on,70,归纳总结我的需求,base,summarize,summarize,True,0.9675,True,True,,summarize,46.05,0,0
+on,71,请整理读书笔记的要点,para1,summarize,summarize,False,0.6625,True,True,,,281.18,504,12
+on,72,辛苦了，感谢您的付出。,para1,small_talk,small_talk,False,0.6515,True,True,,,228.91,507,12
+on,73,衷心感谢您。,para2,small_talk,small_talk,False,0.7672,True,True,,,179.51,498,12
+on,74,帮我提炼核心观点,base,summarize,summarize,False,0.7388,True,True,,,222.67,498,12
+on,75,把这篇文档压缩成摘要,base,summarize,summarize,False,0.8225,True,True,,,168.92,504,12
+on,76,概括一下会议要点,base,summarize,summarize,False,0.8431,True,True,,,211.23,498,12
+on,77,麻烦问一下什么是LoRA微调呢？,perturb1,knowledge_retrieval,knowledge_retrieval,False,0.5642,True,True,,,220.99,516,15
+on,78,是吗？,para1,small_talk,small_talk,False,0.8226,True,True,,,159.52,495,12
+on,79,将这份报告精炼为一段简洁的文字,para1,summarize,summarize,True,0.9446,True,True,,summarize,49.66,0,0
+on,80,请将PDF文件内容进行总结,para2,summarize,summarize,False,0.7149,True,True,,,170.16,507,12
+on,81,请将这段对话进行总结。,para1,summarize,small_talk,False,0.6066,False,False,,,179.41,507,12
+on,82,再会,para2,small_talk,small_talk,False,0.5335,True,True,,,168.8,492,12
+on,83,帮我概括这段代码的作用,base,summarize,summarize,False,0.5876,True,True,,,161.66,501,12
+on,84,Redis和MySQL有什么区别？,base,knowledge_retrieval,knowledge_retrieval,False,0.6623,True,True,,,203.57,504,15
+on,85,大语言模型是指能够理解和生成人类语言的机器学习模型。,para2,knowledge_retrieval,knowledge_retrieval,False,0.4835,True,True,,,214.26,528,15
+on,86,将这篇文档浓缩成摘要,para1,summarize,summarize,True,0.9498,True,True,,summarize,47.44,0,0
+on,87,今天天气怎么样,base,small_talk,small_talk,False,0.5536,True,True,,,199.87,495,12
+on,88,辛苦了,base,small_talk,small_talk,False,0.8207,True,True,,,177.96,492,12
+on,89,概述NLP的发展历程,para1,knowledge_retrieval,summarize,False,0.5441,False,False,,,134.13,501,12
+on,90,请介绍一下这个项目,base,knowledge_retrieval,knowledge_retrieval,False,0.8894,True,True,,,216.47,498,15
+on,91,概括这篇文章的核心要点,para1,summarize,summarize,False,0.8154,True,True,,,132.63,498,12
+on,92,聊聊吧,para1,small_talk,small_talk,False,0.5746,True,True,,,190.44,492,12
+on,93,检索一下相关的技术文档,base,knowledge_retrieval,knowledge_retrieval,False,0.8959,True,True,,,230.66,501,15
+on,94,哈哈好的,base,small_talk,small_talk,False,0.7395,True,True,,,164.0,492,12
+on,95,你有什么名字？,para2,small_talk,small_talk,True,1.0,True,True,,small_talk,53.78,0,0
+on,96,掌握Prompt工程的核心原理,para1,knowledge_retrieval,knowledge_retrieval,False,0.6726,True,True,,,186.8,501,15
+on,97,那个东西的原理是什么？,base,knowledge_retrieval,knowledge_retrieval,False,0.6093,True,True,,,212.15,504,15
+on,98,总结一下这篇文章的主要内容,base,summarize,summarize,False,0.8404,True,True,,,200.26,501,12
+on,99,能否再详细一点呢？,para1,knowledge_retrieval,small_talk,True,1.0,False,False,A_继承后端错误,knowledge_retrieval,55.17,0,0
+on,100,感谢您给予的帮助,para1,small_talk,small_talk,False,0.7812,True,True,,,167.92,498,12
+on,101,解释一下attention机制,base,knowledge_retrieval,knowledge_retrieval,False,0.4883,True,True,,,199.48,498,15
+on,102,有没有关于这个话题的资料？,base,knowledge_retrieval,knowledge_retrieval,False,0.7401,True,True,,,179.39,507,15
+on,103,良好,para1,small_talk,small_talk,False,0.6635,True,True,,,195.6,489,12
+on,104,这个东西的运作原理是什么？,para2,knowledge_retrieval,knowledge_retrieval,True,0.9384,True,True,,knowledge_retrieval,56.56,0,0
+on,105,请简要说明这个项目的相关内容,para1,knowledge_retrieval,summarize,False,0.8652,False,False,,,172.89,507,12
+on,106,就这样吧,base,small_talk,small_talk,False,0.7849,True,True,,,155.41,492,12
+on,107,是吗？,para2,small_talk,small_talk,True,1.0,True,True,,small_talk,71.51,0,0
+on,108,这个功能怎么使用？,para2,knowledge_retrieval,knowledge_retrieval,False,0.6273,True,False,,,232.0,501,14
+on,109,capture the main ideas of the article,para1,summarize,summarize,False,0.6869,True,True,,,218.71,507,12
+on,110,总结我的需求并进行归纳,para2,summarize,summarize,False,0.9164,True,True,,,179.97,504,12
+on,111,好，没关系。,para2,small_talk,small_talk,False,0.6087,True,True,,,182.64,498,12
+on,112,再见,base,small_talk,small_talk,False,0.6549,True,True,,,202.53,489,12
+on,113,帮我找找相关的论文,base,knowledge_retrieval,knowledge_retrieval,True,0.9427,True,True,,knowledge_retrieval,52.0,0,0
+on,114,provide a concise overview of the document,para2,summarize,summarize,False,0.8529,True,True,,,183.64,507,12
+on,115,Redis和MySQL之间有何不同？,para1,knowledge_retrieval,knowledge_retrieval,True,0.9908,True,True,,knowledge_retrieval,48.84,0,0
+on,116,了解了解微调的原理,base,knowledge_retrieval,knowledge_retrieval,False,0.6942,True,True,,,234.44,504,15
+on,117,帮我总结一下这段对话,base,summarize,summarize,False,0.9107,True,True,,,203.68,501,12
+on,118,帮我查一下多Agent架构的原理,base,knowledge_retrieval,knowledge_retrieval,True,0.9761,True,True,,knowledge_retrieval,71.89,0,0
+on,119,好，没关系。,para1,small_talk,small_talk,True,1.0,True,True,,small_talk,47.2,0,0
+on,120,感谢您给予的帮助,para2,small_talk,small_talk,True,1.0,True,True,,small_talk,78.72,0,0
+on,121,你正在做什么,para1,small_talk,small_talk,True,1.0,True,True,,small_talk,71.45,0,0
+on,122,真不错，确实不错,para1,small_talk,small_talk,False,0.727,True,True,,,161.12,501,12
+on,123,有没有相关的内容可供参考？,para1,knowledge_retrieval,knowledge_retrieval,True,1.0,True,True,,knowledge_retrieval,42.09,0,0
+on,124,拜拜,base,small_talk,small_talk,False,0.7121,True,True,,,193.71,492,12
+on,125,说明Z-score异常检测方法,para1,knowledge_retrieval,knowledge_retrieval,True,1.0,True,True,,knowledge_retrieval,82.84,0,0
+on,126,describe the process of prompting in the chain of thought,para1,knowledge_retrieval,summarize,True,1.0,False,False,A_继承后端错误,knowledge_retrieval,60.71,0,0
+on,127,余弦相似度是什么？,para2,knowledge_retrieval,knowledge_retrieval,False,0.4678,True,True,,,209.4,504,15
+on,128,什么是大语言模型？,base,knowledge_retrieval,knowledge_retrieval,False,0.8125,True,True,,,202.51,501,15
+on,129,什么是检索增强生成,base,knowledge_retrieval,knowledge_retrieval,False,0.612,True,True,,,211.1,498,15
+on,130,了解prompt工程的基本概念,base,knowledge_retrieval,knowledge_retrieval,True,0.942,True,True,,knowledge_retrieval,76.52,0,0
+on,131,这段文字主要阐述了什么，用简短的话说明。,para1,summarize,knowledge_retrieval,False,0.8872,False,False,,,199.84,525,9
+on,132,总结一下市场报告,base,summarize,summarize,False,0.9133,True,True,,,182.33,498,12
+on,133,请问什么是多模态模型呢？,perturb2,knowledge_retrieval,knowledge_retrieval,True,0.9795,True,True,,knowledge_retrieval,52.9,0,0
+on,134,说明一下attention机制,para1,knowledge_retrieval,knowledge_retrieval,True,0.9621,True,True,,knowledge_retrieval,59.85,0,0
+on,135,你在干嘛,base,small_talk,small_talk,False,0.824,True,True,,,164.71,492,12
+on,136,how does that function?,para1,knowledge_retrieval,knowledge_retrieval,False,0.5665,True,True,,,226.51,501,15
+on,137,太棒了,base,small_talk,small_talk,False,0.8588,True,True,,,190.05,495,12
+on,138,说明一下attention机制,para2,knowledge_retrieval,knowledge_retrieval,True,0.9621,True,True,,knowledge_retrieval,49.44,0,0
+on,139,然后呢？,base,small_talk,small_talk,False,0.6153,True,True,,,175.5,495,12
+on,140,衷心感谢您。,para1,small_talk,small_talk,True,1.0,True,True,,small_talk,60.67,0,0
+on,141,辛苦了，感谢您的付出。,para2,small_talk,small_talk,True,1.0,True,True,,small_talk,57.07,0,0
+on,142,explain chain of thought prompting,base,knowledge_retrieval,knowledge_retrieval,False,0.8917,True,True,,,207.88,501,15
+on,143,中心思想到底是什么？,para2,summarize,small_talk,True,0.9884,False,False,A_继承后端错误,summarize,60.33,0,0
+on,144,provide a concise overview of the document,para1,summarize,summarize,True,1.0,True,True,,summarize,62.07,0,0
+on,145,请提取关键要点,para2,summarize,small_talk,False,0.8562,False,False,,,246.04,498,12
+on,146,掌握Prompt工程的核心原理,para2,knowledge_retrieval,knowledge_retrieval,True,1.0,True,True,,knowledge_retrieval,69.58,0,0
+on,147,简要说明会议纪要,para1,summarize,summarize,True,1.0,True,True,,summarize,64.93,0,0
+on,148,Docker与Kubernetes的区别,para2,knowledge_retrieval,knowledge_retrieval,True,0.9939,True,True,,knowledge_retrieval,57.76,0,0
+on,149,can you reduce the text to its essential elements?,para1,summarize,small_talk,False,0.7719,False,False,,,206.22,516,12
+on,150,帮我找关于机器学习的资料,base,knowledge_retrieval,knowledge_retrieval,False,0.6949,True,True,,,202.02,507,15
+on,151,如何配置FastAPI服务？,para2,knowledge_retrieval,knowledge_retrieval,True,1.0,True,True,,knowledge_retrieval,60.77,0,0
+on,152,介绍一下Redis的持久化方式,base,knowledge_retrieval,knowledge_retrieval,False,0.9053,True,True,,,223.34,504,15
+on,153,你是谁？,para2,small_talk,small_talk,True,1.0,True,True,,small_talk,56.92,0,0
+on,154,LoRA微调是指通过调整模型中少量参数进行微调，以适应特定任务或数据集。,para2,knowledge_retrieval,knowledge_retrieval,False,0.8862,True,True,,,247.68,555,15
+on,155,这个东西的运作原理是什么？,para1,knowledge_retrieval,knowledge_retrieval,True,0.9384,True,True,,knowledge_retrieval,55.84,0,0
+on,156,how does that work?,base,knowledge_retrieval,small_talk,False,0.8377,False,False,,,160.1,501,12
+on,157,就这样吧，不过换个说法。,para2,small_talk,small_talk,True,1.0,True,True,,small_talk,54.3,0,0
+on,158,嘿，你好,para2,small_talk,small_talk,True,1.0,True,True,,small_talk,61.59,0,0
+on,159,解释RAG的含义,para1,knowledge_retrieval,knowledge_retrieval,True,0.9339,True,True,,knowledge_retrieval,50.49,0,0
+on,160,请概括这段代码的功能,para1,summarize,summarize,True,0.9267,True,True,,summarize,82.43,0,0
+on,161,could you please clarify that concept for me?,para1,knowledge_retrieval,knowledge_retrieval,False,0.8417,True,True,,,194.84,513,15
+on,162,嗨,base,small_talk,small_talk,False,0.8626,True,True,,,161.08,489,12
+on,163,hello,base,small_talk,small_talk,False,0.6715,True,True,,,156.51,489,12
+on,164,晚上好，问候。,para2,small_talk,small_talk,False,0.9007,True,True,,,191.19,501,12
+on,165,解释一下Z-score异常检测,base,knowledge_retrieval,knowledge_retrieval,True,0.9513,True,True,,knowledge_retrieval,59.92,0,0
+on,166,What is the difference between Redis and Memcached?,para2,knowledge_retrieval,knowledge_retrieval,False,0.769,True,True,,,209.7,516,15
+on,167,将这篇文档浓缩成摘要,para2,summarize,summarize,True,0.9498,True,True,,summarize,79.93,0,0
+on,168,持续地进行,para2,small_talk,small_talk,False,0.5605,True,True,,,185.2,495,12
+on,169,查阅最新发布的AI相关资讯,para2,knowledge_retrieval,knowledge_retrieval,False,0.8872,True,True,,,233.46,504,15
+on,170,嘿,para2,small_talk,small_talk,True,1.0,True,True,,small_talk,45.98,0,0
+on,171,我想问下嗯嗯呀,perturb1,small_talk,small_talk,False,0.5905,True,True,,,166.31,504,12
+on,172,清晨问候,para1,small_talk,small_talk,False,0.7304,True,True,,,173.06,492,12
+on,173,说明为何需要进行Rerank,para1,knowledge_retrieval,knowledge_retrieval,True,1.0,True,True,,knowledge_retrieval,45.72,0,0
+on,174,继续进行,para1,small_talk,small_talk,False,0.7531,True,True,,,158.72,492,12
+on,175,什么是Transformer架构？,base,knowledge_retrieval,knowledge_retrieval,False,0.5361,True,True,,,182.34,498,15
+on,176,帮我总结PDF内容,base,summarize,summarize,True,0.9433,True,True,,summarize,71.62,0,0
+on,177,这个技术方案是什么意思？,base,knowledge_retrieval,knowledge_retrieval,True,0.9767,True,True,,knowledge_retrieval,49.23,0,0
+on,178,将聊天记录归纳为要点,para2,summarize,small_talk,False,0.7565,False,False,,,174.86,504,12
+on,179,掌握微调的基本原理,para2,knowledge_retrieval,knowledge_retrieval,True,0.927,True,True,,knowledge_retrieval,59.9,0,0
+on,180,什么是向量数据库？,base,knowledge_retrieval,knowledge_retrieval,True,0.9641,True,True,,knowledge_retrieval,80.02,0,0
+on,181,请整理读书笔记的要点内容,para2,summarize,summarize,True,0.9914,True,True,,summarize,73.32,0,0
+on,182,继续,base,small_talk,small_talk,False,0.8963,True,True,,,213.66,489,12
+on,183,帮我写个摘要,base,summarize,summarize,True,0.9477,True,True,,summarize,64.81,0,0
+on,184,解释下为什么需要Rerank,base,knowledge_retrieval,knowledge_retrieval,True,0.9672,True,True,,knowledge_retrieval,66.13,0,0
+on,185,请帮我查找相关的论文。,para1,knowledge_retrieval,knowledge_retrieval,True,1.0,True,True,,knowledge_retrieval,75.13,0,0
+on,186,请概括这段代码的功能,para2,summarize,summarize,True,0.9267,True,True,,summarize,47.74,0,0
+on,187,请介绍Redis的持久化机制,para2,knowledge_retrieval,knowledge_retrieval,True,0.9739,True,True,,knowledge_retrieval,48.05,0,0
+on,188,SQL与NoSQL的区别,para2,knowledge_retrieval,knowledge_retrieval,False,0.7474,True,True,,,196.25,501,15
+on,189,有意思,base,small_talk,small_talk,False,0.6828,True,True,,,159.94,489,12
+on,190,聊聊吧,para2,small_talk,small_talk,True,1.0,True,True,,small_talk,52.47,0,0
+on,191,Transformer架构是一种基于自注意力机制的深度学习模型架构。,para2,knowledge_retrieval,knowledge_retrieval,False,0.7729,True,True,,,244.89,525,15
+on,192,hello there,para1,small_talk,small_talk,False,0.8672,True,True,,,192.58,492,12
+on,193,那么，接下来呢？,para1,small_talk,small_talk,False,0.7816,True,True,,,177.86,501,12
+on,194,你好，什么是向量数据库呢？,perturb2,knowledge_retrieval,knowledge_retrieval,True,0.9705,True,True,,knowledge_retrieval,51.69,0,0
+on,195,用三句话概括,base,summarize,small_talk,False,0.8004,False,False,,,194.14,498,12
+on,196,这个功能怎么使用？,para1,knowledge_retrieval,knowledge_retrieval,False,0.6385,True,False,,,239.5,501,14
+on,197,嗯嗯,base,small_talk,small_talk,False,0.748,True,True,,,181.01,492,12
+on,198,简要概括背景内容,para2,summarize,summarize,False,0.8648,True,True,,,207.86,501,12
+on,199,在吗呢？,perturb2,small_talk,small_talk,False,0.9063,True,True,,,186.98,498,12
+on,200,简要归纳会议主要议题,para1,summarize,summarize,True,0.9233,True,True,,summarize,61.61,0,0
+on,201,回顾本周的工作进展,para2,summarize,summarize,False,0.6248,True,True,,,151.84,498,12
+on,202,SQL与NoSQL的区别,para1,knowledge_retrieval,knowledge_retrieval,True,1.0,True,True,,knowledge_retrieval,50.76,0,0
+on,203,你好，你好。,para2,small_talk,small_talk,False,0.6805,True,True,,,239.43,498,12
+on,204,归纳一下这几个观点,base,summarize,summarize,False,0.7288,True,True,,,171.48,498,12
+on,205,好的,base,small_talk,small_talk,False,0.9023,True,True,,,178.4,489,12
+on,206,麻烦问一下在吗,perturb1,small_talk,small_talk,False,0.8114,True,True,,,187.09,501,12
+on,207,帮我整理一下读书笔记要点,base,summarize,summarize,True,0.9515,True,True,,summarize,51.82,0,0
+on,208,再会,para1,small_talk,small_talk,True,1.0,True,True,,small_talk,52.16,0,0
+on,209,what is the difference between Redis and Memcached,base,knowledge_retrieval,knowledge_retrieval,True,0.9882,True,True,,knowledge_retrieval,57.13,0,0
+on,210,什么是多模态模型,base,knowledge_retrieval,knowledge_retrieval,True,0.9745,True,True,,knowledge_retrieval,54.0,0,0
+on,211,什么是LoRA微调？,base,knowledge_retrieval,knowledge_retrieval,True,0.9738,True,True,,knowledge_retrieval,50.24,0,0
+on,212,感谢你的帮助,para1,small_talk,small_talk,False,0.9054,True,True,,,169.12,495,12
+on,213,总结一下这周的进度,base,summarize,summarize,False,0.8706,True,True,,,174.67,504,12
+on,214,把聊天记录整理成要点,base,summarize,small_talk,True,0.9725,False,False,A_继承后端错误,summarize,54.58,0,0
+on,215,请将PDF文档内容进行总结,para1,summarize,summarize,True,0.979,True,True,,summarize,60.06,0,0
+on,216,什么是检索增强生成谢谢,perturb1,knowledge_retrieval,knowledge_retrieval,True,0.9526,True,True,,knowledge_retrieval,66.04,0,0
+on,217,概述NLP的发展历程,para2,knowledge_retrieval,summarize,True,1.0,False,False,A_继承后端错误,knowledge_retrieval,82.29,0,0
+on,218,请将这段对话进行总结。,para2,summarize,small_talk,True,1.0,False,False,A_继承后端错误,summarize,55.33,0,0
+on,219,什么是余弦相似度,base,knowledge_retrieval,knowledge_retrieval,True,0.9376,True,True,,knowledge_retrieval,79.66,0,0
+on,220,真不错,base,small_talk,small_talk,False,0.9139,True,True,,,207.09,492,12
+on,221,概括这几个要点,para1,summarize,summarize,False,0.8451,True,True,,,203.76,495,12
+on,222,这段内容信息量太大，需要进行压缩。,para2,summarize,small_talk,True,0.9752,False,False,A_继承后端错误,summarize,53.04,0,0
+on,223,请问how are you呢？,perturb2,small_talk,small_talk,False,0.6511,True,True,,,174.0,504,12
+on,224,麻烦问一下什么是检索增强生成谢谢,perturb2,knowledge_retrieval,knowledge_retrieval,True,0.938,True,True,,knowledge_retrieval,51.97,0,0
+on,225,内容过于冗长，我无法花时间阅读，麻烦帮我简要概括一下。,para2,summarize,summarize,False,0.718,True,True,,,190.99,540,12
+on,226,用三句话进行概括。,para2,summarize,small_talk,True,0.9352,False,False,A_继承后端错误,summarize,53.98,0,0
+on,227,请问how are you,perturb1,small_talk,small_talk,True,0.9311,True,True,,small_talk,52.6,0,0
+on,228,感谢你的帮助,para2,small_talk,small_talk,True,1.0,True,True,,small_talk,52.67,0,0
+on,229,回顾本周的工作进展,para1,summarize,summarize,True,1.0,True,True,,summarize,52.42,0,0
+on,230,我上一次读的那篇论文是讲什么内容的呢？,para1,knowledge_retrieval,knowledge_retrieval,False,0.833,True,True,,,186.41,531,15
+on,231,简述一下会议纪要,base,summarize,summarize,True,0.953,True,True,,summarize,69.02,0,0
+on,232,summarize the key points of this article,base,summarize,summarize,False,0.7023,True,True,,,178.73,513,12
+on,233,清晨问候,para2,small_talk,small_talk,True,1.0,True,True,,small_talk,60.96,0,0
+on,234,ChromaDB和Milvus怎么选,base,knowledge_retrieval,knowledge_retrieval,False,0.6558,True,True,,,211.46,513,15
+on,235,有趣且引人入胜,para1,small_talk,small_talk,True,1.0,True,True,,small_talk,58.12,0,0
+on,236,概括这篇文章的核心要点,para2,summarize,summarize,True,1.0,True,True,,summarize,77.84,0,0
+on,237,将聊天记录归纳为要点,para1,summarize,small_talk,True,1.0,False,False,A_继承后端错误,summarize,58.32,0,0
+on,238,今天天气如何？,para2,small_talk,small_talk,False,0.9121,True,True,,,196.51,498,12
+on,239,SQL和NoSQL的区别,base,knowledge_retrieval,knowledge_retrieval,True,0.9851,True,True,,knowledge_retrieval,66.84,0,0
+on,240,余弦相似度是什么？,para1,knowledge_retrieval,knowledge_retrieval,True,1.0,True,True,,knowledge_retrieval,55.77,0,0
+on,241,你好，嗯嗯呢？,perturb2,small_talk,small_talk,False,0.728,True,True,,,182.87,504,12
+on,242,真不错，很赞,para2,small_talk,small_talk,True,0.9315,True,True,,small_talk,53.28,0,0
+on,243,请提取关键要点,para1,summarize,small_talk,True,1.0,False,False,A_继承后端错误,summarize,53.1,0,0
+on,244,掌握微调的基本原理,para1,knowledge_retrieval,knowledge_retrieval,True,0.927,True,True,,knowledge_retrieval,55.89,0,0
+on,245,请查证prompt中temperature参数的设置,para2,knowledge_retrieval,knowledge_retrieval,True,0.9631,True,True,,knowledge_retrieval,57.28,0,0
+on,246,讲解一下NLP的发展历程,base,knowledge_retrieval,summarize,True,0.982,False,True,A_继承后端错误,knowledge_retrieval,53.16,0,0
+on,247,Docker与Kubernetes的区别,para1,knowledge_retrieval,knowledge_retrieval,True,0.9939,True,True,,knowledge_retrieval,54.24,0,0
+on,248,我上一次读的那篇论文是讲什么内容的呢？,para2,knowledge_retrieval,knowledge_retrieval,True,1.0,True,True,,knowledge_retrieval,82.02,0,0
+on,249,提炼一下重点,base,summarize,small_talk,False,0.8709,False,False,,,209.31,495,12
+on,250,what is the process?,para2,knowledge_retrieval,knowledge_retrieval,False,0.6941,True,True,,,178.87,501,15
+on,251,那么，接下来呢？,para2,small_talk,small_talk,True,1.0,True,True,,small_talk,66.45,0,0
+on,252,Redis和MySQL之间有什么不同？,para2,knowledge_retrieval,knowledge_retrieval,True,0.9909,True,True,,knowledge_retrieval,56.99,0,0
+on,253,说说看,base,small_talk,small_talk,False,0.6028,True,True,,,182.59,495,12
+on,254,大语言模型是什么？,para1,knowledge_retrieval,knowledge_retrieval,True,0.9219,True,True,,knowledge_retrieval,67.1,0,0
+on,255,什么是Transformer模型？,para1,knowledge_retrieval,knowledge_retrieval,False,0.8686,True,True,,,196.86,498,15
+on,256,今天天气如何？,para1,small_talk,small_talk,True,1.0,True,True,,small_talk,68.72,0,0
+on,257,请为我撰写一个摘要,para1,summarize,summarize,True,1.0,True,True,,summarize,55.57,0,0
+on,258,说了这么多，中心思想是什么？,base,summarize,small_talk,False,0.8706,False,False,,,199.15,507,12
+on,259,简短总结一下背景,base,summarize,small_talk,False,0.8218,False,True,,,184.39,501,12
+on,260,ChromaDB和Milvus该如何选择,para2,knowledge_retrieval,knowledge_retrieval,True,0.998,True,True,,knowledge_retrieval,51.14,0,0
+on,261,将这份报告精炼为一段简洁的文字,para2,summarize,summarize,True,0.9446,True,True,,summarize,73.86,0,0
+on,262,Could you condense this text?,para2,summarize,summarize,True,0.9533,True,True,,summarize,56.14,0,0
+on,263,我想知道这个系统的架构是怎么设计的,base,knowledge_retrieval,knowledge_retrieval,False,0.8864,True,True,,,194.82,510,15
+on,264,How does authentication work in this system?,base,knowledge_retrieval,knowledge_retrieval,False,0.9123,True,True,,,196.3,510,15
+on,265,内容过于冗长，我无法花时间阅读，麻烦帮忙简要概括一下。,para1,summarize,summarize,True,0.9958,True,True,,summarize,69.67,0,0
+on,266,简明扼要地概述,para2,summarize,small_talk,True,0.9999,False,False,A_继承后端错误,summarize,73.85,0,0
+on,267,请问hello,perturb1,small_talk,,False,0.8205,False,False,,,139.75,492,6
+on,268,how are you,base,small_talk,small_talk,False,0.8171,True,True,,,182.66,495,12
+on,269,could you please clarify that concept for me?,para2,knowledge_retrieval,knowledge_retrieval,True,1.0,True,True,,knowledge_retrieval,68.56,0,0
+on,270,thanks a lot,base,small_talk,small_talk,False,0.7134,True,True,,,180.98,495,12
+on,271,请查证prompt中temperature参数的设置,para1,knowledge_retrieval,knowledge_retrieval,True,0.9631,True,True,,knowledge_retrieval,79.5,0,0
+on,272,用三句话进行概括。,para1,summarize,small_talk,True,0.9352,False,False,A_继承后端错误,summarize,55.67,0,0
+on,273,晚安，好梦。,para1,small_talk,small_talk,False,0.8537,True,True,,,208.55,504,12
+on,274,我想了解嵌入式系统,base,knowledge_retrieval,knowledge_retrieval,False,0.8757,True,True,,,176.44,504,15
+on,275,提炼本文的主要内容,para2,summarize,summarize,False,0.8381,True,True,,,191.6,498,12
+on,276,谢谢你的帮助,base,small_talk,small_talk,True,0.9592,True,True,,small_talk,76.83,0,0
+on,277,这段内容信息量太大，需要进行压缩。,para1,summarize,small_talk,True,0.9752,False,False,A_继承后端错误,summarize,54.36,0,0
+on,278,这段文字主要阐述了什么，用简短的话说明。,para2,summarize,knowledge_retrieval,True,1.0,False,False,A_继承后端错误,summarize,60.41,0,0
+on,279,请提供关于机器学习的资料。,para2,knowledge_retrieval,knowledge_retrieval,False,0.8632,True,True,,,197.83,510,15
+on,280,什么是向量数据库？,para2,knowledge_retrieval,knowledge_retrieval,True,0.9641,True,True,,knowledge_retrieval,56.0,0,0
+on,281,简要归纳会议主要议题,para2,summarize,summarize,True,0.9233,True,True,,summarize,54.96,0,0
+on,282,hello there,para2,small_talk,small_talk,True,1.0,True,True,,small_talk,52.31,0,0
+on,283,你好,base,small_talk,small_talk,False,0.7067,True,True,,,166.01,489,12
+on,284,哈喽,base,small_talk,small_talk,False,0.7493,True,True,,,157.05,492,12
+on,285,What is the difference between Redis and Memcached?,para1,knowledge_retrieval,knowledge_retrieval,True,1.0,True,True,,knowledge_retrieval,60.0,0,0
+on,286,再见,para1,small_talk,small_talk,True,1.0,True,True,,small_talk,51.12,0,0
+on,287,这个功能怎么用？,base,knowledge_retrieval,small_talk,False,0.6471,False,False,,,166.31,501,12
+on,288,简要概述背景内容,para1,summarize,summarize,True,0.9654,True,True,,summarize,71.37,0,0
+on,289,ChromaDB和Milvus该如何选择,para1,knowledge_retrieval,knowledge_retrieval,True,0.998,True,True,,knowledge_retrieval,54.3,0,0
+on,290,请提供关于机器学习的资料。,para1,knowledge_retrieval,knowledge_retrieval,True,1.0,True,True,,knowledge_retrieval,71.72,0,0
+on,291,太长了我没时间看，帮我概括一下,base,summarize,summarize,False,0.8116,True,True,,,180.17,516,12
+on,292,良好,para2,small_talk,small_talk,True,1.0,True,True,,small_talk,61.06,0,0
+on,293,hi there,base,small_talk,small_talk,True,0.9375,True,True,,small_talk,65.29,0,0
+on,294,查阅最新发布的AI相关资讯,para1,knowledge_retrieval,knowledge_retrieval,True,1.0,True,True,,knowledge_retrieval,54.65,0,0
+on,295,再见,para2,small_talk,small_talk,True,1.0,True,True,,small_talk,65.47,0,0
+on,296,这个技术方案的具体含义是什么？,para2,knowledge_retrieval,knowledge_retrieval,True,0.9306,True,True,,knowledge_retrieval,67.73,0,0
+on,297,我想了解嵌入式系统相关知识。,para1,knowledge_retrieval,knowledge_retrieval,True,1.0,True,True,,knowledge_retrieval,60.2,0,0
+on,298,笑笑,para1,small_talk,small_talk,True,1.0,True,True,,small_talk,51.76,0,0
+on,299,总结这几个主要观点,para2,summarize,summarize,False,0.8527,True,True,,,159.17,498,12

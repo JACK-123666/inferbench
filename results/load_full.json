@@ -1,0 +1,110 @@
+{
+  "tag": "full",
+  "created_at": "2026-09-18 12:25:13",
+  "meta": {
+    "model": "qwen3:1.7b",
+    "levels": [
+      1,
+      2,
+      4,
+      8,
+      16
+    ],
+    "requests_per_level": 24,
+    "max_tokens": 64,
+    "num_ctx": 4096,
+    "streaming": true,
+    "gpu": "3684/8188 MiB (45%) · util 10% · SM 225MHz · 7.8W · 54℃",
+    "footprint_gb": 1.5856640608981252,
+    "client": "httpx + asyncio（Semaphore 控并发）",
+    "ollama_num_parallel": 1
+  },
+  "levels": [
+    {
+      "concurrency": 1,
+      "requests": 24,
+      "ok": 24,
+      "errors": 0,
+      "error_rate": 0.0,
+      "wall_s": 10.17,
+      "qps": 2.36,
+      "tokens_per_s": 150.9,
+      "ttft_p50": 27.4,
+      "ttft_p95": 40.7,
+      "ttft_p99": 43.0,
+      "lat_p50": 422.9,
+      "lat_p95": 443.8,
+      "lat_p99": 445.8
+    },
+    {
+      "concurrency": 2,
+      "requests": 24,
+      "ok": 24,
+      "errors": 0,
+      "error_rate": 0.0,
+      "wall_s": 9.91,
+      "qps": 2.42,
+      "tokens_per_s": 154.3,
+      "ttft_p50": 434.6,
+      "ttft_p95": 448.0,
+      "ttft_p99": 461.1,
+      "lat_p50": 828.3,
+      "lat_p95": 860.4,
+      "lat_p99": 874.4
+    },
+    {
+      "concurrency": 4,
+      "requests": 24,
+      "ok": 24,
+      "errors": 0,
+      "error_rate": 0.0,
+      "wall_s": 9.69,
+      "qps": 2.48,
+      "tokens_per_s": 157.7,
+      "ttft_p50": 1216.8,
+      "ttft_p95": 1298.3,
+      "ttft_p99": 1302.2,
+      "lat_p50": 1602.0,
+      "lat_p95": 1706.7,
+      "lat_p99": 1715.2
+    },
+    {
+      "concurrency": 8,
+      "requests": 24,
+      "ok": 24,
+      "errors": 0,
+      "error_rate": 0.0,
+      "wall_s": 9.54,
+      "qps": 2.51,
+      "tokens_per_s": 160.2,
+      "ttft_p50": 2790.3,
+      "ttft_p95": 2813.9,
+      "ttft_p99": 2817.5,
+      "lat_p50": 3171.7,
+      "lat_p95": 3192.0,
+      "lat_p99": 3194.1
+    },
+    {
+      "concurrency": 16,
+      "requests": 24,
+      "ok": 24,
+      "errors": 0,
+      "error_rate": 0.0,
+      "wall_s": 9.72,
+      "qps": 2.47,
+      "tokens_per_s": 157.3,
+      "ttft_p50": 4711.4,
+      "ttft_p95": 6112.1,
+      "ttft_p99": 6120.4,
+      "lat_p50": 5084.6,
+      "lat_p95": 6517.6,
+      "lat_p99": 6529.7
+    }
+  ],
+  "saturation": {
+    "concurrency": 2,
+    "qps_gain": 0.03,
+    "lat_p95": 860.4,
+    "base_p95": 443.8
+  }
+}

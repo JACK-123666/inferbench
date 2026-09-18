@@ -1,0 +1,224 @@
+{
+  "tag": "full",
+  "created_at": "2026-09-18 08:59:02",
+  "meta": {
+    "stream_size": 300,
+    "base_queries": 100,
+    "paraphrases": 2,
+    "embed_model": "qwen3-embedding:0.6b",
+    "cache_model": "qwen3:1.7b",
+    "unique_texts": 230,
+    "llm_calls_actual": 231,
+    "embed_calls_actual": 2556,
+    "memo_latency": true,
+    "warm_ms": {
+      "embed": 44.89,
+      "llm": 69.2
+    },
+    "gpu_before": {
+      "mem_used_mb": 3882.0,
+      "mem_total_mb": 8188.0,
+      "util": 4.0,
+      "clock_sm": 210.0,
+      "power_w": 7.15,
+      "temp_c": 51.0
+    },
+    "note": "同一文本的 LLM 只在首次真实调用并记录耗时，重复出现复用该测量值；预热使用请求流中不会出现的固定文本，避免冷加载污染延迟"
+  },
+  "protocol": {
+    "thresholds": [
+      0.8,
+      0.85,
+      0.88,
+      0.9,
+      0.92,
+      0.94,
+      0.96,
+      0.98
+    ],
+    "num_ctx": 4096,
+    "temperature": 0.0,
+    "shots": 3,
+    "ttl_seconds": 3600
+  },
+  "baseline": {
+    "ms_p95": 154.15,
+    "ms_median": 119.725
+  },
+  "thresholds": [
+    {
+      "threshold": 0.8,
+      "requests": 300,
+      "hit_rate": 0.6066666666666667,
+      "hit_correct_rate": 0.8406593406593407,
+      "false_hit_rate": 0.15934065934065933,
+      "false_hit_a": 29,
+      "false_hit_b": 0,
+      "false_hit_a_rate": 1.0,
+      "end_to_end_accuracy": 0.8533333333333334,
+      "nocache_accuracy": 0.86,
+      "accuracy_delta": -0.006666666666666599,
+      "hit_ms_median": 84.11500000000001,
+      "hit_ms_p95": 103.74,
+      "miss_ms_median": 114.925,
+      "miss_ms_p95": 150.64899999999997,
+      "all_ms_p95": 138.497,
+      "cost_saved_pct": 60.4247619047619
+    },
+    {
+      "threshold": 0.85,
+      "requests": 300,
+      "hit_rate": 0.5433333333333333,
+      "hit_correct_rate": 0.8282208588957055,
+      "false_hit_rate": 0.17177914110429449,
+      "false_hit_a": 28,
+      "false_hit_b": 0,
+      "false_hit_a_rate": 1.0,
+      "end_to_end_accuracy": 0.8433333333333334,
+      "nocache_accuracy": 0.86,
+      "accuracy_delta": -0.016666666666666607,
+      "hit_ms_median": 87.75,
+      "hit_ms_p95": 109.061,
+      "miss_ms_median": 122.87,
+      "miss_ms_p95": 147.766,
+      "all_ms_p95": 141.27450000000002,
+      "cost_saved_pct": 54.09714285714286
+    },
+    {
+      "threshold": 0.88,
+      "requests": 300,
+      "hit_rate": 0.5,
+      "hit_correct_rate": 0.84,
+      "false_hit_rate": 0.16,
+      "false_hit_a": 24,
+      "false_hit_b": 0,
+      "false_hit_a_rate": 1.0,
+      "end_to_end_accuracy": 0.85,
+      "nocache_accuracy": 0.86,
+      "accuracy_delta": -0.010000000000000009,
+      "hit_ms_median": 89.53,
+      "hit_ms_p95": 109.0655,
+      "miss_ms_median": 123.055,
+      "miss_ms_p95": 149.78949999999998,
+      "all_ms_p95": 143.24300000000002,
+      "cost_saved_pct": 49.75238095238096
+    },
+    {
+      "threshold": 0.9,
+      "requests": 300,
+      "hit_rate": 0.4633333333333333,
+      "hit_correct_rate": 0.8561151079136691,
+      "false_hit_rate": 0.14388489208633093,
+      "false_hit_a": 20,
+      "false_hit_b": 0,
+      "false_hit_a_rate": 1.0,
+      "end_to_end_accuracy": 0.8566666666666667,
+      "nocache_accuracy": 0.86,
+      "accuracy_delta": -0.0033333333333332993,
+      "hit_ms_median": 89.53,
+      "hit_ms_p95": 105.375,
+      "miss_ms_median": 122.86,
+      "miss_ms_p95": 153.33,
+      "all_ms_p95": 148.00199999999998,
+      "cost_saved_pct": 46.019047619047626
+    },
+    {
+      "threshold": 0.92,
+      "requests": 300,
+      "hit_rate": 0.42333333333333334,
+      "hit_correct_rate": 0.8582677165354331,
+      "false_hit_rate": 0.14173228346456693,
+      "false_hit_a": 18,
+      "false_hit_b": 0,
+      "false_hit_a_rate": 1.0,
+      "end_to_end_accuracy": 0.86,
+      "nocache_accuracy": 0.86,
+      "accuracy_delta": 0.0,
+      "hit_ms_median": 80.86,
+      "hit_ms_p95": 104.294,
+      "miss_ms_median": 122.82,
+      "miss_ms_p95": 154.15,
+      "all_ms_p95": 147.53,
+      "cost_saved_pct": 42.013333333333335
+    },
+    {
+      "threshold": 0.94,
+      "requests": 300,
+      "hit_rate": 0.38,
+      "hit_correct_rate": 0.8508771929824561,
+      "false_hit_rate": 0.14912280701754385,
+      "false_hit_a": 17,
+      "false_hit_b": 0,
+      "false_hit_a_rate": 1.0,
+      "end_to_end_accuracy": 0.86,
+      "nocache_accuracy": 0.86,
+      "accuracy_delta": 0.0,
+      "hit_ms_median": 74.64500000000001,
+      "hit_ms_p95": 109.69049999999999,
+      "miss_ms_median": 106.91,
+      "miss_ms_p95": 131.39249999999998,
+      "all_ms_p95": 129.346,
+      "cost_saved_pct": 37.64380952380953
+    },
+    {
+      "threshold": 0.96,
+      "requests": 300,
+      "hit_rate": 0.3333333333333333,
+      "hit_correct_rate": 0.83,
+      "false_hit_rate": 0.17,
+      "false_hit_a": 17,
+      "false_hit_b": 0,
+      "false_hit_a_rate": 1.0,
+      "end_to_end_accuracy": 0.8566666666666667,
+      "nocache_accuracy": 0.86,
+      "accuracy_delta": -0.0033333333333332993,
+      "hit_ms_median": 88.33,
+      "hit_ms_p95": 109.4405,
+      "miss_ms_median": 113.615,
+      "miss_ms_p95": 143.888,
+      "all_ms_p95": 140.86950000000002,
+      "cost_saved_pct": 32.91619047619047
+    },
+    {
+      "threshold": 0.98,
+      "requests": 300,
+      "hit_rate": 0.27666666666666667,
+      "hit_correct_rate": 0.8192771084337349,
+      "false_hit_rate": 0.18072289156626506,
+      "false_hit_a": 15,
+      "false_hit_b": 0,
+      "false_hit_a_rate": 1.0,
+      "end_to_end_accuracy": 0.8566666666666667,
+      "nocache_accuracy": 0.86,
+      "accuracy_delta": -0.0033333333333332993,
+      "hit_ms_median": 87.34,
+      "hit_ms_p95": 105.981,
+      "miss_ms_median": 116.63,
+      "miss_ms_p95": 147.99,
+      "all_ms_p95": 144.0335,
+      "cost_saved_pct": 27.156190476190478
+    }
+  ],
+  "engineering": {
+    "版本指纹（模型/Prompt 换代）": {
+      "how": "缓存写入 50 条后把版本号 v1→v2，再查同一 query",
+      "result": "命中=False（相似度 -1.000）→ 旧缓存全部失效，不会串用过期答案"
+    },
+    "TTL 过期": {
+      "how": "写入后 ttl=1ms，等 10ms 再查",
+      "result": "命中=False → 过期条目被跳过，不会命中陈旧答案"
+    },
+    "灰度发布（10% 流量）": {
+      "how": "新版本缓存先接 10% 流量，与旧版本并行，比较命中正确率",
+      "result": "灰度桶命中 0 次，命中正确率 0.0% → 可先小流量验证再全量"
+    },
+    "一键回滚（kill switch）": {
+      "how": "把缓存开关关掉再打开，各查一次",
+      "result": "关闭时命中=False，打开后命中=True → 出问题可秒级回滚到无缓存直连"
+    },
+    "批量失效": {
+      "how": "调用 invalidate_all()",
+      "result": "清空 1 条；清空后缓存为空，下一次请求必然回落到 LLM（正确但变慢）"
+    }
+  }
+}
