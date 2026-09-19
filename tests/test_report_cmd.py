@@ -33,7 +33,7 @@ def test_gate_is_not_misclassified_as_cache():
 
 def test_real_result_files_classify_correctly(tmp_path, monkeypatch):
     """如果 results/ 下已有真实结果，逐个检查分类是否与文件名一致。"""
-    import config
+    from inferbench import config
     from inferbench.stats import read_json
 
     mapping = {

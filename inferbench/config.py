@@ -7,11 +7,32 @@ import os
 from pathlib import Path
 
 # ---------- 路径 ----------
-ROOT = Path(__file__).resolve().parent
+# 本文件在包内（inferbench/config.py），但 data/ 与 results/ 属于"仓库"而不是"包"，
+# 所以这里要单独定位仓库根目录，不能直接用 Path(__file__).parent。
+_PKG_DIR = Path(__file__).resolve().parent
+
+
+def _resolve_root() -> Path:
+    """定位仓库根目录（data/ 与 results/ 的落点）。
+
+    1) 环境变量 INFERBENCH_ROOT 优先 —— 想把结果写到别处就设它；
+    2) 源码运行时，包目录的上一级就是仓库根（用 pyproject.toml / requirements.txt 认一下）；
+    3) 被 pip 装进 site-packages 后上一级不是仓库，退回当前工作目录。
+    """
+    env = os.environ.get("INFERBENCH_ROOT")
+    if env:
+        return Path(env).expanduser().resolve()
+    candidate = _PKG_DIR.parent
+    if (candidate / "pyproject.toml").is_file() or (candidate / "requirements.txt").is_file():
+        return candidate
+    return Path.cwd().resolve()
+
+
+ROOT = _resolve_root()
 DATA_DIR = ROOT / "data"
 RESULTS_DIR = ROOT / "results"
-DATA_DIR.mkdir(exist_ok=True)
-RESULTS_DIR.mkdir(exist_ok=True)
+DATA_DIR.mkdir(parents=True, exist_ok=True)
+RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
 # Synapse 开源工程（复用它的 100 条评测集）
 # 换机器时用环境变量覆盖：INFERBENCH_SYNAPSE_DIR

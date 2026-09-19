@@ -9,7 +9,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-import config
+from inferbench import config
 from inferbench import stats
 from inferbench.svg import bar_chart, line_chart  # noqa: E402
 

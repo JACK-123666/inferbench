@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "inferbench"
+dynamic = ["version"]
+description = "本地大模型推理实验台：量化 / 语义缓存 / 投机解码 / 并发压测的可复现测量"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "JACK", email = "3280097009@qq.com" }]
+keywords = [
+    "llm", "inference", "quantization", "ollama", "llama.cpp",
+    "benchmark", "semantic-cache", "speculative-decoding",
+]
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Intended Audience :: Developers",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+# 核心实验（一~四）零第三方依赖，只用标准库；下面两个是可选的能力缺口
+dependencies = []
+
+[project.optional-dependencies]
+load = ["httpx>=0.27"]      # 实验五：异步 HTTP 客户端（并发压测）
+test = ["pytest>=8.0"]      # 单元测试
+dev = ["httpx>=0.27", "pytest>=8.0"]
+
+[project.scripts]
+inferbench = "inferbench.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/JACK-123666/inferbench"
+Repository = "https://github.com/JACK-123666/inferbench"
+
+[tool.setuptools]
+packages = ["inferbench", "inferbench.experiments"]
+
+[tool.setuptools.dynamic]
+version = { attr = "inferbench.__version__" }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

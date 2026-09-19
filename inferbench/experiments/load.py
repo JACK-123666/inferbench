@@ -18,7 +18,7 @@ import asyncio
 import sys
 import time
 
-import config
+from inferbench import config
 from inferbench import eval_set as ev
 from inferbench import gpu, loadgen, report as rep
 from inferbench.ollama import Ollama

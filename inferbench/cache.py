@@ -15,7 +15,7 @@ from __future__ import annotations
 import random
 import time
 
-import config
+from inferbench import config
 from inferbench import tasks
 from inferbench.ollama import Ollama, OllamaError
 from inferbench.stats import cosine

@@ -49,7 +49,7 @@ def _print_help() -> None:
 def cmd_env(argv: list[str]) -> int:
     """环境体检：一眼看清这台机器能不能跑、跑之前要确认什么。"""
     from inferbench import tasks
-    import config
+    from inferbench import config
 
     print("=" * 78)
     print("环境体检")
@@ -81,7 +81,7 @@ def cmd_env(argv: list[str]) -> int:
             print(f"   ✓ {mod:<8} {why}")
         except ImportError:
             print(f"   ✗ {mod:<8} 未安装 —— {why}：pip install {mod}")
-    print("\n测量口径（写在 config.py，所有实验共用）:")
+    print("\n测量口径（写在 inferbench/config.py，所有实验共用）:")
     print(f"   num_ctx={config.NUM_CTX}  embed_ctx={config.EMBED_NUM_CTX}  "
           f"temperature={config.TEMPERATURE}  seed={config.SEED}  repeats={config.REPEATS}")
     print(f"   think=False（思维链模型必须关）  few-shot={config.SHOTS}  "

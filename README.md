@@ -1,8 +1,13 @@
 ﻿# inferbench · 本地大模型推理实验台
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![tests](https://img.shields.io/badge/tests-51%20passed-brightgreen.svg)](#5-%E6%B5%8B%E9%87%8F%E5%8F%A3%E5%BE%84%E6%89%80%E6%9C%89%E6%95%B0%E5%AD%97%E9%83%BD%E6%8C%89%E8%BF%99%E4%B8%80%E5%A5%97%E4%BA%A7%E5%87%BA)
+[![python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](#)
+[![runtime deps](https://img.shields.io/badge/runtime%20deps-0-success.svg)](#)
+
 > 📖 **第一次接触？先看 [`TUTORIAL.md`](TUTORIAL.md)** —— 零基础教程（v2 完整版）：
 > 12 章 + 4 个附录，从"量化是什么"讲到"怎么把结果写进简历"，
-> 含 19 个概念的四段式讲解、三个实验的手把手流程、9 个真实故障的排错手册、测量纪律检查清单。
+> 含 19 个概念的四段式讲解、三个实验的手把手流程、8 类真实故障的排错手册、测量纪律检查清单。
 > 赶时间就看 **附录 D 三分钟速览**。
 
 用**本地 Ollama + RTX 4060 8GB**，把推理工程里那些"听起来会、讲不清楚"的东西，
@@ -52,17 +57,22 @@ python -m inferbench            # 不知道有什么命令？直接敲这个
 **设计原则：CLI 只做路由，不塞业务逻辑。** 每个子命令背后都是
 `inferbench/experiments/*.py` 里的 `run(argv) -> int`，所以这些实验也能被别的脚本 import 调用。
 
+装成正经的包也可以：`pip install -e .` 之后，**任何目录**下都能用 `inferbench env`
+（等价于 `python -m inferbench env`），也能 `from inferbench import cache, report` 当库用。
+
 ---
 
 ## 3. 目录结构
 
 ```
 inferbench/
-├── config.py                  # 【最常改】测量口径、模型列表、成本折算
+├── LICENSE                    # MIT
+├── pyproject.toml             # 可 pip install -e .；也可直接 python -m inferbench 跑
 ├── requirements.txt           # httpx（并发压测）+ pytest（测试）
 ├── inferbench/
 │   ├── __main__.py            # python -m inferbench 的入口
 │   ├── cli.py                 # 子命令路由 + 帮助 + 环境自检
+│   ├── config.py              # 【最常改】测量口径、模型列表、成本折算
 │   ├── ollama.py              # Ollama 客户端：chat / embed / ps / unload + 指标提取
 │   ├── llama.py               # llama.cpp 集成：GGUF 路径解析 + llama-server 管理
 │   ├── gpu.py                 # nvidia-smi 采集 + 测量卫生检查
@@ -76,10 +86,13 @@ inferbench/
 │   ├── report.py              # 报告组装（数字全部从结果文件取，不手抄）
 │   └── experiments/           # 五个实验，每个暴露 run(argv) -> int
 │       ├── quant.py  cache_exp.py  gate.py  spec.py  load.py  report_cmd.py
-├── tests/                     # pytest：43 个用例，覆盖三个真实 bug 的回归
-├── data/                      # 评测集缓存（自动生成）
-└── results/                   # CSV 明细 / JSON / Markdown 报告（自动生成）
+├── tests/                     # pytest：51 个用例，覆盖三个真实 bug 的回归
+├── data/                      # 评测集缓存（已入库，clone 即可复现）
+└── results/                   # CSV 明细 / JSON / Markdown 报告（已入库）
 ```
+
+> `config.py` 现在在包内（`inferbench/config.py`）。结果固定写到**仓库根目录**下的
+> `data/` 与 `results/`；想写到别处就设环境变量 `INFERBENCH_ROOT`。
 
 ---
 
@@ -119,7 +132,7 @@ python -m inferbench load --levels 1,2,4,8,16 --requests 24
 | few-shot | 3（所有模型相同） | 保证对比公平 |
 | 重复次数 | 3，取中位数并给 P95 | 单次测量抖动大 |
 | 预热 | 1 次并丢弃 | 冷启动实测 14s，首调用 12 tok/s vs 预热后 168 tok/s |
-| 显存隔离 | 每个模型测量前 `unload_all()` | 见 §6 踩坑记录 |
+| 显存隔离 | 每个模型测量前 `unload_all()` | 见 §7 踩坑记录 |
 
 ---
 
@@ -155,7 +168,7 @@ python -m inferbench load --levels 1,2,4,8,16 --requests 24
 `qwen3:0.6b` 提供了**另一种失效模式**：它不是"答错题"，而是**13% 的概率不按格式答题**。
 → 这决定了工程处置方式完全不同：分类混淆要换模型/调 prompt，格式崩溃要加输出校验+重试。
 
-### 实验 3 · 语义缓存（300 条请求 = 100 query × 3 种说法，231 条唯一文本）
+### 实验 2 · 语义缓存（300 条请求 = 100 query × 3 种说法，231 条唯一文本）
 
 | 阈值 | 命中率 | 误命中率 | A类·继承后端错误 | B类·跨意图误匹配 | 端到端准确率 | 无缓存基线 | 成本节省 |
 |---|---|---|---|---|---|---|---|
@@ -171,7 +184,7 @@ python -m inferbench load --levels 1,2,4,8,16 --requests 24
 3. 因此**语义缓存不制造新错误，它只是原样传播后端模型的错误**：端到端准确率与无缓存基线（231 条唯一文本各真跑一次 LLM）**完全一致**（86.0%），
    而成本省了 42%。真正该做的不是继续调阈值，而是**高价值/易错意图不进缓存**或**命中后二次校验**。
 
-### 实验 3b · 缓存写入门槛（自一致性）—— 一个干净的负结果
+### 实验 3 · 缓存写入门槛（自一致性）—— 一个干净的负结果
 
 顺着上面的结论，给"写入缓存"加门槛：同一条 query 采样 3 次（temperature=0.7），**全部一致才允许写入**。
 A/B 用同一张采样表，唯一变量是门槛开关：
@@ -195,7 +208,7 @@ A/B 用同一张采样表，唯一变量是门槛开关：
 这个负结果比正结果更有价值：它把「在缓存层加个门槛就好了」这条路排除了，
 把改进方向钉死在**后端模型质量**和**意图级策略**上。
 
-### 实验 2 · 投机解码（target=qwen3:1.7b，draft=qwen3:0.6b）
+### 实验 4 · 投机解码（target=qwen3:1.7b，draft=qwen3:0.6b）
 
 用 Ollama 自带的 llama-server（就是完整 llama.cpp 构建，**无需额外下载**）+ CUDA 后端，
 两类负载各 6 条 prompt：
@@ -320,19 +333,18 @@ A/B 用同一张采样表，唯一变量是门槛开关：
 
 ## 8. 下一步（按 ROI 排序）
 
-1. **投机解码**（实验 2）：Ollama 不暴露 draft 模型参数，需要 llama.cpp CUDA 版（下载仅约 200MB）；
-   draft 用 `qwen3:0.6b`、target 用 `qwen3:1.7b`（同族接受率最高），
-   GGUF 可直接从 Ollama 的 `blobs/` 目录复用，不用重新下载。**性价比最高的一步。**
-2. **KV Cache 扫参**：改 `num_ctx`（2048/4096/8192/16384）跑一圈，得到"上下文 → 显存/速度"曲线。0 成本。
-3. **SFT / LoRA**：8GB 显存 + `qwen3:0.6b` 基座，跑通 LoRA 全流程（方法学验证）。
-4. **偏好对齐 DPO**：0.5B 玩具规模。
+**已完成**：实验一~五（量化 / 语义缓存 / 写入门槛 / 投机解码 / 并发压测）都已跑完并留有结果文件。
+下面只剩「想做但没做」的：
+
+1. **KV Cache 扫参**：改 `num_ctx`（2048/4096/8192/16384）跑一圈，得到"上下文 → 显存/速度"曲线。0 成本。
+2. **SFT / LoRA**：8GB 显存 + `qwen3:0.6b` 基座，跑通 LoRA 全流程（方法学验证）。
+3. **偏好对齐 DPO**：0.5B 玩具规模。
 
 > **暂不做的：多模态（VLM 单据抽取）**。理由：需下载约 12GB（`granite3.2-vision:2b` + `qwen3-vl:4b` +
 > `deepseek-ocr:3b`），按 2 MB/s 约 100 分钟，且要另备票据数据集；而它只命中 JD 的"范式选型"一角，
-> 与现有三个实验也无法复用代码。相比之下投机解码只要 200MB 下载、复用现有模型与评测集，
-> 且直接对应 JD 明确列出的"推理加速与压缩"。**等有真实业务需求时再做多模态。**
+> 与现有五个实验也无法复用代码。**等有真实业务需求时再做多模态。**
 
-> 实验 3b 已经做完并给出负结果（见 §5），**不建议**继续在缓存层做花样。
+> 实验三（写入门槛）已给出干净的负结果（见 §6），**不建议**继续在缓存层做花样。
 > 真正值得投入的是：**提升后端模型质量**、**按意图分级处理**（哪些意图允许缓存、哪些必须直连）。
 
 ---

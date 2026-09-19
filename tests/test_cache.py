@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import random
 
-import config
+from inferbench import config
 from inferbench import cache as C
 
 

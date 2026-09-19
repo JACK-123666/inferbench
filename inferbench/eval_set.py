@@ -15,7 +15,7 @@ import importlib.util
 import json
 from pathlib import Path
 
-import config
+from inferbench import config
 
 
 def _load_from_synapse() -> list[dict]:

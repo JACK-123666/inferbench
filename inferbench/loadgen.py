@@ -34,7 +34,7 @@ import time
 
 import httpx
 
-import config
+from inferbench import config
 
 
 class StreamResult(dict):

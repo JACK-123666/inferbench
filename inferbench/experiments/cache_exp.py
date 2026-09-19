@@ -30,7 +30,7 @@ import time
 from pathlib import Path
 
 
-import config  # noqa: E402
+from inferbench import config  # noqa: E402
 from inferbench import eval_set as ev  # noqa: E402
 from inferbench import gpu  # noqa: E402
 from inferbench import report as rep  # noqa: E402

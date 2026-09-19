@@ -20,7 +20,7 @@ from __future__ import annotations
 import time
 from typing import Callable
 
-import config
+from inferbench import config
 from inferbench import gpu, tasks
 from inferbench.ollama import Ollama, OllamaError
 from inferbench.stats import mean, median, percentile

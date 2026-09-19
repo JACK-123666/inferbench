@@ -198,7 +198,7 @@
 - **是什么**：模型一次能"记住"多少 token。
 - **打个比方**：草稿纸有多大。纸越大，能处理的对话越长，但**占的显存也越多**。
 - **为什么重要**：本工程的**第一条测量铁律就是锁死它**。不锁的话，你测出来的差异根本不是量化带来的。
-- **在哪看**：`config.py` 里的 `NUM_CTX = 4096` 和 `EMBED_NUM_CTX = 512`。
+- **在哪看**：`inferbench/config.py` 里的 `NUM_CTX = 4096` 和 `EMBED_NUM_CTX = 512`。
 
 ### 2.10 显存（VRAM）与 CPU 分流
 
@@ -400,9 +400,9 @@ inferbench/
 ├── README.md                  ← 工程总览与技术细节
 ├── TUTORIAL.md                ← 本教程
 ├── requirements.txt           ← httpx（并发压测）+ pytest（测试）
-├── config.py                  ← 【最常改】测量口径、模型列表、价格折算
 ├── inferbench/
 │   ├── cli.py / __main__.py   ← 【入口】python -m inferbench 的命令路由
+│   ├── config.py              ← 【最常改】测量口径、模型列表、价格折算
 │   ├── ollama.py              ← 和 Ollama 通信（stdlib）+ 指标提取 + 显存治理
 │   ├── llama.py               ← llama.cpp 集成：GGUF 路径解析 + llama-server 管理
 │   ├── gpu.py                 ← 采 GPU 状态，判断测量环境是否干净
@@ -416,7 +416,7 @@ inferbench/
 │   ├── report.py              ← 【想改报告文案改这里】报告组装
 │   └── experiments/           ← 五个实验，每个暴露 run(argv) -> int
 │       ├── quant.py  cache_exp.py  gate.py  spec.py  load.py  report_cmd.py
-├── tests/                     ← pytest：43 个用例（含三个真实 bug 的回归测试）
+├── tests/                     ← pytest：51 个用例（含三个真实 bug 的回归测试）
 ├── data/                      ← 评测集缓存（自动生成）
 └── results/                   ← 【看结果】CSV / JSON / Markdown
 ```
@@ -425,7 +425,7 @@ inferbench/
 
 ```powershell
 pip install -r requirements.txt   # httpx（并发压测）+ pytest（测试）
-python -m inferbench test                # 43 个用例，约 1 秒跑完
+python -m inferbench test                # 51 个用例，约 1 秒跑完
 ```
 
 两个依赖都不是为了少写代码，而是补能力缺口：
@@ -599,7 +599,7 @@ python -m inferbench quant --models qwen3:0.6b --repeats 3
 
 ```powershell
 # 练习 1：把 num_ctx 从 4096 改成 16384，看显存涨多少
-#   改 config.py 的 NUM_CTX，前后各跑一次，对比报告里的「显存GB」
+#   改 inferbench/config.py 的 NUM_CTX，前后各跑一次，对比报告里的「显存GB」
 python -m inferbench quant --models qwen3:1.7b --repeats 1 --limit 20
 
 # 练习 2：看看只统计难例时，三档差距会不会更大
@@ -1166,7 +1166,7 @@ ollama stop qwen3:1.7b
 |---|---|---|
 | 换评测任务（比如分类→抽取） | `inferbench/tasks.py` | 改 `build_messages()` 的 prompt 和 `parse_label()` 的解析规则 |
 | 换评测集 | `inferbench/eval_set.py` 或 `--eval-set` | 准备一个 jsonl，每行 `{"text":..., "intent":...}` |
-| 改测量口径（num_ctx、重复次数…） | `config.py` | 全部口径集中在这里 |
+| 改测量口径（num_ctx、重复次数…） | `inferbench/config.py` | 全部口径集中在这里 |
 | 加新指标 | `inferbench/bench.py` 的 `measure_model()` | 在 records 里加字段，再在 `report.py` 里展示 |
 | 改报告文案/图 | `inferbench/report.py` | 改完跑 `python -m inferbench report` 即可，不用重跑实验 |
 | 加一个全新实验 | `experiments/` 新建脚本 | 抄 `run_quant.py` 的骨架（参数解析 + 跑 + 落盘 + 出报告） |
@@ -1176,7 +1176,7 @@ ollama stop qwen3:1.7b
 **问题**：上下文开大一点，显存和速度各损失多少？
 
 ```powershell
-# 把 config.py 的 NUM_CTX 依次改成 2048 / 4096 / 8192 / 16384，各跑一次
+# 把 inferbench/config.py 的 NUM_CTX 依次改成 2048 / 4096 / 8192 / 16384，各跑一次
 # 然后对比每个结果的「显存GB」和「tok/s」
 python -m inferbench quant --models qwen3:1.7b --limit 20 --repeats 1 --tag ctx2048
 ```
@@ -1500,11 +1500,13 @@ $n2=(Get-NetAdapterStatistics|Measure-Object ReceivedBytes -Sum).Sum
 inferbench/
 ├── README.md                 工程总览（技术细节 + 全部实验结果）
 ├── TUTORIAL.md               本教程
+├── LICENSE                   MIT
+├── pyproject.toml            可 pip install -e .；httpx / pytest 声明为可选依赖
 ├── requirements.txt          httpx + pytest
-├── config.py                 【最常改】测量口径、模型列表、价格折算
 ├── .gitignore                忽略 __pycache__ / .pytest_cache（data/ results/ 故意不忽略）
 ├── inferbench/
 │   ├── cli.py / __main__.py  【入口】python -m inferbench 的子命令路由
+│   ├── config.py             【最常改】测量口径、模型列表、价格折算
 │   ├── ollama.py             Ollama 客户端：chat/embed/ps/unload + 指标提取
 │   ├── llama.py              llama.cpp 集成：GGUF 路径解析 + llama-server 管理
 │   ├── gpu.py                GPU 状态采集 + 测量环境告警
@@ -1526,7 +1528,8 @@ inferbench/
     ├── cache_full.{csv,json,md}            实验二结果
     ├── cache_gate_full.{csv,json,md}       实验三结果（负结果）
     ├── spec_full.{csv,json,md}             实验四结果（投机解码）
-    └── load_full.{csv,json,md}             实验五结果（并发压测）
+    ├── load_full.{csv,json,md}             实验五结果（并发压测）
+    └── load_parallel4.{csv,json,md}        实验五补充（OLLAMA_NUM_PARALLEL=4 对照）
 ```
 
 ---

@@ -19,7 +19,7 @@ import time
 import urllib.error
 import urllib.request
 
-import config
+from inferbench import config
 
 NS = 1_000_000_000
 

@@ -39,7 +39,7 @@ from collections import Counter
 from pathlib import Path
 
 
-import config  # noqa: E402
+from inferbench import config  # noqa: E402
 from inferbench.cache import SemanticCache, TimedCache, build_stream, perturb  # noqa: E402
 from inferbench import eval_set as ev  # noqa: E402
 from inferbench import gpu  # noqa: E402
