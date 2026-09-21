@@ -52,3 +52,69 @@ def cache_payload() -> dict:
         "thresholds": [row(0.80, 0.607, 0.159, 60.4), row(0.92, 0.423, 0.142, 42.4)],
         "engineering": {},
     }
+
+
+@pytest.fixture
+def kv_payload() -> dict:
+    """一份最小的 KV cache 扫参结果。
+
+    前 5 档刻意做成**完全线性**（weight 1.80 GB + 0.1094 GB/1K token），
+    最后两档是「被截断且溢出」的坏点 —— 拟合必须把它们排除掉，
+    否则斜率会被压平，结论就错了。
+    """
+    per_token = 0.1094 / 1024.0
+
+    def point(requested: int, *, loaded: int, ratio: float, acc: float, tps: float,
+              ttft: float) -> dict:
+        footprint = 1.80 + loaded * per_token
+        return {
+            "requested_ctx": requested, "loaded_ctx": loaded,
+            "truncated": loaded < requested,
+            "footprint_gb": round(footprint, 3), "vram_gb": round(footprint, 3),
+            "gpu_ratio": ratio, "processor": "100% GPU" if ratio >= 99.5 else "86% GPU / 14% CPU",
+            "vram_delta_mb": int(footprint * 1024),
+            "summary": {
+                "model": "qwen3:1.7b-q8_0", "footprint_gb": round(footprint, 3),
+                "accuracy": acc, "accuracy_hard": 0.783, "accuracy_easy": acc,
+                "invalid_rate": 0.01, "n_hard": 23, "n_records": 300,
+                "ttft_ms_median": ttft, "ttft_ms_p95": ttft * 1.2,
+                "decode_tps_median": tps, "decode_tps_mean": tps,
+                "wall_ms_median": 90.0, "wall_ms_p95": 150.0,
+                "processor": "100% GPU", "confusion": {}, "request_errors": 0,
+                "gpu_before": {"mem_used_mb": 1500, "mem_total_mb": 8188},
+            },
+        }
+
+    return {
+        "tag": "unit", "created_at": "2026-01-01 00:00:00",
+        "eval_set": {"total": 100, "hard": 23, "by_intent": {}},
+        "protocol": {"model": "qwen3:1.7b-q8_0", "levels": [2048, 4096, 8192, 16384,
+                                                             32768, 40960, 65536],
+                     "temperature": 0.0, "think": False, "seed": 42, "shots": 3,
+                     "repeats": 3, "warmup_calls": 1, "kv_cache_type": "f16"},
+        "gguf": {"architecture": "qwen3", "block_count": 28, "head_count": 16,
+                 "head_count_kv": 8, "key_length": 128, "value_length": 128,
+                 "embedding_length": 2048, "context_length": 40960, "complete": True},
+        "kv_theory": {"bytes_per_token": 114688, "gb_per_1k_tokens": 0.1094,
+                      "declared_context": 40960, "kv_gb_at_declared_context": 4.375},
+        "runs": [
+            point(2048, loaded=2048, ratio=100.0, acc=0.92, tps=115.2, ttft=15.3),
+            point(4096, loaded=4096, ratio=100.0, acc=0.92, tps=116.2, ttft=15.3),
+            point(8192, loaded=8192, ratio=100.0, acc=0.91, tps=112.0, ttft=18.0),
+            point(16384, loaded=16384, ratio=100.0, acc=0.92, tps=105.0, ttft=25.0),
+            point(32768, loaded=32768, ratio=100.0, acc=0.92, tps=90.0, ttft=40.0),
+            point(40960, loaded=40960, ratio=86.0, acc=0.91, tps=88.0, ttft=41.0),
+            point(65536, loaded=40960, ratio=86.0, acc=0.92, tps=90.7, ttft=40.9),
+        ],
+        # 请求级记录：32768（健康）与 40960（溢出）两档各 8 条，
+        # 其中 item 14 在健康档输出非法标签、在溢出档翻成正确标签 ——
+        # 报告必须能识别出「准确率差异来自执行路径，不是上下文」。
+        "records": (
+            [{"item_id": i, "rep": r, "num_ctx": 32768, "hard": i < 23,
+              "pred": "chain_of_thought" if i == 14 else "summarize"}
+             for i in (1, 2, 14, 15) for r in range(2)]
+            + [{"item_id": i, "rep": r, "num_ctx": 40960, "hard": i < 23,
+                "pred": "knowledge_retrieval" if i == 14 else "summarize"}
+               for i in (1, 2, 14, 15) for r in range(2)]
+        ),
+    }

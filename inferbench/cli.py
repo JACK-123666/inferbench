@@ -28,6 +28,8 @@ COMMANDS: dict[str, tuple[str, str, str]] = {
                "python -m inferbench spec --configs base,draft-k8,ngram"),
     "load":   ("inferbench.experiments.load", "实验五 · 并发压测（QPS / 尾延迟 / TTFT）",
                "python -m inferbench load --levels 1,2,4,8,16 --requests 32"),
+    "kv":     ("inferbench.experiments.kv", "实验六 · KV cache 扫参（上下文 → 显存 / 溢出 / 质量）",
+               "python -m inferbench kv --levels 2048,4096,8192,16384,32768"),
     "recommend": ("inferbench.recommend", "收敛 · 选型建议：读结果文件算出「本机该怎么配 + 代价」",
                   "python -m inferbench recommend --vram 8 --slo-ttft 200 --concurrency 4"),
     "report": ("inferbench.experiments.report_cmd", "重出报告：用旧 JSON 重新生成 Markdown（不重跑实验）",

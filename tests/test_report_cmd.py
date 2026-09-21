@@ -17,10 +17,18 @@ from inferbench.experiments import report_cmd
     ({"meta": {"stream_size": 300}, "off": {}, "on": {}}, "gate"),
     ({"meta": {"stream_size": 300}, "thresholds": []}, "cache"),
     ({"meta": {}, "runs": [], "eval_set": {}}, "quant"),
+    ({"meta": {}, "runs": [], "eval_set": {}, "kv_theory": {}}, "kv"),
     ({"meta": {}}, "unknown"),
 ])
 def test_kind_of_classifies_each_experiment(payload, expected):
     assert report_cmd.kind_of(payload) == expected
+
+
+def test_kv_is_not_misclassified_as_quant():
+    """回归：实验六的结果同样有 `runs` + `eval_set`，不能被 quant 抢走。"""
+    kv_like = {"runs": [{"requested_ctx": 2048}], "eval_set": {"total": 100},
+               "kv_theory": {"gb_per_1k_tokens": 0.1094}, "gguf": {}}
+    assert report_cmd.kind_of(kv_like) == "kv"
 
 
 def test_gate_is_not_misclassified_as_cache():
@@ -42,6 +50,7 @@ def test_real_result_files_classify_correctly(tmp_path, monkeypatch):
         "cache_gate_full.json": "gate",
         "spec_full.json": "spec",
         "load_full.json": "load",
+        "kv_full.json": "kv",
     }
     checked = 0
     for name, expected in mapping.items():

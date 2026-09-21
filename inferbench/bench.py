@@ -1,4 +1,4 @@
-﻿"""测量执行器：把「模型 × 评测集 × 重复次数」跑成可比的记录与汇总。
+"""测量执行器：把「模型 × 评测集 × 重复次数」跑成可比的记录与汇总。
 
 测量口径（每一条都写进结果文件，保证数字可复现、可被追问）：
 
@@ -64,7 +64,7 @@ def measure_model(client: Ollama, model: str, items: list[dict], *,
     warn = gpu.hygiene_warning(gpu_before, footprint["footprint_gb"])
     if warn:
         progress(f"[{model}] {warn}")
-    if footprint.get("gpu_ratio", 100) < 99.5:
+    if footprint.get("gpu_ratio", 100) < config.GPU_RATIO_OK:
         progress(f"[{model}] ⚠ 该模型未全量上 GPU，速度数字会被 CPU 拖累，"
                  f"对比前需要确认显存余量")
 

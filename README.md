@@ -1,7 +1,7 @@
 # inferbench · 本地大模型推理实验台
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![tests](https://img.shields.io/badge/tests-103%20passed-brightgreen.svg)](#5-%E6%B5%8B%E9%87%8F%E5%8F%A3%E5%BE%84%E6%89%80%E6%9C%89%E6%95%B0%E5%AD%97%E9%83%BD%E6%8C%89%E8%BF%99%E4%B8%80%E5%A5%97%E4%BA%A7%E5%87%BA)
+[![tests](https://img.shields.io/badge/tests-128%20passed-brightgreen.svg)](#5-%E6%B5%8B%E9%87%8F%E5%8F%A3%E5%BE%84%E6%89%80%E6%9C%89%E6%95%B0%E5%AD%97%E9%83%BD%E6%8C%89%E8%BF%99%E4%B8%80%E5%A5%97%E4%BA%A7%E5%87%BA)
 [![python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](#)
 [![runtime deps](https://img.shields.io/badge/runtime%20deps-0-success.svg)](#)
 
@@ -39,6 +39,7 @@
 | 要不要给缓存加写入门槛 | **不要**（负结果）：98.7% 采样自洽，门槛只挡下 1 次写入，成本从省 42% 变**亏 75%** | §6 实验三 |
 | 投机解码值不值得上 | 草稿模型**不值**（0.50–0.71×，草稿成本占 target 的 35%）；零成本 **n-gram 草稿值**（1.83×） | §6 实验四 |
 | 一个实例能扛几路并发 | 默认**只 1 路**（要 TTFT P95 < 200ms）；`OLLAMA_NUM_PARALLEL=4` 后吞吐 2.5×、TTFT 降 24×，代价显存 +86% | §6 实验五 |
+| `num_ctx` 该定多少 | **唯一能算出来的那笔账**：KV cache **0.11 GB / 1K token**（与 GGUF 结构推算值差 0.8%）。超过 32768 就溢到 CPU（解码腰斩）；请求超过模型声明上限（40960）会被**静默截断** | §6 实验六 |
 
 以上每条都有 CSV 明细与 Markdown 报告可溯源（`results/`），结论句由脚本从结果文件生成，不手抄。
 
@@ -51,6 +52,7 @@
 | `inferbench gate` | 承接上一步的归因结论：给缓存写入加**自一致性门槛**，误命中能降下来吗？ | A/B 对照 + **负结果**（见 §6） |
 | `inferbench spec` | 投机解码能快多少？草稿模型 vs n-gram 草稿，**接受率与加速比的关系**？ | 两类负载 × 6 配置 + 正确性对照（见 §6） |
 | `inferbench load` | 单实例能扛多少并发？**吞吐上限与尾延迟拐点**在哪？ | 并发梯度 × QPS/TTFT/P95/P99（见 §6） |
+| `inferbench kv` | `num_ctx` 该配多少？KV cache 吃多少显存、涨到哪一档会**溢到 CPU**？ | 上下文梯度 × 显存构成 + 与 GGUF 理论值对账（见 §6） |
 
 设计上有两条硬规矩：
 1. **每个结论都必须挂在一个客观评测基准上**（复用 Synapse 开源工程的 100 条人工标注意图集），
@@ -76,6 +78,7 @@ python -m inferbench            # 不知道有什么命令？直接敲这个
 | `gate` | 实验三 · 缓存写入门槛（自一致性 A/B，负结果） |
 | `spec` | 实验四 · 投机解码（draft 模型 vs n-gram） |
 | `load` | 实验五 · 并发压测（QPS / 尾延迟 / 真实 TTFT） |
+| `kv` | 实验六 · KV cache 扫参（上下文 → 显存 / 溢出 / 质量） |
 | `recommend` | **收敛 · 选型建议**：读 `results/*.json` 算出「本机该怎么配 + 代价」（不跑模型） |
 | `report` | 用旧 JSON 重新生成报告（改了文案不用重跑实验） |
 | `test` | 跑单元测试（pytest） |
@@ -104,6 +107,7 @@ inferbench/
 │   ├── config.py              # 【最常改】测量口径、模型列表、成本折算
 │   ├── ollama.py              # Ollama 客户端：chat / embed / ps / unload + 指标提取
 │   ├── llama.py               # llama.cpp 集成：GGUF 路径解析 + llama-server 管理
+│   ├── gguf.py                # GGUF 头解析：读层数/KV 头数，算 KV cache 的**理论**显存（实验六）
 │   ├── gpu.py                 # nvidia-smi 采集 + 测量卫生检查
 │   ├── fingerprint.py         # 环境指纹：每份结果自带「适用范围」
 │   ├── cache.py               # 语义缓存核心（实验二/三共用，含版本/TTL/开关）
@@ -116,9 +120,9 @@ inferbench/
 │   ├── svg.py                 # 内联 SVG 图表（零依赖，取代 matplotlib）
 │   ├── report.py              # 报告组装（数字全部从结果文件取，不手抄）
 │   ├── recommend.py           # 【收敛层】读结果文件 → 选型建议 + 代价（不产生新数据）
-│   └── experiments/           # 五个实验，每个暴露 run(argv) -> int
-│       ├── quant.py  cache_exp.py  gate.py  spec.py  load.py  report_cmd.py
-├── tests/                     # pytest：103 个用例，覆盖真实踩过的坑（回归测试）
+│   └── experiments/           # 六个实验，每个暴露 run(argv) -> int
+│       ├── quant.py  cache_exp.py  gate.py  spec.py  load.py  kv.py  report_cmd.py
+├── tests/                     # pytest：128 个用例，覆盖真实踩过的坑（回归测试）
 ├── data/                      # 评测集缓存（已入库，clone 即可复现）+ example_corpus.jsonl（格式样例）
 └── results/                   # CSV 明细 / JSON / Markdown 报告（已入库）
 ```
@@ -145,10 +149,13 @@ python -m inferbench quant --models qwen3:1.7b-fp16,qwen3:1.7b-q8_0,qwen3:1.7b
 # ④ 实验二：语义缓存（不调模型生成改写，最快）
 python -m inferbench cache --perturb-only --thresholds 0.85,0.90,0.92,0.95
 
-# ⑤ 实验五：并发压测（新）
+# ⑤ 实验五：并发压测
 python -m inferbench load --levels 1,2,4,8,16 --requests 24
 
-# ⑥ 收敛：把上面的结果算成「本机该怎么配」（不跑模型，秒出）
+# ⑥ 实验六：KV cache 扫参（上下文 → 显存/溢出/质量）
+python -m inferbench kv --levels 2048,4096,8192,16384,32768
+
+# ⑦ 收敛：把上面的结果算成「本机该怎么配」（不跑模型，秒出）
 python -m inferbench recommend --vram 8 --slo-ttft 200 --concurrency 4
 ```
 
@@ -192,7 +199,7 @@ PowerShell / 记事本存出来的带 BOM 文件也能读。
 
 | 项 | 取值 | 为什么 |
 |---|---|---|
-| `num_ctx` | 4096 | 默认 131072 会让 KV cache 吃满显存（本机实测 1.2GB ↔ 5.1GB），不锁死就变成"测显存" |
+| `num_ctx` | 4096 | 默认 131072 会让 KV cache 吃满显存，不锁死就变成"测显存"。**实验六专门测了这个数**：每 1K 上下文 0.11 GB，超过模型声明上限还会被静默截断 |
 | `temperature` / `seed` | 0 / 42 | 降低采样随机性对准确率的影响 |
 | `think` | False | Qwen3 等思维链模型必须关掉，否则输出混推理链，token 数不可比 |
 | few-shot | 3（所有模型相同） | 保证对比公平 |
@@ -378,6 +385,77 @@ A/B 用同一张采样表，唯一变量是门槛开关：
 这条结论对 SLO 的直接价值：**若要求 TTFT P95 < 200 ms，这个实例只能承载 1 路并发请求**——
 按这个反推容量，而不是拍脑袋定副本数。
 
+### 实验 6 · KV cache 上下文扫参（`num_ctx` 是该算的，不是该试的）
+
+`num_ctx` 是部署里最容易被随手写大的一个数：很多框架的默认值是模型声明的上限，
+甚至更离谱的占位值（131072）。而 **KV cache 是按 `num_ctx` 满额预分配的，跟实际
+prompt 多长无关** —— 所以「上下文设大一点没坏处」是错的，它在请求还远没用满之前
+就把显存吃光了。
+
+用**同一个模型**扫 8 档 `num_ctx`（100 条评测集 × 3 次重复，每档前先卸载模型清空显存）：
+
+| 请求 num_ctx | 实际生效 | 总占用 (GB) | 推算 KV (GB) | GPU 分流 | TTFT 中位 | 解码 | 备注 |
+|---|---|---|---|---|---|---|---|
+| 2048 | 2048 | 2.02 | 0.20 | 100% GPU | 16.3 ms | 111.1 tok/s | — |
+| 4096 | 4096 | 2.24 | 0.42 | 100% GPU | 16.6 ms | 110.2 tok/s | — |
+| 8192 | 8192 | 2.74 | 0.91 | 100% GPU | 15.3 ms | 117.4 tok/s | — |
+| 16384 | 16384 | 3.63 | 1.80 | 100% GPU | 15.8 ms | 114.6 tok/s | — |
+| 32768 | 32768 | 5.33 | 3.51 | 100% GPU | 15.9 ms | 114.5 tok/s | — |
+| 40960 | 40960 | 6.77 | 4.95 | **86% GPU / 14% CPU** | 49.2 ms | **71.0 tok/s** | **溢出到 CPU** |
+| 65536 | **40960** | 6.77 | 4.95 | 86% GPU / 14% CPU | 48.0 ms | 84.5 tok/s | **静默截断**+溢出 |
+| 131072 | **40960** | 6.77 | 4.95 | 86% GPU / 14% CPU | 42.7 ms | 84.3 tok/s | **静默截断**+溢出 |
+
+**四个结论，按值钱程度排：**
+
+1. **这笔账算得出来，而且实测对得上。** 实测斜率 **0.1103 GB / 1K token**；
+   从 GGUF 头读出结构参数（28 层 × 8 KV 头 × head_dim 128）按
+   `2 (K+V) × 28 × 8 × 128 × 2 字节` 算出的理论值是 **0.1094 GB / 1K token**，
+   两者相差 **0.8%**。
+   → 归因成立：显存增长确实来自 KV cache，而不是框架开销或显存碎片。
+   工程含义是**上下文预算可以在上线前算出来，不用靠试**——
+   拿 `gguf.py` 读一下模型文件头就够，不需要 GPU、不需要加载模型。
+
+2. **KV cache 会超过模型权重本身。** 拟合出的权重基线 **1.82 GB**，
+   KV cache 在约 **16940 token** 处追平它，之后 KV 成为显存的主要构成。
+   → 推论：「换个小模型省显存」在长上下文下**基本失效**——
+   `qwen3:0.6b` 和 `qwen3:1.7b` 的层数/KV 头数完全相同，KV cache 一样大，
+   小模型省下的只有权重那一部分。
+
+3. **超过模型上限会被静默截断（本次最意外的发现）。**
+   请求 `num_ctx = 65536` 和 `131072`，实际生效的都是 **40960**（模型的声明上限，
+   就写在 GGUF 的 `context_length` 里），而 Ollama **既不报错也不警告**。
+   → 把 `num_ctx` 写成很大的值**换不来更长的上下文**，只换来显存浪费和溢出。
+   如果不上这个对照，你会一直以为自己有 128K 上下文。
+
+4. **溢出到 CPU 是一个台阶，不是斜坡。**
+   从 `num_ctx=40960` 起 GPU 分流掉到 86%：解码 114.5 → 71.0 tok/s、
+   TTFT 15.9 → 49.2 ms。但**进程照常启动、请求照常返回**。
+   → 显存不够时框架不会拒绝启动，而是把层 offload 到 CPU 继续跑，
+   表现成「能跑但慢很多」。这种**静默降级比直接 OOM 更难排查**——
+   OOM 会告诉你出事了，掉一半速度不会。
+
+**质量侧（必须逐条比对，不能说「基本一致」）**：以 `num_ctx=32768` 为基准逐条 diff，
+5 个 100% GPU 档位的预测**完全一致**；差异只出现在溢出到 CPU 的档位。
+
+这里有个陷阱值得单独记：溢出档的准确率是 **93.0%**，比健康档的 **92.0%** 还高。
+如果只报「准确率」，结论会变成「上下文开大点更好」——**完全错了**。
+逐条 diff 才看清：差异全部来自同一条样本（item 14），它在 GPU 路径下稳定输出
+非法标签 `chain_of_thought`，在 CPU offload 路径下稳定输出正确的
+`knowledge_retrieval`。也就是说这 1 个百分点是**换了执行路径导致浮点累加顺序改变、
+贪心解码在并列位置翻转**的产物，不是上下文的功劳——
+和实验四「投机解码无损仅指分布无损」是同一个机制。
+
+> **1 条样本就值 1.0 个百分点的准确率。** 不加对照组、不做逐条归因，
+> 这个数字会被讲成一个完全相反的结论。
+
+**跑法：**
+
+```powershell
+python -m inferbench kv                                        # 默认 8 档 × 100 条 × 3 次重复
+python -m inferbench kv --levels 2048,4096,8192 --limit 20     # 冒烟
+python -m inferbench kv --model qwen3:0.6b                     # 换模型重扫
+```
+
 ---
 
 ## 7. 踩坑记录（比结论更值钱的部分）
@@ -409,15 +487,17 @@ A/B 用同一张采样表，唯一变量是门槛开关：
 
 ## 8. 下一步（按 ROI 排序）
 
-**已完成**：实验一~五（量化 / 语义缓存 / 写入门槛 / 投机解码 / 并发压测）都已跑完并留有结果文件；
+**已完成**：实验一~六（量化 / 语义缓存 / 写入门槛 / 投机解码 / 并发压测 / KV cache 扫参）
+都已跑完并留有结果文件；
 每份结果自带环境指纹（`inferbench/fingerprint.py`）与语料指纹（`inferbench/eval_set.py`）；
 选型可用 `python -m inferbench recommend` 直接收敛成「配置 + 代价」；
 自己的语料可以用 `python -m inferbench dataset` 体检后接进任意实验（见 §4）。
 下面只剩「想做但没做」的：
 
-1. **KV Cache 扫参**：改 `num_ctx`（2048/4096/8192/16384）跑一圈，得到"上下文 → 显存/速度"曲线。0 成本。
-2. **SFT / LoRA**：8GB 显存 + `qwen3:0.6b` 基座，跑通 LoRA 全流程（方法学验证）。
-3. **偏好对齐 DPO**：0.5B 玩具规模。
+1. **SFT / LoRA**：8GB 显存 + `qwen3:0.6b` 基座，跑通 LoRA 全流程（方法学验证）。
+2. **偏好对齐 DPO**：0.5B 玩具规模。
+3. **`recommend` 接入实验六的 KV 结论**：现在它还没把 `num_ctx` 纳入「本机该怎么配」的收敛，
+   而 KV cache 恰恰是显存预算里唯一能精确算出来的那一项。
 
 > **暂不做的：多模态（VLM 单据抽取）**。理由：需下载约 12GB（`granite3.2-vision:2b` + `qwen3-vl:4b` +
 > `deepseek-ocr:3b`），按 2 MB/s 约 100 分钟，且要另备票据数据集；而它只覆盖"多模态"一角，

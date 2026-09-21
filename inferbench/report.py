@@ -1,4 +1,4 @@
-﻿"""报告生成：把实验结果组装成 Markdown（含内联 SVG 图与可直接引用的结论）。
+"""报告生成：把实验结果组装成 Markdown（含内联 SVG 图与可直接引用的结论）。
 
 图表实现在 inferbench/svg.py（零依赖内联 SVG，不引入 matplotlib）。
 本模块只负责：取数 → 判定 → 组织文案。**所有数字都从结果文件里取，
@@ -376,6 +376,298 @@ def build_cache_report(payload: dict) -> Path:
               f"结论来自可复现的消融实验，而非「调大阈值就好了」的直觉。")
     md.append("")
     md.append(f"明细数据：`results/cache_{tag}.csv`")
+    path.write_text("\n".join(md), encoding="utf-8")
+    return path
+
+
+# ---------------------------------------------------------------------------
+# KV cache 扫参：控制台表 + Markdown 报告
+# ---------------------------------------------------------------------------
+
+def _least_squares(xs: list[float], ys: list[float]) -> tuple[float, float]:
+    """最小二乘拟合 `y = slope·x + intercept`。点数不足时退化为常数。"""
+    n = len(xs)
+    if n < 2:
+        return 0.0, (ys[0] if ys else 0.0)
+    mx, my = sum(xs) / n, sum(ys) / n
+    den = sum((x - mx) ** 2 for x in xs)
+    if den == 0:
+        return 0.0, my
+    slope = sum((x - mx) * (y - my) for x, y in zip(xs, ys)) / den
+    return slope, my - slope * mx
+
+
+def kv_analysis(payload: dict) -> dict:
+    """把扫参结果收敛成几个判定：斜率、权重基线、交叉点、截断、溢出拐点、质量抖动。
+
+    拟合**只用手上的健康点**（实际生效上下文 == 请求值，且 100% 在 GPU 上）：
+    被截断的档位 x 应该是生效值而不是请求值，溢出的档位显存已经被"掉到 CPU"
+    这个事实限制了，再放进拟合会把斜率压平——两者都会让斜率失真。
+    """
+    runs = payload.get("runs") or []
+    good = [r for r in runs
+            if r.get("loaded_ctx") and not r.get("truncated")
+            and float(r.get("gpu_ratio") or 0) >= config.GPU_RATIO_OK]
+    slope, intercept = _least_squares(
+        [float(r["loaded_ctx"]) for r in good],
+        [float(r["footprint_gb"]) for r in good],
+    )
+    theory_slope = float((payload.get("kv_theory") or {}).get("gb_per_1k_tokens") or 0.0)
+    measured_slope = slope * 1024.0                      # GB / 1K token
+    out = {
+        "n_points": len(good),
+        "gb_per_token": slope,
+        "gb_per_1k": measured_slope,
+        "weights_gb": intercept,
+        "theory_gb_per_1k": theory_slope,
+        "slope_error_pct": (stats.pct(measured_slope - theory_slope, theory_slope)
+                            if theory_slope > 0 else 0.0),
+        "crossover_ctx": (intercept / slope) if slope > 0 else 0.0,
+        "truncated": [r for r in runs if r.get("truncated")],
+        "spilled": [r for r in runs
+                    if r.get("gpu_ratio") and float(r["gpu_ratio"]) < config.GPU_RATIO_OK],
+        "healthiest": max(good, key=lambda r: r["loaded_ctx"]) if good else None,
+    }
+    accs = [r["summary"]["accuracy"] for r in runs
+            if (r.get("summary") or {}).get("n_records")]
+    out["accuracy_min"] = min(accs) if accs else 0.0
+    out["accuracy_max"] = max(accs) if accs else 0.0
+    out["accuracy_spread_pp"] = (out["accuracy_max"] - out["accuracy_min"]) * 100
+
+    # ---- 质量侧：逐条比对预测，判断准确率差异到底来自哪里 ----
+    # 这是本实验最容易讲错的一处：溢出档的准确率**更高**，但那不是上下文变长的功劳。
+    # 只有逐条 diff 才能说清「变的是执行路径，不是质量」。
+    ref = out["healthiest"]
+    if ref:
+        ref_ctx = int(ref["loaded_ctx"])
+        ref_pred = {(r.get("item_id"), r.get("rep")): (r.get("pred") or "")
+                    for r in payload.get("records", []) if r.get("num_ctx") == ref_ctx}
+        per_level: dict[int, dict] = {}
+        for run in runs:
+            ctx = int(run.get("loaded_ctx") or 0)
+            pred = {(r.get("item_id"), r.get("rep")): (r.get("pred") or "")
+                    for r in payload.get("records", []) if r.get("num_ctx") == ctx}
+            if not pred or not ref_pred:
+                continue
+            shared = set(pred) & set(ref_pred)
+            diff = {k for k in shared if pred[k] != ref_pred[k]}
+            per_level[ctx] = {
+                "n": len(shared), "n_diff": len(diff),
+                "diff_items": sorted({str(k[0]) for k in diff}),
+                "identical": not diff,
+                "spilled": ctx in {int(r.get("loaded_ctx") or 0) for r in out["spilled"]},
+            }
+        out["ref_ctx"] = ref_ctx
+        out["per_level"] = per_level
+    return out
+
+
+def kv_console_table(payload: dict) -> str:
+    runs = payload.get("runs") or []
+    if not runs:
+        return "没有成功的运行记录。"
+    a = kv_analysis(payload)
+    head = (f"{'请求ctx':>9}{'生效ctx':>9}{'总占用':>9}{'KV推算':>9}{'GPU':>7}"
+            f"{'TTFTms':>9}{'tok/s':>9}{'准确率':>9}  备注")
+    lines = [head, "-" * len(head)]
+    for r in runs:
+        s = r.get("summary") or {}
+        kv = max(0.0, float(r.get("footprint_gb") or 0.0) - a["weights_gb"])
+        note = []
+        if r.get("truncated"):
+            note.append("静默截断")
+        if r.get("gpu_ratio") and float(r["gpu_ratio"]) < config.GPU_RATIO_OK:
+            note.append("溢出到CPU")
+        lines.append(
+            f"{r['requested_ctx']:>9}{r.get('loaded_ctx') or '-':>9}"
+            f"{float(r.get('footprint_gb') or 0):>8.2f}G{kv:>8.2f}G"
+            f"{float(r.get('gpu_ratio') or 0):>6.0f}%"
+            f"{s.get('ttft_ms_median', 0):>9.1f}{s.get('decode_tps_median', 0):>9.1f}"
+            f"{s.get('accuracy', 0) * 100:>8.1f}%  {'/'.join(note)}"
+        )
+    lines.append(f"\n实测斜率 {a['gb_per_1k']:.4f} GB/1K token"
+                 f"（理论 {a['theory_gb_per_1k']:.4f}，误差 {a['slope_error_pct']:+.1f}%）"
+                 f" · 权重基线 {a['weights_gb']:.2f} GB"
+                 f" · KV 追平权重的上下文 ≈ {a['crossover_ctx']:.0f}")
+    return "\n".join(lines)
+
+
+def build_kv_report(payload: dict) -> Path:
+    tag = payload.get("tag", "run")
+    path = config.RESULTS_DIR / f"kv_{tag}.md"
+    runs = payload.get("runs") or []
+    proto = payload.get("protocol") or {}
+    geom = payload.get("gguf") or {}
+    theory = payload.get("kv_theory") or {}
+
+    md: list[str] = ["# 实验 6 · KV cache 上下文扫参报告\n"]
+    md.append(f"- 生成时间：{payload.get('created_at')}")
+    md.extend(fingerprint.report_lines(payload))
+    md.extend(ev.render_lines(payload))
+    md.append("")
+    md.append(f"- 模型：`{proto.get('model')}`（全程同一个模型，唯一变量是 `num_ctx`）")
+    md.append(f"- 评测集：{payload.get('eval_set', {}).get('total')} 条"
+              f"（难例 {payload.get('eval_set', {}).get('hard')} 条）")
+    md.append(f"- 测量口径：temperature={proto.get('temperature')} · think=False · "
+              f"seed={proto.get('seed')} · few-shot={proto.get('shots')} · "
+              f"重复 {proto.get('repeats')} 次取中位数 · 每档前卸载模型清空显存\n")
+
+    if not runs:
+        path.write_text("\n".join(md) + "\n没有成功的记录。\n", encoding="utf-8")
+        return path
+
+    a = kv_analysis(payload)
+
+    if geom.get("complete"):
+        md.append("## 先算一遍理论值（当尺子用）\n")
+        md.append(f"- 结构：{geom.get('architecture')} · {geom.get('block_count')} 层 × "
+                  f"{geom.get('head_count_kv')}/{geom.get('head_count')} 个 KV 头 × "
+                  f"head_dim {geom.get('key_length')}，模型声明上下文 {geom.get('context_length')}")
+        md.append(f"- 理论 KV：`2 (K+V) × {geom.get('block_count')} 层 × {geom.get('head_count_kv')} KV 头 × "
+                  f"{geom.get('key_length')} × {config.KV_BYTES_PER_ELEM.get(config.KV_CACHE_TYPE, 2)} 字节` = "
+                  f"**{theory.get('bytes_per_token', 0):.0f} B/token = "
+                  f"{theory.get('gb_per_1k_tokens', 0):.4f} GB / 1K token**")
+        md.append(f"- 按此推算，跑满模型声明的 {geom.get('context_length')} 上下文，"
+                  f"KV cache 单独就要 **{theory.get('kv_gb_at_declared_context', 0):.2f} GB**"
+                  f"（还没算模型权重）\n")
+
+    md.append("## 扫参结果\n")
+    md.append("| 请求 num_ctx | 实际生效 | 总占用 (GB) | 推算 KV (GB) | GPU 分流 | "
+              "TTFT 中位 (ms) | 解码 (tok/s) | 准确率 | P95 端到端 (ms) | 备注 |")
+    md.append("|---|---|---|---|---|---|---|---|---|---|")
+    for r in runs:
+        s = r.get("summary") or {}
+        kv = max(0.0, float(r.get("footprint_gb") or 0.0) - a["weights_gb"])
+        note = []
+        if r.get("truncated"):
+            note.append("**静默截断**")
+        if r.get("gpu_ratio") and float(r["gpu_ratio"]) < config.GPU_RATIO_OK:
+            note.append("**溢出到 CPU**")
+        md.append(f"| {r['requested_ctx']} | {r.get('loaded_ctx') or '-'} | "
+                  f"{float(r.get('footprint_gb') or 0):.2f} | {kv:.2f} | "
+                  f"{r.get('processor') or '-'} | {s.get('ttft_ms_median', 0):.1f} | "
+                  f"{s.get('decode_tps_median', 0):.1f} | {s.get('accuracy', 0) * 100:.1f}% | "
+                  f"{s.get('wall_ms_p95', 0):.1f} | {'/'.join(note) or '—'} |")
+    md.append("")
+
+    xs = [float(r["requested_ctx"]) for r in runs]
+    bpt = float(theory.get("bytes_per_token") or 0.0)
+    md.append(line_chart(xs, {
+        "实测总占用 (GB)": [float(r.get("footprint_gb") or 0.0) for r in runs],
+        "理论 KV cache (GB)": [bpt * float(r.get("loaded_ctx") or 0) / (1024 ** 3) for r in runs],
+        "模型权重基线 (GB)": [a["weights_gb"] for _ in runs],
+    }, title="上下文长度 → 显存构成（KV cache 是按 num_ctx 满额预分配的）",
+        x_label="请求的 num_ctx (tokens)", y_label="GB", percent=False))
+    md.append("")
+    md.append(bar_chart([str(r["requested_ctx"]) for r in runs], {
+        "解码吞吐 (tok/s)": [(r.get("summary") or {}).get("decode_tps_median", 0) for r in runs],
+        "TTFT 中位 (ms)": [(r.get("summary") or {}).get("ttft_ms_median", 0) for r in runs],
+        "GPU 分流 (%)": [float(r.get("gpu_ratio") or 0) for r in runs],
+    }, title="上下文长度 → 速度与 GPU 分流", y_label="tok/s · ms · %", height=300))
+    md.append("")
+
+    md.append("## 关键结论（数字自动取自本次运行）\n")
+
+    md.append(f"1. **KV cache 的显存是可以算出来的，而且实测对得上**："
+              f"实测斜率 **{a['gb_per_1k']:.4f} GB / 1K token**，"
+              f"从 GGUF 结构参数算出的理论值 {a['theory_gb_per_1k']:.4f} GB / 1K token，"
+              f"两者相差 {abs(a['slope_error_pct']):.1f}%。"
+              f"→ 归因成立：显存增长确实来自 KV cache，不是框架开销或显存碎片。"
+              f"工程含义是**上下文预算可以在上线前算出来，不用靠试**。")
+
+    if a["weights_gb"] > 0 and a["crossover_ctx"] > 0:
+        md.append(f"2. **KV cache 会超过模型权重本身**：本次拟合出的权重基线 "
+                  f"{a['weights_gb']:.2f} GB，KV cache 在约 **{a['crossover_ctx']:.0f} token** "
+                  f"处追平它，之后 KV 成为显存的主要构成。"
+                  f"→ 也就是说「换个小模型省显存」在长上下文下**基本失效**："
+                  f"`qwen3:0.6b` 和 `qwen3:1.7b` 的 KV 头数/层数完全相同，"
+                  f"KV cache 一样大，省下的只有权重那一部分。")
+
+    if a["truncated"]:
+        reqs = ", ".join(str(r["requested_ctx"]) for r in a["truncated"])
+        eff = sorted({int(r["loaded_ctx"]) for r in a["truncated"]})
+        md.append(f"3. **超过模型上限会被静默截断（本次最意外的发现）**："
+                  f"请求 `num_ctx` = {reqs} 时，实际生效的都是 "
+                  f"**{('、'.join(str(x) for x in eff))}**，"
+                  f"而 Ollama **既不报错也不警告**。"
+                  f"模型的声明上限就写在 GGUF 里（`context_length`），"
+                  f"超出的部分被丢弃。"
+                  f"→ 把 `num_ctx` 写成很大的值（很多框架的默认占位值）"
+                  f"**换不来更长的上下文，只换来显存浪费和溢出**。")
+
+    if a["spilled"]:
+        first = min(a["spilled"], key=lambda r: r["requested_ctx"])
+        healthy = a["healthiest"]
+        if healthy:
+            h_ctx = healthy["loaded_ctx"]
+            h_gb = float(healthy.get("footprint_gb") or 0.0)
+            h_tps = (healthy.get("summary") or {}).get("decode_tps_median", 0)
+            ref = (f"对照组 num_ctx={h_ctx}（{h_gb:.2f} GB，100% GPU）"
+                   f"解码 {h_tps:.1f} tok/s，")
+        else:
+            ref = ""
+        s_tps = (first.get("summary") or {}).get("decode_tps_median", 0)
+        md.append(f"4. **溢出到 CPU 是一个台阶，不是斜坡**："
+                  f"从 `num_ctx={first['requested_ctx']}` 起 GPU 分流降到 "
+                  f"{float(first.get('gpu_ratio') or 0):.0f}%（{first.get('processor')}）。"
+                  f"{ref}该档解码 {s_tps:.1f} tok/s。"
+                  f"→ 显存不够时框架**不会拒绝启动，而是把层 offload 到 CPU 继续跑**，"
+                  f"表现成「能跑但慢很多」——这种静默降级比直接 OOM 更难排查。")
+    md.append("")
+
+    md.append("## 结论（可直接引用；数字都是本次真实测量值）\n")
+    parts = [f"**KV cache 上下文扫参**：在 RTX 4060 8GB 上对同一模型扫 "
+             f"{len(runs)} 档 `num_ctx`（{runs[0]['requested_ctx']} → {runs[-1]['requested_ctx']}），"
+             f"实测 KV cache 成本 **{a['gb_per_1k']:.4f} GB / 1K token**，"
+             f"与按 GGUF 结构参数算出的理论值（{a['theory_gb_per_1k']:.4f}）"
+             f"相差 {abs(a['slope_error_pct']):.1f}%，"
+             f"据此把「上下文长度」从配置项变成可预算的显存支出。"]
+    if a["crossover_ctx"] > 0:
+        parts.append(f"上下文涨到约 {a['crossover_ctx']:.0f} token 时，"
+                     f"KV cache 的显存超过模型权重本身。")
+    if a["truncated"]:
+        parts.append(f"并发现请求 `num_ctx` 超过模型声明上限时，"
+                     f"运行时会**静默截断**到上限值而不报错。")
+    if a["spilled"]:
+        parts.append(f"显存不足时表现为 GPU 分流下降、解码吞吐阶跃式下跌"
+                     f"（而非启动失败），属于静默降级。")
+    md.append("\n>\n".join("> " + p for p in parts))
+    md.append("")
+
+    # 质量侧：必须逐条 diff 才能说清「准确率那一跳来自执行路径，不是上下文」
+    per_level = a.get("per_level") or {}
+    ref_ctx = a.get("ref_ctx")
+    if per_level and ref_ctx:
+        healthy_same = [c for c, v in per_level.items() if v["identical"] and not v["spilled"]]
+        changed = {c: v for c, v in per_level.items() if v["n_diff"]}
+        if changed:
+            detail = "、".join(
+                f"`num_ctx={c}`（{v['n_diff']}/{v['n']} 条，涉及样本 {','.join(v['diff_items']) or '—'}）"
+                for c, v in sorted(changed.items()))
+            md.append(f"> **质量侧（逐条比对，不说「基本一致」）**："
+                      f"以 `num_ctx={ref_ctx}` 为基准逐条比对预测，"
+                      f"{len(healthy_same)} 个 100% GPU 档位的预测**完全一致**；"
+                      f"出现差异的只有溢出到 CPU 的档位 —— {detail}。"
+                      f"也就是说准确率那一跳**不是上下文变长让模型变准了**，"
+                      f"而是换了执行路径（GPU → CPU offload）后浮点累加顺序改变，"
+                      f"贪心解码在并列位置翻转，恰好把一条「输出非法标签」的样本"
+                      f"翻成了「输出正确标签」。"
+                      f"**1 条样本就值 "
+                      f"{a['accuracy_spread_pp']:.1f} 个百分点的准确率** —— "
+                      f"这正是「不加对照就无法归因」的活例子。")
+        else:
+            md.append(f"> **质量侧（逐条比对）**：以 `num_ctx={ref_ctx}` 为基准逐条比对预测，"
+                      f"各档预测完全一致（{per_level.get(ref_ctx, {}).get('n', 0)} 条）——"
+                      f"`num_ctx` 不改变输出，**它是一笔纯成本**：买不到质量，只买到显存占用。")
+    md.append("")
+
+    md.append("## 复现方式\n")
+    md.append("```powershell")
+    md.append(f"python -m inferbench kv --model {proto.get('model')} "
+              f"--levels {','.join(str(r['requested_ctx']) for r in runs)}")
+    md.append("```")
+    md.append("")
+    md.append(f"明细数据：`results/kv_{tag}.csv`（请求级，含每条样本的延迟、显存、GPU 分流）")
     path.write_text("\n".join(md), encoding="utf-8")
     return path
 

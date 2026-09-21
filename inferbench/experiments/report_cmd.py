@@ -19,11 +19,15 @@ def kind_of(payload: dict) -> str:
 
     注意判别顺序：实验三（门槛 A/B）的结果里也有 `meta.stream_size`，
     如果先判 cache 就会把它当成实验二重出，导致 gate 的报告永远不更新（踩过）。
+    实验六同理：它的结果里也有 `runs` + `eval_set`，而这两项正是实验一的特征，
+    所以必须靠它独有的 `kv_theory` 先在前面拦下来。
     """
     if payload.get("kind") == "recommend":            # 选型建议：自带 kind，最优先
         return "recommend"
     if payload.get("kind") == "dataset":              # 语料体检报告：只有控制台形态
         return "dataset"
+    if "kv_theory" in payload:                        # 实验六：KV cache 扫参（必须早于 quant）
+        return "kv"
     if payload.get("meta", {}).get("target"):
         return "spec"
     if payload.get("meta", {}).get("levels"):
@@ -51,6 +55,8 @@ def run(argv: list[str] | None = None) -> int:
         kind = kind_of(payload)
         if kind == "quant":
             out = rep.build_quant_report(payload)
+        elif kind == "kv":
+            out = rep.build_kv_report(payload)
         elif kind == "cache":
             out = rep.build_cache_report(payload)
         elif kind == "gate":
