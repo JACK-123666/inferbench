@@ -19,6 +19,7 @@ import sys
 import time
 
 from inferbench import config
+from inferbench import fingerprint
 from inferbench import eval_set as ev
 from inferbench import gpu, loadgen, report as rep
 from inferbench.ollama import Ollama
@@ -33,6 +34,8 @@ def build_report(payload: dict) -> "object":
 
     md: list[str] = ["# 实验 5 · 并发压测报告\n"]
     md.append(f"- 生成时间：{payload['created_at']}")
+    md.extend(fingerprint.report_lines(payload))
+    md.append("")
     md.append(f"- 模型：`{meta['model']}` ｜ 并发梯度：{meta['levels']} ｜ "
               f"每档 {meta['requests_per_level']} 请求 ｜ num_predict={meta['max_tokens']}")
     md.append(f"- 请求方式：**流式**（`stream=true`）——TTFT 是实测首 token 到达时间，"
@@ -224,6 +227,7 @@ def run(argv: list[str] | None = None) -> int:
     payload = {
         "tag": tag,
         "created_at": time.strftime("%Y-%m-%d %H:%M:%S"),
+        "env": fingerprint.fingerprint(host=args.host),
         "meta": {
             "model": args.model,
             "levels": levels,

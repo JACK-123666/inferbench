@@ -406,6 +406,7 @@ inferbench/
 │   ├── ollama.py              ← 和 Ollama 通信（stdlib）+ 指标提取 + 显存治理
 │   ├── llama.py               ← llama.cpp 集成：GGUF 路径解析 + llama-server 管理
 │   ├── gpu.py                 ← 采 GPU 状态，判断测量环境是否干净
+│   ├── fingerprint.py         ← 【每份结果自带适用范围】GPU/驱动/CUDA/Ollama/代码版本
 │   ├── cache.py               ← 【缓存实验核心】版本/TTL/开关 + 请求流构造
 │   ├── loadgen.py             ← 【并发实验核心】httpx + asyncio 流式压测
 │   ├── bench.py               ← 【核心】测量执行器：清显存→预热→重复→记录
@@ -1510,6 +1511,7 @@ inferbench/
 │   ├── ollama.py             Ollama 客户端：chat/embed/ps/unload + 指标提取
 │   ├── llama.py              llama.cpp 集成：GGUF 路径解析 + llama-server 管理
 │   ├── gpu.py                GPU 状态采集 + 测量环境告警
+│   ├── fingerprint.py        环境指纹：结果自带适用范围（GPU/驱动/CUDA/Ollama/git）
 │   ├── cache.py              语义缓存核心（实验二/三共用）
 │   ├── loadgen.py            并发压测（httpx + asyncio，实验五）
 │   ├── bench.py              【核心】测量执行器：清显存→预热→重复→记录

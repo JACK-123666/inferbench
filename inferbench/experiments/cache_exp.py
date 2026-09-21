@@ -1,4 +1,4 @@
-﻿"""实验 3 · 语义缓存：阈值扫描 + 客观误命中评估 + 版本/灰度/回滚验证
+﻿"""实验 2 · 语义缓存：阈值扫描 + 客观误命中评估 + 版本/灰度/回滚验证
 
 跑法::
 
@@ -31,6 +31,7 @@ from pathlib import Path
 
 
 from inferbench import config  # noqa: E402
+from inferbench import fingerprint  # noqa: E402
 from inferbench import eval_set as ev  # noqa: E402
 from inferbench import gpu  # noqa: E402
 from inferbench import report as rep  # noqa: E402
@@ -317,6 +318,7 @@ def run(argv: list[str] | None = None) -> int:
     payload = {
         "tag": tag,
         "created_at": time.strftime("%Y-%m-%d %H:%M:%S"),
+        "env": fingerprint.fingerprint(),
         "meta": {
             "stream_size": len(stream),
             "base_queries": len(items),

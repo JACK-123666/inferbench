@@ -64,7 +64,7 @@ QUANT_MODELS = [
     # "qwen3:1.7b-fp16", # FP16    约 3.8GB（需要时再拉，见 README）
 ]
 
-# ---------- 实验 3：语义缓存 ----------
+# ---------- 实验 2：语义缓存 ----------
 EMBED_MODEL = "qwen3-embedding:0.6b"
 CACHE_MODEL = "qwen3:1.7b"          # 缓存后端（未命中时真正干活的模型）
 CACHE_THRESHOLDS = [0.80, 0.85, 0.88, 0.90, 0.92, 0.94, 0.96, 0.98]

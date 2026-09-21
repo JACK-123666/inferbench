@@ -1,8 +1,8 @@
-﻿"""实验 3b · 缓存写入门槛：用自一致性（self-consistency）治 A 类误命中
+﻿"""实验 3 · 缓存写入门槛：用自一致性（self-consistency）治 A 类误命中
 
 ## 为什么做这个实验
 
-实验 3 的结论是：**误命中 100% 属于 A 类「继承后端模型自身的错误」**——
+实验 2 的结论是：**误命中 100% 属于 A 类「继承后端模型自身的错误」**——
 缓存存的是模型当初的预测，模型答错那一次被永久固化，之后所有近义请求都被这个错答案命中。
 阈值再高也救不了，因为错误在**写入缓存的那一刻**就已经产生了。
 
@@ -19,7 +19,7 @@
 1. 对请求流里所有**唯一文本**一次性采样 n 次，存成表（`first` = 第一次采样结果，
    `majority` = 多数票，`unanimous` = 是否 n 次一致）。
 2. 然后跑两遍模拟，**用同一张采样表**，只有"缓存写入门槛"这一个变量不同：
-   - `gate=off`：单次调用，永远写入（= 实验 3 的做法）
+   - `gate=off`：单次调用，永远写入（= 实验 2 的做法）
    - `gate=on` ：多数票返回，不一致则不写入
 3. 对比：误命中率、A 类次数、端到端准确率、命中率、成本、延迟。
 
@@ -40,6 +40,7 @@ from pathlib import Path
 
 
 from inferbench import config  # noqa: E402
+from inferbench import fingerprint  # noqa: E402
 from inferbench.cache import SemanticCache, TimedCache, build_stream, perturb  # noqa: E402
 from inferbench import eval_set as ev  # noqa: E402
 from inferbench import gpu  # noqa: E402
@@ -201,8 +202,10 @@ def build_report(payload: dict) -> Path:
     meta = payload["meta"]
     n = meta["n"]
 
-    md: list[str] = ["# 实验 3b · 缓存写入门槛（自一致性）验证报告\n"]
+    md: list[str] = ["# 实验 3 · 缓存写入门槛（自一致性）验证报告\n"]
     md.append(f"- 生成时间：{payload['created_at']}")
+    md.extend(fingerprint.report_lines(payload))
+    md.append("")
     md.append(f"- 请求流：{meta['stream_size']} 条请求 / {meta['unique_texts']} 条唯一文本")
     md.append(f"- 采样：每条唯一文本采样 **{n} 次**（temperature={meta['temperature']}）")
     md.append(f"- **采样一致率：{meta['unanimous_rate'] * 100:.1f}%**"
@@ -285,7 +288,7 @@ def build_report(payload: dict) -> Path:
                   f"延迟 {lat_ratio:.1f} 倍。")
     md.append("")
     md.append("## 面试怎么讲这个结果\n")
-    md.append("> 「实验 3 我发现误命中 100% 来自「继承后端模型自己的错误」，"
+    md.append("> 「实验 2 我发现误命中 100% 来自「继承后端模型自己的错误」，"
               "于是加了自一致性门槛——同一条 query 采样 3 次、结果一致才允许写入缓存。"
               f"结果：{meta['unanimous_count']}/{meta['unique_texts']} 条文本采样 3 次完全一致，"
               f"门槛只挡住了 {off['cache_entries'] - on['cache_entries']} 次写入，"
@@ -366,6 +369,7 @@ def run(argv: list[str] | None = None) -> int:
     payload = {
         "tag": tag,
         "created_at": time.strftime("%Y-%m-%d %H:%M:%S"),
+        "env": fingerprint.fingerprint(),
         "meta": {
             "stream_size": len(stream),
             "unique_texts": len(unique),

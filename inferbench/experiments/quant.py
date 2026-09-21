@@ -21,6 +21,7 @@ from pathlib import Path
 
 
 from inferbench import config  # noqa: E402
+from inferbench import fingerprint  # noqa: E402
 from inferbench import eval_set as ev  # noqa: E402
 from inferbench import report as rep  # noqa: E402
 from inferbench.ollama import Ollama  # noqa: E402
@@ -81,6 +82,7 @@ def run(argv: list[str] | None = None) -> int:
     payload = {
         "tag": tag,
         "created_at": time.strftime("%Y-%m-%d %H:%M:%S"),
+        "env": fingerprint.fingerprint(),
         "eval_set": {"total": info["total"], "hard": info["hard"], "by_intent": info["by_intent"]},
         "protocol": {
             "num_ctx": config.NUM_CTX, "temperature": config.TEMPERATURE,

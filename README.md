@@ -101,6 +101,7 @@ inferbench/
 │   ├── ollama.py              # Ollama 客户端：chat / embed / ps / unload + 指标提取
 │   ├── llama.py               # llama.cpp 集成：GGUF 路径解析 + llama-server 管理
 │   ├── gpu.py                 # nvidia-smi 采集 + 测量卫生检查
+│   ├── fingerprint.py         # 环境指纹：每份结果自带「适用范围」
 │   ├── cache.py               # 语义缓存核心（实验二/三共用，含版本/TTL/开关）
 │   ├── loadgen.py             # 并发压测（httpx + asyncio，实验五）
 │   ├── bench.py               # 通用测量执行器：清显存 → 预热 → 重复 → 记录
@@ -158,6 +159,15 @@ python -m inferbench load --levels 1,2,4,8,16 --requests 24
 | 重复次数 | 3，取中位数并给 P95 | 单次测量抖动大 |
 | 预热 | 1 次并丢弃 | 冷启动实测 14s，首调用 12 tok/s vs 预热后 168 tok/s |
 | 显存隔离 | 每个模型测量前 `unload_all()` | 见 §7 踩坑记录 |
+
+**每份结果都自带适用范围。** 落盘时自动采集一份环境指纹 —— GPU 型号 / 显存总量 / 驱动 / CUDA、
+Ollama 版本与实际 host、`OLLAMA_NUM_PARALLEL`、Python 与 `inferbench+git` 版本 —— 写进结果的
+`env` 块，并在报告开头印成「适用范围」段。理由很直接：**这里的每个结论都绑定硬件**，
+「8GB 卡上草稿模型全负收益」换到 24GB 卡上就不成立，所以看任何一份旧结果之前，先看它的适用范围。
+
+> 本仓库里的历史结果（`quant_ladder-*`、`cache_*`、`cache_gate_*`、`spec_full`、`load_*`）
+> 产生在这个功能之前，报告会明确标注「适用边界未知」，而不是假装有指纹。
+> `results/quant_smoke-env.*` 是一次 12 条样本的冒烟跑，只为演示 `env` 块长什么样，**不是结论依据**。
 
 ---
 

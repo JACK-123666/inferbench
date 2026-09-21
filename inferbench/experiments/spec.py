@@ -1,4 +1,4 @@
-﻿"""实验 2 · 投机解码（speculative decoding）：接受率、加速比与边界
+﻿"""实验 4 · 投机解码（speculative decoding）：接受率、加速比与边界
 
 ## 要回答的问题
 
@@ -44,6 +44,7 @@ from pathlib import Path
 
 
 from inferbench import config  # noqa: E402
+from inferbench import fingerprint  # noqa: E402
 from inferbench import gpu  # noqa: E402
 from inferbench import llama  # noqa: E402
 from inferbench import report as rep  # noqa: E402
@@ -229,8 +230,10 @@ def build_report(payload: dict) -> Path:
     base = runs.get("base")
     order = [c for c in CONFIGS if c in runs]
 
-    md: list[str] = ["# 实验 2 · 投机解码报告\n"]
+    md: list[str] = ["# 实验 4 · 投机解码报告\n"]
     md.append(f"- 生成时间：{payload['created_at']}")
+    md.extend(fingerprint.report_lines(payload))
+    md.append("")
     md.append(f"- target：`{payload['meta']['target']}`（{payload['meta']['target_gb']} GB）"
               f" ｜ draft：`{payload['meta']['draft']}`（{payload['meta']['draft_gb']} GB，同族）")
     md.append(f"- 运行方式：llama-server（Ollama 自带构建）+ CUDA 后端，`-np 1`（投机解码只支持单序列）")
@@ -462,6 +465,7 @@ def run(argv: list[str] | None = None) -> int:
     payload = {
         "tag": tag,
         "created_at": time.strftime("%Y-%m-%d %H:%M:%S"),
+        "env": fingerprint.fingerprint(),
         "meta": {
             "target": TARGET, "target_gb": target_INFO["size_gb"],
             "draft": DRAFT, "draft_gb": draft_INFO["size_gb"],
