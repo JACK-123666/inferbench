@@ -87,6 +87,19 @@ def _scope_of(payload: dict) -> str:
     return env.get("scope") or "未记录（该结果早于环境指纹功能）"
 
 
+def _corpus_of(payload: dict) -> dict | None:
+    """结果用的语料身份（来源 / 条数 / 内容指纹）。
+
+    准确率类结论**只在那份语料上成立**，所以推荐必须把它一起带上 ——
+    否则"Q8 比 Q4 准 5pp"这句话在换了一份语料之后就没人说得清还成不成立。
+    """
+    info = payload.get("eval_set")
+    if not info:
+        return None
+    return {"source": info.get("source", "未记录"), "total": info.get("total"),
+            "hard": info.get("hard"), "sha1_8": info.get("sha1_8")}
+
+
 # ============================================================
 # 四项决策
 # ============================================================
@@ -316,10 +329,9 @@ def decide_load(loads: list[tuple[Path, dict]], slo_ttft: float | None,
         if not levels:
             continue
         levels.sort(key=lambda L: L["concurrency"])
-        if slo_ttft is not None:
-            within = [L for L in levels if L["ttft_p95"] <= slo_ttft]
-        else:
-            within = levels
+        # 没有延迟目标就没有"承载能力"这一说：P=1 也能收下 16 路请求，
+        # 只是 TTFT P95 会到几秒 —— 那不是容量，那是排队。
+        within = [L for L in levels if L["ttft_p95"] <= slo_ttft] if slo_ttft is not None else []
         cap = within[-1] if within else None
         configs.append({
             "file": path.name,
@@ -332,6 +344,7 @@ def decide_load(loads: list[tuple[Path, dict]], slo_ttft: float | None,
                         "ttft_p95": L["ttft_p95"], "lat_p95": L.get("lat_p95"),
                         "lat_p99": L.get("lat_p99"), "error_rate": L.get("error_rate")}
                        for L in levels],
+            "measured_max_concurrency": levels[-1]["concurrency"],
             "capacity_at_slo": ({"concurrency": cap["concurrency"], "qps": cap["qps"],
                                  "ttft_p95": cap["ttft_p95"]} if cap else None),
             "saturation": payload.get("saturation"),
@@ -340,11 +353,24 @@ def decide_load(loads: list[tuple[Path, dict]], slo_ttft: float | None,
         return {"status": "no_data", "reason": "并发结果里没有可用的并发梯度"}
 
     configs.sort(key=lambda c: (c["num_parallel"] if c["num_parallel"] is not None else 0))
-    best = max(configs, key=lambda c: ((c["capacity_at_slo"] or {}).get("concurrency") or 0))
-    result = {"status": "ok", "slo_ttft_ms": slo_ttft, "configs": configs,
-              "recommended": {"file": best["file"], "num_parallel": best["num_parallel"],
-                              "capacity_at_slo": best["capacity_at_slo"],
-                              "footprint_gb": best["footprint_gb"]}}
+    result = {"status": "ok", "slo_ttft_ms": slo_ttft, "configs": configs}
+    if slo_ttft is None:
+        result["recommended"] = None
+        result["capacity_note"] = ("未设 `--slo-ttft`：**给不出承载能力结论**。"
+                                   "并发数本身不是容量 —— 不设延迟目标的话，单 slot 也能收下 16 路请求，"
+                                   "只是首 Token 要等几秒。加上 `--slo-ttft <ms>` 再来看能扛几路。")
+        if want_concurrency is not None:
+            result["meets_target"] = {
+                "ok": False, "want_concurrency": want_concurrency,
+                "reason": f"没设 `--slo-ttft`，无法判断能否承载 {want_concurrency} 路 —— "
+                          f"并发不配延迟目标是没有意义的（补上目标延迟再问）",
+            }
+        return result
+
+    best = max(configs, key=lambda c: (c["capacity_at_slo"] or {}).get("concurrency") or 0)
+    result["recommended"] = {"file": best["file"], "num_parallel": best["num_parallel"],
+                             "capacity_at_slo": best["capacity_at_slo"],
+                             "footprint_gb": best["footprint_gb"]}
 
     if len(configs) >= 2:
         lo, hi = configs[0], configs[-1]
@@ -412,6 +438,24 @@ def check_scope(used: list[tuple[str, dict]], current: dict) -> dict:
                             f"{oll.get('num_parallel_env')}，本机 {cur_oll.get('num_parallel_env')} "
                             f"—— 并发结论直接受这个值影响")
     return {"warnings": warnings, "unknown_scope": unknown}
+
+
+def check_corpus(used: list[tuple[str, dict]]) -> dict:
+    """多份结果混用不同语料时，准确率的横向对比是不成立的。"""
+    seen: dict[str, list[str]] = {}
+    unknown: list[str] = []
+    for label, payload in used:
+        info = _corpus_of(payload)
+        if not info or not info.get("sha1_8"):
+            unknown.append(label)
+            continue
+        seen.setdefault(info["sha1_8"], []).append(label)
+    warnings = []
+    if len(seen) > 1:
+        groups = "；".join(f"指纹 `{sha}`：{'、'.join(labels)}" for sha, labels in seen.items())
+        warnings.append(f"这些结果用的**不是同一份语料**（{groups}）—— "
+                        f"跨语料的准确率横向对比不成立，请用同一份语料重跑后再比")
+    return {"corpora": seen, "unknown": unknown, "warnings": warnings}
 
 
 # ============================================================
@@ -503,15 +547,15 @@ def build(argv: list[str]) -> tuple[dict, list[Path]]:
         },
         "sources": {
             "quant": {"file": quant[0].name, "created_at": quant[1].get("created_at"),
-                      "scope": _scope_of(quant[1])} if quant else None,
+                      "scope": _scope_of(quant[1]), "corpus": _corpus_of(quant[1])} if quant else None,
             "cache": {"file": cache[0].name, "created_at": cache[1].get("created_at"),
-                      "scope": _scope_of(cache[1])} if cache else None,
+                      "scope": _scope_of(cache[1]), "corpus": _corpus_of(cache[1])} if cache else None,
             "gate": {"file": gate[0].name, "created_at": gate[1].get("created_at"),
-                     "scope": _scope_of(gate[1])} if gate else None,
+                     "scope": _scope_of(gate[1]), "corpus": _corpus_of(gate[1])} if gate else None,
             "spec": {"file": spec[0].name, "created_at": spec[1].get("created_at"),
-                     "scope": _scope_of(spec[1])} if spec else None,
+                     "scope": _scope_of(spec[1]), "corpus": _corpus_of(spec[1])} if spec else None,
             "load": [{"file": p.name, "created_at": pl.get("created_at"),
-                      "scope": _scope_of(pl)} for p, pl in loads],
+                      "scope": _scope_of(pl), "corpus": _corpus_of(pl)} for p, pl in loads],
         },
         "unused_candidates": unused,
         "quant": decide_quant(quant[1], vram, args.quality_floor) if quant else
@@ -520,6 +564,7 @@ def build(argv: list[str]) -> tuple[dict, list[Path]]:
         "spec_decision": decide_spec(spec[1] if spec else None),
         "load_decision": decide_load(loads, args.slo_ttft, args.concurrency),
         "scope_check": check_scope(used, current_env),
+        "corpus_check": check_corpus(used),
         "env": current_env,
     }
     tag = payload["tag"]
@@ -583,6 +628,21 @@ def build_report(payload: dict) -> Path:
         for key, names in unused.items():
             md.append(f"- {key}：{'、'.join('`' + n + '`' for n in names)}")
         md.append("")
+
+    corpora = payload.get("corpus_check") or {}
+    listed = [("实验一·量化", src.get("quant")), ("实验二·缓存", src.get("cache")),
+              ("实验三·门槛", src.get("gate"))]
+    listed += [("实验五·并发", item) for item in src.get("load", [])]
+    with_corpus = [(label, item) for label, item in listed if item and item.get("corpus")]
+    if with_corpus:
+        md.append("**这些准确率只在下列语料上成立**（语料换了结论要重测）：\n")
+        for label, item in with_corpus:
+            c = item["corpus"]
+            md.append(f"- {label}（`{item['file']}`）：{c['source']} · {c['total']} 条"
+                      f"（难例 {c['hard']}）· 指纹 `{c['sha1_8'] or '未记录'}`")
+        md.append("")
+    for w in corpora.get("warnings") or []:
+        md.append(f"⚠ {w}\n")
 
     chk = payload.get("scope_check") or {}
     if chk.get("warnings"):
@@ -679,6 +739,8 @@ def build_report(payload: dict) -> Path:
                       f"在 TTFT P95 ≤ {_fmt(L.get('slo_ttft_ms'), ' ms')} 下可承载 "
                       f"**{cap.get('concurrency')} 路**（QPS {_fmt(cap.get('qps'))}），"
                       f"模型显存 {_fmt(rec.get('footprint_gb'), ' GB')} | 实验五（`{rec.get('file')}`） |")
+        elif L.get("capacity_note"):
+            md.append(f"| 并行度 / 容量 | ⚠ **给不出结论** | {L['capacity_note']} | 实验五 |")
         else:
             md.append(f"| 并行度 / 容量 | ⚠ 该 SLO 下没有任何并发档达标 | "
                       f"最低实测 TTFT P95 都超过目标 | 实验五 |")
@@ -817,16 +879,23 @@ def console_summary(payload: dict) -> str:
     if L.get("status") == "ok":
         rec = L.get("recommended") or {}
         cap = rec.get("capacity_at_slo") or {}
-        lines.append(f"  并发容量    : NUM_PARALLEL={rec.get('num_parallel')} "
-                     f"→ {cap.get('concurrency')} 路 @ SLO（QPS {_fmt(cap.get('qps'))}）")
+        if cap:
+            lines.append(f"  并发容量    : NUM_PARALLEL={rec.get('num_parallel')} "
+                         f"→ {cap.get('concurrency')} 路 @ SLO（QPS {_fmt(cap.get('qps'))}）")
+        elif L.get("capacity_note"):
+            lines.append("  并发容量    : 给不出结论 —— 未设 --slo-ttft（并发不配延迟目标没有意义）")
+        else:
+            lines.append("  并发容量    : 该 SLO 下没有任何并发档达标")
         mt = L.get("meets_target")
         if mt and not mt.get("ok"):
-            lines.append(f"  目标并发    : 给不出结论 —— 已测并行度都不够 {mt['want_concurrency']} 路")
+            lines.append(f"  目标并发    : 给不出结论 —— {mt['reason']}")
     else:
         lines.append(f"  并发容量    : 给不出结论（{L.get('reason')}）")
 
     chk = payload.get("scope_check") or {}
     for w in chk.get("warnings") or []:
+        lines.append(f"  ⚠ {w}")
+    for w in (payload.get("corpus_check") or {}).get("warnings") or []:
         lines.append(f"  ⚠ {w}")
     lines.append("=" * 78)
     return "\n".join(lines)

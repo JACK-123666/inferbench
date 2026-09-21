@@ -70,6 +70,7 @@ python -m inferbench            # 不知道有什么命令？直接敲这个
 | 命令 | 做什么 |
 |---|---|
 | `env` | 环境体检：显卡 / Ollama / 模型 / 依赖 / 测量口径 |
+| `dataset` | **语料体检**：接自己的数据（格式 / 能测什么 / 标签对不对得上任务定义） |
 | `quant` | 实验一 · 量化档位对比（显存↓ / 速度↑ / 精度↓） |
 | `cache` | 实验二 · 语义缓存（阈值扫描 + 误命中归因） |
 | `gate` | 实验三 · 缓存写入门槛（自一致性 A/B，负结果） |
@@ -108,7 +109,8 @@ inferbench/
 │   ├── cache.py               # 语义缓存核心（实验二/三共用，含版本/TTL/开关）
 │   ├── loadgen.py             # 并发压测（httpx + asyncio，实验五）
 │   ├── bench.py               # 通用测量执行器：清显存 → 预热 → 重复 → 记录
-│   ├── eval_set.py            # 评测集加载（默认从 Synapse 导入并缓存）
+│   ├── eval_set.py            # 评测集加载（默认从 Synapse 导入并缓存）+ 语料身份/指纹
+│   ├── dataset.py             # 语料体检：格式、可测性、标签与任务定义对齐
 │   ├── tasks.py               # 任务定义：prompt / 标签解析 / 打分 / 混淆矩阵
 │   ├── stats.py               # 中位数 / P95 / 余弦相似度 / CSV·JSON 落盘
 │   ├── svg.py                 # 内联 SVG 图表（零依赖，取代 matplotlib）
@@ -117,7 +119,7 @@ inferbench/
 │   └── experiments/           # 五个实验，每个暴露 run(argv) -> int
 │       ├── quant.py  cache_exp.py  gate.py  spec.py  load.py  report_cmd.py
 ├── tests/                     # pytest：83 个用例，覆盖真实踩过的坑（回归测试）
-├── data/                      # 评测集缓存（已入库，clone 即可复现）
+├── data/                      # 评测集缓存（已入库，clone 即可复现）+ example_corpus.jsonl（格式样例）
 └── results/                   # CSV 明细 / JSON / Markdown 报告（已入库）
 ```
 
@@ -150,6 +152,37 @@ python -m inferbench load --levels 1,2,4,8,16 --requests 24
 python -m inferbench recommend --vram 8 --slo-ttft 200 --concurrency 4
 ```
 
+### 用你自己的语料（不必依赖 Synapse）
+
+先把文件喂给体检，它会告诉你**能测什么、不能测什么**：
+
+```powershell
+python -m inferbench dataset raw_queries.txt              # 一行一条 prompt 也能读
+python -m inferbench dataset q.csv --text-col question --intent-col category
+python -m inferbench dataset my.jsonl --write data/my_corpus.jsonl   # 规范化后直接用
+```
+
+然后交给实验（量化 / 缓存 / 门槛 / 并发都支持 `--eval-set`）：
+
+```powershell
+python -m inferbench quant --eval-set data/my_corpus.jsonl --models qwen3:1.7b-q8_0
+```
+
+格式是 jsonl，一行一条：`{"text": "...", "intent": "...", "hard": false}`（后两个字段可省）。
+PowerShell / 记事本存出来的带 BOM 文件也能读。
+
+**两个必须先知道的限制**（`dataset` 会替你检查，并写进报告）：
+
+1. **没有标签就测不出准确率** —— 只能测吞吐与延迟。量化实验会**直接拒绝运行**，
+   而不是给你一个恒为 0 的准确率。
+2. **换标签必须同时改任务定义** —— 标签不在 `inferbench/tasks.py` 的 `LABELS` 里时，
+   准确率会恒为 0。**那不是模型不行，是尺子错了**；要换标签就同时改
+   `LABELS` / `SYSTEM_PROMPT` / `FEW_SHOTS` / `SYNONYMS` 四处。
+
+准确率类结论**只在它所用的那份语料上成立**，所以每份结果都会记下语料的来源、条数与
+**内容指纹**（sha1 前 8 位），报告头部会印出来；`recommend` 一旦发现多份结果用了
+不同语料，会直接告警——跨语料的准确率横向对比是不成立的。
+
 跑完看 `results/` 下的 `.md`：除了表格和 SVG 图，最后一段是**可直接粘进简历的结论句**，
 数字全部自动取自本次运行。
 
@@ -174,7 +207,8 @@ Ollama 版本与实际 host、`OLLAMA_NUM_PARALLEL`、Python 与 `inferbench+git
 
 > 本仓库里的历史结果（`quant_ladder-*`、`cache_*`、`cache_gate_*`、`spec_full`、`load_*`）
 > 产生在这个功能之前，报告会明确标注「适用边界未知」，而不是假装有指纹。
-> `results/quant_smoke-env.*` 是一次 12 条样本的冒烟跑，只为演示 `env` 块长什么样，**不是结论依据**。
+> `results/quant_owncorpus.*` 是用 `data/example_corpus.jsonl`（15 条手写样例）跑的一次小实验，
+> 只为演示 `env` 块与语料指纹长什么样，**不是结论依据**。
 
 ---
 
@@ -376,16 +410,14 @@ A/B 用同一张采样表，唯一变量是门槛开关：
 ## 8. 下一步（按 ROI 排序）
 
 **已完成**：实验一~五（量化 / 语义缓存 / 写入门槛 / 投机解码 / 并发压测）都已跑完并留有结果文件；
-每份结果自带环境指纹（`inferbench/fingerprint.py`）；选型可用 `python -m inferbench recommend`
-直接收敛成「配置 + 代价」（见 §2）。
+每份结果自带环境指纹（`inferbench/fingerprint.py`）与语料指纹（`inferbench/eval_set.py`）；
+选型可用 `python -m inferbench recommend` 直接收敛成「配置 + 代价」；
+自己的语料可以用 `python -m inferbench dataset` 体检后接进任意实验（见 §4）。
 下面只剩「想做但没做」的：
 
-1. **接入真实语料**：现在的评测集是借自 Synapse 的 100 条人工标注，**不是你的真实流量**。
-   `--eval-set` 已支持任意 jsonl，但缺一页「怎么把自己的数据接进来」的说明与样例 ——
-   这是真把它当工具用时，第一个要回答的问题。
-2. **KV Cache 扫参**：改 `num_ctx`（2048/4096/8192/16384）跑一圈，得到"上下文 → 显存/速度"曲线。0 成本。
-3. **SFT / LoRA**：8GB 显存 + `qwen3:0.6b` 基座，跑通 LoRA 全流程（方法学验证）。
-4. **偏好对齐 DPO**：0.5B 玩具规模。
+1. **KV Cache 扫参**：改 `num_ctx`（2048/4096/8192/16384）跑一圈，得到"上下文 → 显存/速度"曲线。0 成本。
+2. **SFT / LoRA**：8GB 显存 + `qwen3:0.6b` 基座，跑通 LoRA 全流程（方法学验证）。
+3. **偏好对齐 DPO**：0.5B 玩具规模。
 
 > **暂不做的：多模态（VLM 单据抽取）**。理由：需下载约 12GB（`granite3.2-vision:2b` + `qwen3-vl:4b` +
 > `deepseek-ocr:3b`），按 2 MB/s 约 100 分钟，且要另备票据数据集；而它只命中 JD 的"范式选型"一角，

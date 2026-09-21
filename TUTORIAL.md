@@ -1484,6 +1484,12 @@ python -m inferbench gate --paraphrases 2 --n 3 --threshold 0.92
 # 收敛：把以上结果算成「本机该怎么配 + 代价」（不跑模型，秒出）
 python -m inferbench recommend --vram 8 --slo-ttft 200 --concurrency 4
 
+# 用自己的语料：先体检（格式 / 能测什么 / 标签对不对得上任务定义）
+python -m inferbench dataset my_corpus.jsonl
+python -m inferbench dataset raw_queries.txt --write data/my_corpus.jsonl
+# 再喂给任意实验
+python -m inferbench quant --eval-set data/my_corpus.jsonl
+
 # 改报告模板后重出报告（不重跑实验）
 python -m inferbench report results/quant_xxx.json
 
@@ -1518,7 +1524,8 @@ inferbench/
 │   ├── cache.py              语义缓存核心（实验二/三共用）
 │   ├── loadgen.py            并发压测（httpx + asyncio，实验五）
 │   ├── bench.py              【核心】测量执行器：清显存→预热→重复→记录
-│   ├── eval_set.py           评测集加载（默认从 Synapse 导入并缓存）
+│   ├── eval_set.py           评测集加载 + 语料身份/指纹（记录结果用的是哪份数据）
+│   ├── dataset.py            语料体检：格式、可测性、标签与任务定义对齐
 │   ├── tasks.py              任务定义：prompt、标签解析、打分、混淆矩阵
 │   ├── stats.py              中位数/P95/余弦相似度/CSV·JSON 落盘
 │   ├── svg.py                零依赖内联 SVG 图表

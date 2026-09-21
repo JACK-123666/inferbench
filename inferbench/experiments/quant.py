@@ -1,4 +1,4 @@
-﻿"""实验 1 · 量化档位对比：显存 ↓ / 速度 ↑ / 精度 ↓ 三角表
+"""实验 1 · 量化档位对比：显存 ↓ / 速度 ↑ / 精度 ↓ 三角表
 
 跑法::
 
@@ -51,6 +51,10 @@ def run(argv: list[str] | None = None) -> int:
         print("评测集为空。请确认 D:\\PYTHON\\Synapse\\tools\\intent_testset.py 存在，"
               "或用 --eval-set 指定 jsonl。")
         return 2
+    problem = ev.require_labels(items, "quant")
+    if problem:
+        print(problem)
+        return 2
     if args.limit:
         items = items[: args.limit]
 
@@ -83,7 +87,7 @@ def run(argv: list[str] | None = None) -> int:
         "tag": tag,
         "created_at": time.strftime("%Y-%m-%d %H:%M:%S"),
         "env": fingerprint.fingerprint(),
-        "eval_set": {"total": info["total"], "hard": info["hard"], "by_intent": info["by_intent"]},
+        "eval_set": ev.identify(args.eval_set or None, items),
         "protocol": {
             "num_ctx": config.NUM_CTX, "temperature": config.TEMPERATURE,
             "think": False, "seed": config.SEED, "shots": args.shots,

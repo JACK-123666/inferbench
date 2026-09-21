@@ -1,4 +1,4 @@
-﻿"""实验 3 · 缓存写入门槛：用自一致性（self-consistency）治 A 类误命中
+"""实验 3 · 缓存写入门槛：用自一致性（self-consistency）治 A 类误命中
 
 ## 为什么做这个实验
 
@@ -205,6 +205,7 @@ def build_report(payload: dict) -> Path:
     md: list[str] = ["# 实验 3 · 缓存写入门槛（自一致性）验证报告\n"]
     md.append(f"- 生成时间：{payload['created_at']}")
     md.extend(fingerprint.report_lines(payload))
+    md.extend(ev.render_lines(payload))
     md.append("")
     md.append(f"- 请求流：{meta['stream_size']} 条请求 / {meta['unique_texts']} 条唯一文本")
     md.append(f"- 采样：每条唯一文本采样 **{n} 次**（temperature={meta['temperature']}）")
@@ -325,6 +326,10 @@ def run(argv: list[str] | None = None) -> int:
     if not items:
         print("评测集为空。")
         return 2
+    problem = ev.require_labels(items, "gate")
+    if problem:
+        print(problem)
+        return 2
 
     tag = args.tag or time.strftime("%Y%m%d-%H%M%S")
     client = Ollama()
@@ -370,6 +375,7 @@ def run(argv: list[str] | None = None) -> int:
         "tag": tag,
         "created_at": time.strftime("%Y-%m-%d %H:%M:%S"),
         "env": fingerprint.fingerprint(),
+        "eval_set": ev.identify(args.eval_set or None, items),
         "meta": {
             "stream_size": len(stream),
             "unique_texts": len(unique),

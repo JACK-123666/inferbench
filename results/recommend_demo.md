@@ -1,10 +1,10 @@
 # 选型建议（从实验结果收敛而来）
 
-- 生成时间：2026-09-21 12:20:09
-- **适用范围**：NVIDIA GeForce RTX 4060 Laptop GPU（8188 MiB） · 驱动 616.92 · CUDA 13.4 · Ollama unknown · OLLAMA_NUM_PARALLEL=1（客户端环境变量） · Python 3.13.12 · inferbench 0.3.0+45764c4
+- 生成时间：2026-09-21 12:27:33
+- **适用范围**：NVIDIA GeForce RTX 4060 Laptop GPU（8188 MiB） · 驱动 616.92 · CUDA 13.4 · Ollama 0.32.15 · OLLAMA_NUM_PARALLEL=1（客户端环境变量） · Python 3.13.12 · inferbench 0.3.0+fdf6d47
   - GPU：`NVIDIA GeForce RTX 4060 Laptop GPU` · 显存 8188 MiB · 驱动 616.92 · CUDA 13.4 · 算力 8.9
-  - 运行时：Ollama `unknown` @ `http://127.0.0.1:11434` · `OLLAMA_NUM_PARALLEL=1`（客户端环境变量；服务端探测不到，若服务端在别处运行请以服务端为准）
-  - 代码版本：inferbench `0.3.0` · git `45764c4` · Python 3.13.12 · 指纹采集于 2026-09-21 12:20:06
+  - 运行时：Ollama `0.32.15` @ `http://127.0.0.1:11434` · `OLLAMA_NUM_PARALLEL=1`（客户端环境变量；服务端探测不到，若服务端在别处运行请以服务端为准）
+  - 代码版本：inferbench `0.3.0` · git `fdf6d47` · Python 3.13.12 · 指纹采集于 2026-09-21 12:27:33
 
 ## 1. 场景（你的约束）
 
@@ -26,7 +26,11 @@
 
 同一实验有多份结果时，本工具按「记录最多 → 采集最新」自动挑选；**本次未采用**的候选如下（可用 `--quant-file` 等参数手动指定）：
 
-- quant：`quant_ladder-3tier.json`、`quant_smoke-env.json`
+- quant：`quant_ladder-3tier.json`、`quant_owncorpus.json`、`quant_smoke-env.json`
+
+**这些准确率只在下列语料上成立**（语料换了结论要重测）：
+
+- 实验一·量化（`quant_ladder-fp16.json`）：未记录 · 100 条（难例 23）· 指纹 `未记录`
 
 ### 适用边界未知的数据
 

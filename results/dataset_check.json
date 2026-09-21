@@ -1,0 +1,54 @@
+{
+  "total": 15,
+  "labeled": 15,
+  "unlabeled": 0,
+  "unlabeled_ids": [],
+  "empty_text_ids": [],
+  "by_intent": {
+    "knowledge_retrieval": 7,
+    "summarize": 4,
+    "small_talk": 4
+  },
+  "task_labels": [
+    "knowledge_retrieval",
+    "summarize",
+    "small_talk"
+  ],
+  "unknown_labels": {},
+  "missing_task_labels": [],
+  "hard_count": 3,
+  "hard_share": 0.2,
+  "duplicate_count": 0,
+  "duplicate_examples": [],
+  "max_chars": 20,
+  "char_limit": 2457,
+  "over_length_count": 0,
+  "over_length_examples": [],
+  "balance": {
+    "max_label": "knowledge_retrieval",
+    "max_share": 0.4666666666666667,
+    "n_labels": 3
+  },
+  "capabilities": [
+    {
+      "experiment": "实验五·并发压测",
+      "status": "ok",
+      "why": "只需要 prompt 构造请求，不需要标签"
+    },
+    {
+      "experiment": "实验二/三·语义缓存",
+      "status": "ok",
+      "why": "标签齐备，可客观判定命中是否正确"
+    },
+    {
+      "experiment": "实验一·量化",
+      "status": "ok",
+      "why": "标签齐备且与任务定义一致"
+    }
+  ],
+  "problems": [],
+  "source_path": "data/example_corpus.jsonl",
+  "source_format": "jsonl",
+  "created_at": "2026-09-21 12:25:53",
+  "kind": "dataset"
+}

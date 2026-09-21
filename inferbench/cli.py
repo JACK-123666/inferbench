@@ -16,6 +16,8 @@ from inferbench.ollama import Ollama
 COMMANDS: dict[str, tuple[str, str, str]] = {
     "env":    ("", "环境体检：显卡 / Ollama / 模型 / 依赖 / 测量口径",
                "python -m inferbench env"),
+    "dataset": ("inferbench.dataset", "语料体检：接自己的数据（格式 / 可测性 / 标签对齐）",
+                "python -m inferbench dataset data/example_corpus.jsonl"),
     "quant":  ("inferbench.experiments.quant", "实验一 · 量化档位对比（显存↓ / 速度↑ / 精度↓）",
                "python -m inferbench quant --models qwen3:1.7b-fp16,qwen3:1.7b-q8_0,qwen3:1.7b"),
     "cache":  ("inferbench.experiments.cache_exp", "实验二 · 语义缓存（阈值扫描 + 误命中归因）",

@@ -1,4 +1,4 @@
-﻿"""实验 2 · 语义缓存：阈值扫描 + 客观误命中评估 + 版本/灰度/回滚验证
+"""实验 2 · 语义缓存：阈值扫描 + 客观误命中评估 + 版本/灰度/回滚验证
 
 跑法::
 
@@ -260,6 +260,10 @@ def run(argv: list[str] | None = None) -> int:
     if not items:
         print("评测集为空。")
         return 2
+    problem = ev.require_labels(items, "cache")
+    if problem:
+        print(problem)
+        return 2
 
     thresholds = [float(t) for t in args.thresholds.split(",") if t.strip()]
     tag = args.tag or time.strftime("%Y%m%d-%H%M%S")
@@ -319,6 +323,7 @@ def run(argv: list[str] | None = None) -> int:
         "tag": tag,
         "created_at": time.strftime("%Y-%m-%d %H:%M:%S"),
         "env": fingerprint.fingerprint(),
+        "eval_set": ev.identify(args.eval_set or None, items),
         "meta": {
             "stream_size": len(stream),
             "base_queries": len(items),

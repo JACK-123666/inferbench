@@ -233,6 +233,28 @@ def test_load_absent_gives_no_conclusion():
     assert rec.decide_load([], slo_ttft=200.0, want_concurrency=None)["status"] == "no_data"
 
 
+def test_load_without_slo_does_not_claim_capacity():
+    """不设延迟目标就没有"承载能力"可言：P=1 也能收下 16 路，只是首 Token 要等几秒。"""
+    loads = [(Path("load_full.json"), _load(1, 1.586, {1: 40.7, 16: 6112.1}))]
+    d = rec.decide_load(loads, slo_ttft=None, want_concurrency=16)
+    assert d["recommended"] is None
+    assert "给不出承载能力结论" in d["capacity_note"]
+    assert d["meets_target"]["ok"] is False and "没有意义" in d["meets_target"]["reason"]
+
+
+def test_corpus_check_warns_when_results_use_different_corpora():
+    a = {"eval_set": {"source": "内置", "total": 100, "sha1_8": "aaaaaaaa"}}
+    b = {"eval_set": {"source": "我的语料.jsonl", "total": 15, "sha1_8": "bbbbbbbb"}}
+    chk = rec.check_corpus([("实验一·量化", a), ("实验二·缓存", b)])
+    assert len(chk["corpora"]) == 2
+    assert any("不是同一份语料" in w for w in chk["warnings"])
+    # 同一份语料则不告警
+    assert rec.check_corpus([("实验一·量化", a), ("实验二·缓存", dict(a))])["warnings"] == []
+    # 没有语料信息的老结果进 unknown，不误报"混用"
+    chk2 = rec.check_corpus([("实验一·量化", a), ("实验二·缓存", {"tag": "old"})])
+    assert chk2["warnings"] == [] and chk2["unknown"] == ["实验二·缓存"]
+
+
 # ============================================================
 # 数据源挑选与适用范围
 # ============================================================

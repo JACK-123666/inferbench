@@ -1,0 +1,15 @@
+{"text": "上个月的运输成本环比涨了多少？", "intent": "knowledge_retrieval", "hard": false}
+{"text": "8D 报告里的 D4 阶段要写什么？", "intent": "knowledge_retrieval", "hard": false}
+{"text": "怎么查某个批次的质量检验记录？", "intent": "knowledge_retrieval", "hard": false}
+{"text": "ISO 9001 的纠正措施流程是什么？", "intent": "knowledge_retrieval", "hard": false}
+{"text": "这批货现在停在哪个中转场？", "intent": "knowledge_retrieval", "hard": false}
+{"text": "把这个月的物流异常汇总一下", "intent": "summarize", "hard": false}
+{"text": "把这份月度成本表概括成三句话", "intent": "summarize", "hard": false}
+{"text": "总结一下昨天质量会上提到的三个问题", "intent": "summarize", "hard": false}
+{"text": "简要说明这批退货的原因", "intent": "summarize", "hard": false}
+{"text": "辛苦了，谢谢", "intent": "small_talk", "hard": false}
+{"text": "早上好", "intent": "small_talk", "hard": false}
+{"text": "这个报表做得不错", "intent": "small_talk", "hard": false}
+{"text": "那个东西的费用怎么算？", "intent": "knowledge_retrieval", "hard": true}
+{"text": "再详细一点", "intent": "knowledge_retrieval", "hard": true}
+{"text": "继续", "intent": "small_talk", "hard": true}

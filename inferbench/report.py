@@ -10,6 +10,7 @@ import re
 from pathlib import Path
 
 from inferbench import config
+from inferbench import eval_set as ev
 from inferbench import fingerprint
 from inferbench import stats
 from inferbench.svg import bar_chart, line_chart  # noqa: E402
@@ -151,6 +152,7 @@ def build_quant_report(payload: dict) -> Path:
     md.append(f"# 实验 1 · 量化档位对比报告\n")
     md.append(f"- 生成时间：{payload.get('created_at')}")
     md.extend(fingerprint.report_lines(payload))
+    md.extend(ev.render_lines(payload))
     md.append("")
     md.append(f"- 评测集：{payload['eval_set']['total']} 条（难例 {payload['eval_set']['hard']} 条）")
     proto = payload.get("protocol", {})
@@ -278,6 +280,7 @@ def build_cache_report(payload: dict) -> Path:
     md: list[str] = ["# 实验 2 · 语义缓存实验报告\n"]
     md.append(f"- 生成时间：{payload.get('created_at')}")
     md.extend(fingerprint.report_lines(payload))
+    md.extend(ev.render_lines(payload))
     md.append("")
     md.append(f"- 请求流：{meta.get('stream_size')} 条（原始 query {meta.get('base_queries')} 条 × "
               f"每条 {meta.get('paraphrases')} 个语义改写 + 原句）")
