@@ -1,0 +1,576 @@
+{
+  "kind": "recommend",
+  "tag": "demo",
+  "created_at": "2026-09-21 12:20:09",
+  "scenario": {
+    "vram_gb": 8.0,
+    "vram_source": "命令行指定",
+    "vram_margin": 0.9,
+    "slo_ttft_ms": 200.0,
+    "want_concurrency": 4,
+    "quality_floor": null
+  },
+  "sources": {
+    "quant": {
+      "file": "quant_ladder-fp16.json",
+      "created_at": "2026-09-18 10:27:45",
+      "scope": "未记录（该结果早于环境指纹功能）"
+    },
+    "cache": {
+      "file": "cache_full.json",
+      "created_at": "2026-09-18 08:59:02",
+      "scope": "未记录（该结果早于环境指纹功能）"
+    },
+    "gate": {
+      "file": "cache_gate_full.json",
+      "created_at": "2026-09-18 09:34:43",
+      "scope": "未记录（该结果早于环境指纹功能）"
+    },
+    "spec": {
+      "file": "spec_full.json",
+      "created_at": "2026-09-18 12:00:01",
+      "scope": "未记录（该结果早于环境指纹功能）"
+    },
+    "load": [
+      {
+        "file": "load_full.json",
+        "created_at": "2026-09-18 12:25:13",
+        "scope": "未记录（该结果早于环境指纹功能）"
+      },
+      {
+        "file": "load_parallel4.json",
+        "created_at": "2026-09-18 13:03:21",
+        "scope": "未记录（该结果早于环境指纹功能）"
+      }
+    ]
+  },
+  "unused_candidates": {
+    "quant": [
+      "quant_ladder-3tier.json",
+      "quant_smoke-env.json"
+    ]
+  },
+  "quant": {
+    "status": "ok",
+    "recommended": {
+      "model": "qwen3:1.7b-q8_0",
+      "footprint_gb": 2.242,
+      "accuracy": 0.92,
+      "accuracy_hard": 0.782608695652174,
+      "invalid_rate": 0.01,
+      "ttft_ms": 13.58,
+      "decode_tps": 134.21,
+      "wall_ms_p95": 80.99
+    },
+    "hard_case_best": {
+      "model": "qwen3:1.7b-fp16",
+      "accuracy_hard": 0.782608695652174,
+      "footprint_gb": 3.693
+    },
+    "basis": "未给准确率下限 → 在显存允许的候选里取**准确率最高**的一档（没有理由主动用精度换显存）",
+    "table": [
+      {
+        "model": "qwen3:1.7b-fp16",
+        "footprint_gb": 3.693,
+        "accuracy": 0.91,
+        "accuracy_hard": 0.782608695652174,
+        "invalid_rate": 0.01,
+        "ttft_ms": 18.46,
+        "decode_tps": 85.27,
+        "wall_ms_p95": 113.73,
+        "fits_vram": true,
+        "meets_floor": true
+      },
+      {
+        "model": "qwen3:1.7b-q8_0",
+        "footprint_gb": 2.242,
+        "accuracy": 0.92,
+        "accuracy_hard": 0.782608695652174,
+        "invalid_rate": 0.01,
+        "ttft_ms": 13.58,
+        "decode_tps": 134.21,
+        "wall_ms_p95": 80.99,
+        "fits_vram": true,
+        "meets_floor": true
+      },
+      {
+        "model": "qwen3:1.7b",
+        "footprint_gb": 1.586,
+        "accuracy": 0.87,
+        "accuracy_hard": 0.6956521739130435,
+        "invalid_rate": 0.0,
+        "ttft_ms": 10.73,
+        "decode_tps": 191.61,
+        "wall_ms_p95": 72.72,
+        "fits_vram": true,
+        "meets_floor": true
+      }
+    ],
+    "cheaper_alternative": {
+      "model": "qwen3:1.7b",
+      "footprint_gb": 1.586,
+      "accuracy": 0.87,
+      "accuracy_hard": 0.6956521739130435,
+      "saves_gb": 0.6559999999999999,
+      "accuracy_cost_pp": 5.000000000000004,
+      "hard_cost_pp": 8.695652173913048
+    },
+    "eval_set": {
+      "total": 100,
+      "hard": 23,
+      "hard_share": 0.23
+    }
+  },
+  "cache_decision": {
+    "cache": {
+      "status": "ok",
+      "threshold": 0.92,
+      "cost_saved_pct": 42.013333333333335,
+      "hit_rate": 0.42333333333333334,
+      "false_hit_rate": 0.14173228346456693,
+      "false_hit_a": 18,
+      "false_hit_b": 0,
+      "end_to_end_accuracy": 0.86,
+      "nocache_accuracy": 0.86,
+      "hit_ms_p95": 104.294,
+      "miss_ms_p95": 154.15,
+      "basis": "在「端到端准确率不低于无缓存基线 且 跨意图误命中(B类)=0」的档位里，取成本节省最大的一档",
+      "selection_met": true,
+      "table": [
+        {
+          "threshold": 0.8,
+          "cost_saved_pct": 60.4247619047619,
+          "hit_rate": 0.6066666666666667,
+          "false_hit_rate": 0.15934065934065933,
+          "false_hit_a": 29,
+          "false_hit_b": 0,
+          "end_to_end_accuracy": 0.8533333333333334,
+          "nocache_accuracy": 0.86
+        },
+        {
+          "threshold": 0.85,
+          "cost_saved_pct": 54.09714285714286,
+          "hit_rate": 0.5433333333333333,
+          "false_hit_rate": 0.17177914110429449,
+          "false_hit_a": 28,
+          "false_hit_b": 0,
+          "end_to_end_accuracy": 0.8433333333333334,
+          "nocache_accuracy": 0.86
+        },
+        {
+          "threshold": 0.88,
+          "cost_saved_pct": 49.75238095238096,
+          "hit_rate": 0.5,
+          "false_hit_rate": 0.16,
+          "false_hit_a": 24,
+          "false_hit_b": 0,
+          "end_to_end_accuracy": 0.85,
+          "nocache_accuracy": 0.86
+        },
+        {
+          "threshold": 0.9,
+          "cost_saved_pct": 46.019047619047626,
+          "hit_rate": 0.4633333333333333,
+          "false_hit_rate": 0.14388489208633093,
+          "false_hit_a": 20,
+          "false_hit_b": 0,
+          "end_to_end_accuracy": 0.8566666666666667,
+          "nocache_accuracy": 0.86
+        },
+        {
+          "threshold": 0.92,
+          "cost_saved_pct": 42.013333333333335,
+          "hit_rate": 0.42333333333333334,
+          "false_hit_rate": 0.14173228346456693,
+          "false_hit_a": 18,
+          "false_hit_b": 0,
+          "end_to_end_accuracy": 0.86,
+          "nocache_accuracy": 0.86
+        },
+        {
+          "threshold": 0.94,
+          "cost_saved_pct": 37.64380952380953,
+          "hit_rate": 0.38,
+          "false_hit_rate": 0.14912280701754385,
+          "false_hit_a": 17,
+          "false_hit_b": 0,
+          "end_to_end_accuracy": 0.86,
+          "nocache_accuracy": 0.86
+        },
+        {
+          "threshold": 0.96,
+          "cost_saved_pct": 32.91619047619047,
+          "hit_rate": 0.3333333333333333,
+          "false_hit_rate": 0.17,
+          "false_hit_a": 17,
+          "false_hit_b": 0,
+          "end_to_end_accuracy": 0.8566666666666667,
+          "nocache_accuracy": 0.86
+        },
+        {
+          "threshold": 0.98,
+          "cost_saved_pct": 27.156190476190478,
+          "hit_rate": 0.27666666666666667,
+          "false_hit_rate": 0.18072289156626506,
+          "false_hit_a": 15,
+          "false_hit_b": 0,
+          "end_to_end_accuracy": 0.8566666666666667,
+          "nocache_accuracy": 0.86
+        }
+      ],
+      "threshold_is_lever": {
+        "false_hit_rate_range": [
+          0.15934065934065933,
+          0.18072289156626506
+        ],
+        "note": "误命中率不随阈值单调下降 → 调阈值治不了误命中"
+      }
+    },
+    "gate": {
+      "status": "ok",
+      "cost_saved_pct_off": 42.433868436477766,
+      "cost_saved_pct_on": -74.68754136177135,
+      "false_hit_off": 18,
+      "false_hit_on": 16,
+      "latency_median_off": 89.345,
+      "latency_median_on": 164.84,
+      "unanimous_rate": 0.9869565217391304,
+      "unanimous_count": 227,
+      "unique_texts": 230,
+      "n": 3,
+      "worth_it": false
+    }
+  },
+  "spec_decision": {
+    "status": "ok",
+    "baseline": "base",
+    "controls": [
+      "base2"
+    ],
+    "noise_floor_pct": 0.7133592736705774,
+    "per_workload": {
+      "A-结构化抽取": {
+        "baseline_config": "base",
+        "baseline_tps": 154.2,
+        "best": {
+          "config": "ngram",
+          "decode_tps": 282.0,
+          "speedup": 1.8287937743190663,
+          "accept_rate": 100.0,
+          "ttft_ms": 17.1
+        },
+        "candidates": [
+          {
+            "config": "ngram",
+            "decode_tps": 282.0,
+            "speedup": 1.8287937743190663,
+            "accept_rate": 100.0,
+            "ttft_ms": 17.1
+          },
+          {
+            "config": "draft-k8",
+            "decode_tps": 109.2,
+            "speedup": 0.708171206225681,
+            "accept_rate": 56.6,
+            "ttft_ms": 26.0
+          },
+          {
+            "config": "draft-k3",
+            "decode_tps": 107.4,
+            "speedup": 0.6964980544747083,
+            "accept_rate": 69.9,
+            "ttft_ms": 23.8
+          },
+          {
+            "config": "draft-k16",
+            "decode_tps": 76.5,
+            "speedup": 0.4961089494163424,
+            "accept_rate": 30.8,
+            "ttft_ms": 23.7
+          }
+        ]
+      },
+      "B-自由摘要": {
+        "baseline_config": "base",
+        "baseline_tps": 152.5,
+        "best": {
+          "config": "ngram",
+          "decode_tps": 181.2,
+          "speedup": 1.1881967213114752,
+          "accept_rate": 94.2,
+          "ttft_ms": 17.4
+        },
+        "candidates": [
+          {
+            "config": "ngram",
+            "decode_tps": 181.2,
+            "speedup": 1.1881967213114752,
+            "accept_rate": 94.2,
+            "ttft_ms": 17.4
+          },
+          {
+            "config": "draft-k3",
+            "decode_tps": 100.2,
+            "speedup": 0.6570491803278689,
+            "accept_rate": 65.3,
+            "ttft_ms": 27.0
+          },
+          {
+            "config": "draft-k8",
+            "decode_tps": 94.8,
+            "speedup": 0.6216393442622951,
+            "accept_rate": 45.7,
+            "ttft_ms": 25.0
+          },
+          {
+            "config": "draft-k16",
+            "decode_tps": 57.3,
+            "speedup": 0.37573770491803277,
+            "accept_rate": 22.0,
+            "ttft_ms": 24.0
+          }
+        ]
+      }
+    },
+    "draft_cost": {
+      "target": "qwen3:1.7b",
+      "target_gb": 1.27,
+      "draft": "qwen3:0.6b",
+      "draft_gb": 0.49,
+      "draft_share_of_target": 0.3858267716535433
+    },
+    "draft_configs": [
+      "draft-k3",
+      "draft-k8",
+      "draft-k16"
+    ],
+    "ngram_configs": [
+      "ngram"
+    ],
+    "draft_speedups": {
+      "draft-k3": [
+        0.696,
+        0.657
+      ],
+      "draft-k8": [
+        0.708,
+        0.622
+      ],
+      "draft-k16": [
+        0.496,
+        0.376
+      ]
+    },
+    "all_draft_configs_slower": true
+  },
+  "load_decision": {
+    "status": "ok",
+    "slo_ttft_ms": 200.0,
+    "configs": [
+      {
+        "file": "load_full.json",
+        "num_parallel": 1,
+        "host": null,
+        "model": "qwen3:1.7b",
+        "footprint_gb": 1.5856640608981252,
+        "levels": [
+          {
+            "concurrency": 1,
+            "qps": 2.36,
+            "tokens_per_s": 150.9,
+            "ttft_p50": 27.4,
+            "ttft_p95": 40.7,
+            "lat_p95": 443.8,
+            "lat_p99": 445.8,
+            "error_rate": 0.0
+          },
+          {
+            "concurrency": 2,
+            "qps": 2.42,
+            "tokens_per_s": 154.3,
+            "ttft_p50": 434.6,
+            "ttft_p95": 448.0,
+            "lat_p95": 860.4,
+            "lat_p99": 874.4,
+            "error_rate": 0.0
+          },
+          {
+            "concurrency": 4,
+            "qps": 2.48,
+            "tokens_per_s": 157.7,
+            "ttft_p50": 1216.8,
+            "ttft_p95": 1298.3,
+            "lat_p95": 1706.7,
+            "lat_p99": 1715.2,
+            "error_rate": 0.0
+          },
+          {
+            "concurrency": 8,
+            "qps": 2.51,
+            "tokens_per_s": 160.2,
+            "ttft_p50": 2790.3,
+            "ttft_p95": 2813.9,
+            "lat_p95": 3192.0,
+            "lat_p99": 3194.1,
+            "error_rate": 0.0
+          },
+          {
+            "concurrency": 16,
+            "qps": 2.47,
+            "tokens_per_s": 157.3,
+            "ttft_p50": 4711.4,
+            "ttft_p95": 6112.1,
+            "lat_p95": 6517.6,
+            "lat_p99": 6529.7,
+            "error_rate": 0.0
+          }
+        ],
+        "capacity_at_slo": {
+          "concurrency": 1,
+          "qps": 2.36,
+          "ttft_p95": 40.7
+        },
+        "saturation": {
+          "concurrency": 2,
+          "qps_gain": 0.03,
+          "lat_p95": 860.4,
+          "base_p95": 443.8
+        }
+      },
+      {
+        "file": "load_parallel4.json",
+        "num_parallel": 4,
+        "host": "http://127.0.0.1:11440",
+        "model": "qwen3:1.7b",
+        "footprint_gb": 2.9489550767466426,
+        "levels": [
+          {
+            "concurrency": 1,
+            "qps": 2.24,
+            "tokens_per_s": 143.0,
+            "ttft_p50": 25.6,
+            "ttft_p95": 36.0,
+            "lat_p95": 496.3,
+            "lat_p99": 569.3,
+            "error_rate": 0.0
+          },
+          {
+            "concurrency": 2,
+            "qps": 4.01,
+            "tokens_per_s": 255.7,
+            "ttft_p50": 34.9,
+            "ttft_p95": 47.4,
+            "lat_p95": 514.1,
+            "lat_p99": 515.8,
+            "error_rate": 0.0
+          },
+          {
+            "concurrency": 4,
+            "qps": 6.09,
+            "tokens_per_s": 387.9,
+            "ttft_p50": 51.9,
+            "ttft_p95": 62.6,
+            "lat_p95": 702.8,
+            "lat_p99": 704.0,
+            "error_rate": 0.0
+          },
+          {
+            "concurrency": 8,
+            "qps": 6.27,
+            "tokens_per_s": 399.5,
+            "ttft_p50": 676.6,
+            "ttft_p95": 696.9,
+            "lat_p95": 1287.6,
+            "lat_p99": 1287.9,
+            "error_rate": 0.0
+          },
+          {
+            "concurrency": 16,
+            "qps": 6.18,
+            "tokens_per_s": 393.6,
+            "ttft_p50": 1641.9,
+            "ttft_p95": 1982.2,
+            "lat_p95": 2580.7,
+            "lat_p99": 2582.8,
+            "error_rate": 0.0
+          }
+        ],
+        "capacity_at_slo": {
+          "concurrency": 4,
+          "qps": 6.09,
+          "ttft_p95": 62.6
+        },
+        "saturation": {
+          "concurrency": 8,
+          "qps_gain": 0.03,
+          "lat_p95": 1287.6,
+          "base_p95": 496.3
+        }
+      }
+    ],
+    "recommended": {
+      "file": "load_parallel4.json",
+      "num_parallel": 4,
+      "capacity_at_slo": {
+        "concurrency": 4,
+        "qps": 6.09,
+        "ttft_p95": 62.6
+      },
+      "footprint_gb": 2.9489550767466426
+    },
+    "parallel_upgrade": {
+      "from_num_parallel": 1,
+      "to_num_parallel": 4,
+      "capacity_from": 1,
+      "capacity_to": 4,
+      "vram_from_gb": 1.5856640608981252,
+      "vram_to_gb": 2.9489550767466426,
+      "vram_cost_pct": 85.97603045101148
+    },
+    "meets_target": {
+      "ok": true,
+      "want_concurrency": 4,
+      "num_parallel": 4,
+      "file": "load_parallel4.json",
+      "capacity_at_slo": {
+        "concurrency": 4,
+        "qps": 6.09,
+        "ttft_p95": 62.6
+      },
+      "footprint_gb": 2.9489550767466426
+    }
+  },
+  "scope_check": {
+    "warnings": [],
+    "unknown_scope": [
+      "实验一·量化",
+      "实验二·缓存",
+      "实验三·门槛",
+      "实验四·投机解码",
+      "实验五·并发（load_full.json）",
+      "实验五·并发（load_parallel4.json）"
+    ]
+  },
+  "env": {
+    "captured_at": "2026-09-21 12:20:06",
+    "python": "3.13.12",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "gpu": {
+      "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+      "memory_total_mb": 8188.0,
+      "driver": "616.92",
+      "compute_cap": "8.9",
+      "cuda": "13.4"
+    },
+    "ollama": {
+      "version": "unknown",
+      "host": "http://127.0.0.1:11434",
+      "num_parallel_env": 1
+    },
+    "code": {
+      "inferbench": "0.3.0",
+      "git": "45764c4"
+    },
+    "scope": "NVIDIA GeForce RTX 4060 Laptop GPU（8188 MiB） · 驱动 616.92 · CUDA 13.4 · Ollama unknown · OLLAMA_NUM_PARALLEL=1（客户端环境变量） · Python 3.13.12 · inferbench 0.3.0+45764c4"
+  }
+}

@@ -1,4 +1,4 @@
-﻿"""重出报告：从已有的 results/*.json 重新生成 Markdown（不重跑实验）。
+"""重出报告：从已有的 results/*.json 重新生成 Markdown（不重跑实验）。
 
 改报告文案后用它，避免为了改一句话再跑几百次模型调用。
 
@@ -20,6 +20,8 @@ def kind_of(payload: dict) -> str:
     注意判别顺序：实验三（门槛 A/B）的结果里也有 `meta.stream_size`，
     如果先判 cache 就会把它当成实验二重出，导致 gate 的报告永远不更新（踩过）。
     """
+    if payload.get("kind") == "recommend":            # 选型建议：自带 kind，最优先
+        return "recommend"
     if payload.get("meta", {}).get("target"):
         return "spec"
     if payload.get("meta", {}).get("levels"):
@@ -58,6 +60,9 @@ def run(argv: list[str] | None = None) -> int:
         elif kind == "load":
             from inferbench.experiments import load
             out = load.build_report(payload)
+        elif kind == "recommend":
+            from inferbench import recommend
+            out = recommend.build_report(payload)
         else:
             print(f"{path} 类型无法识别")
             continue

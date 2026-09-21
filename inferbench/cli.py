@@ -1,4 +1,4 @@
-﻿"""统一命令入口：`python -m inferbench <命令>`。
+"""统一命令入口：`python -m inferbench <命令>`。
 
 设计意图：这个工程有 5 个实验 + 若干工具，散成 5 个脚本会让"从哪开始"变成一个问题。
 所以这里做一个薄薄的路由层——**每个子命令背后都是 `inferbench/experiments/*.py` 里的 `run(argv)`**，
@@ -26,6 +26,8 @@ COMMANDS: dict[str, tuple[str, str, str]] = {
                "python -m inferbench spec --configs base,draft-k8,ngram"),
     "load":   ("inferbench.experiments.load", "实验五 · 并发压测（QPS / 尾延迟 / TTFT）",
                "python -m inferbench load --levels 1,2,4,8,16 --requests 32"),
+    "recommend": ("inferbench.recommend", "收敛 · 选型建议：读结果文件算出「本机该怎么配 + 代价」",
+                  "python -m inferbench recommend --vram 8 --slo-ttft 200 --concurrency 4"),
     "report": ("inferbench.experiments.report_cmd", "重出报告：用旧 JSON 重新生成 Markdown（不重跑实验）",
                "python -m inferbench report results/spec_full.json"),
     "test":   ("", "跑单元测试（pytest）", "python -m inferbench test"),

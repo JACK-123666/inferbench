@@ -75,12 +75,15 @@ python -m inferbench            # 不知道有什么命令？直接敲这个
 | `gate` | 实验三 · 缓存写入门槛（自一致性 A/B，负结果） |
 | `spec` | 实验四 · 投机解码（draft 模型 vs n-gram） |
 | `load` | 实验五 · 并发压测（QPS / 尾延迟 / 真实 TTFT） |
+| `recommend` | **收敛 · 选型建议**：读 `results/*.json` 算出「本机该怎么配 + 代价」（不跑模型） |
 | `report` | 用旧 JSON 重新生成报告（改了文案不用重跑实验） |
 | `test` | 跑单元测试（pytest） |
 | `models` | 列出模型及其对应的 GGUF 文件路径 |
 
 **设计原则：CLI 只做路由，不塞业务逻辑。** 每个子命令背后都是
 `inferbench/experiments/*.py` 里的 `run(argv) -> int`，所以这些实验也能被别的脚本 import 调用。
+唯一的例外是 `recommend`（`inferbench/recommend.py`）：它是**收敛层** —— 不产生新数据，
+只把已有结果算成决策，所以它没有「测量口径」这一说。
 
 装成正经的包也可以：`pip install -e .` 之后，**任何目录**下都能用 `inferbench env`
 （等价于 `python -m inferbench env`），也能 `from inferbench import cache, report` 当库用。
@@ -110,9 +113,10 @@ inferbench/
 │   ├── stats.py               # 中位数 / P95 / 余弦相似度 / CSV·JSON 落盘
 │   ├── svg.py                 # 内联 SVG 图表（零依赖，取代 matplotlib）
 │   ├── report.py              # 报告组装（数字全部从结果文件取，不手抄）
+│   ├── recommend.py           # 【收敛层】读结果文件 → 选型建议 + 代价（不产生新数据）
 │   └── experiments/           # 五个实验，每个暴露 run(argv) -> int
 │       ├── quant.py  cache_exp.py  gate.py  spec.py  load.py  report_cmd.py
-├── tests/                     # pytest：51 个用例，覆盖三个真实 bug 的回归
+├── tests/                     # pytest：83 个用例，覆盖真实踩过的坑（回归测试）
 ├── data/                      # 评测集缓存（已入库，clone 即可复现）
 └── results/                   # CSV 明细 / JSON / Markdown 报告（已入库）
 ```
@@ -141,6 +145,9 @@ python -m inferbench cache --perturb-only --thresholds 0.85,0.90,0.92,0.95
 
 # ⑤ 实验五：并发压测（新）
 python -m inferbench load --levels 1,2,4,8,16 --requests 24
+
+# ⑥ 收敛：把上面的结果算成「本机该怎么配」（不跑模型，秒出）
+python -m inferbench recommend --vram 8 --slo-ttft 200 --concurrency 4
 ```
 
 跑完看 `results/` 下的 `.md`：除了表格和 SVG 图，最后一段是**可直接粘进简历的结论句**，
@@ -368,12 +375,17 @@ A/B 用同一张采样表，唯一变量是门槛开关：
 
 ## 8. 下一步（按 ROI 排序）
 
-**已完成**：实验一~五（量化 / 语义缓存 / 写入门槛 / 投机解码 / 并发压测）都已跑完并留有结果文件。
+**已完成**：实验一~五（量化 / 语义缓存 / 写入门槛 / 投机解码 / 并发压测）都已跑完并留有结果文件；
+每份结果自带环境指纹（`inferbench/fingerprint.py`）；选型可用 `python -m inferbench recommend`
+直接收敛成「配置 + 代价」（见 §2）。
 下面只剩「想做但没做」的：
 
-1. **KV Cache 扫参**：改 `num_ctx`（2048/4096/8192/16384）跑一圈，得到"上下文 → 显存/速度"曲线。0 成本。
-2. **SFT / LoRA**：8GB 显存 + `qwen3:0.6b` 基座，跑通 LoRA 全流程（方法学验证）。
-3. **偏好对齐 DPO**：0.5B 玩具规模。
+1. **接入真实语料**：现在的评测集是借自 Synapse 的 100 条人工标注，**不是你的真实流量**。
+   `--eval-set` 已支持任意 jsonl，但缺一页「怎么把自己的数据接进来」的说明与样例 ——
+   这是真把它当工具用时，第一个要回答的问题。
+2. **KV Cache 扫参**：改 `num_ctx`（2048/4096/8192/16384）跑一圈，得到"上下文 → 显存/速度"曲线。0 成本。
+3. **SFT / LoRA**：8GB 显存 + `qwen3:0.6b` 基座，跑通 LoRA 全流程（方法学验证）。
+4. **偏好对齐 DPO**：0.5B 玩具规模。
 
 > **暂不做的：多模态（VLM 单据抽取）**。理由：需下载约 12GB（`granite3.2-vision:2b` + `qwen3-vl:4b` +
 > `deepseek-ocr:3b`），按 2 MB/s 约 100 分钟，且要另备票据数据集；而它只命中 JD 的"范式选型"一角，

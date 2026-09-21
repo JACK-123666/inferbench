@@ -1481,6 +1481,9 @@ python -m inferbench cache --paraphrases 2
 # 实验三：缓存写入门槛（约 2 分钟）
 python -m inferbench gate --paraphrases 2 --n 3 --threshold 0.92
 
+# 收敛：把以上结果算成「本机该怎么配 + 代价」（不跑模型，秒出）
+python -m inferbench recommend --vram 8 --slo-ttft 200 --concurrency 4
+
 # 改报告模板后重出报告（不重跑实验）
 python -m inferbench report results/quant_xxx.json
 
@@ -1520,6 +1523,7 @@ inferbench/
 │   ├── stats.py              中位数/P95/余弦相似度/CSV·JSON 落盘
 │   ├── svg.py                零依赖内联 SVG 图表
 │   ├── report.py             报告组装 + 反直觉信号检测
+│   ├── recommend.py          【收敛层】读结果文件 → 选型建议与代价（不产生新数据）
 │   └── experiments/          五个实验 + 重出报告（每个暴露 run(argv)）
 ├── tests/                    pytest 用例（含三个真实 bug 的回归测试）
 ├── data/
