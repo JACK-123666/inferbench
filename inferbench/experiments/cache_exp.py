@@ -6,7 +6,7 @@
     python -m inferbench cache --limit 30 --thresholds 0.85,0.90,0.95
     python -m inferbench cache --perturb-only        # 不调 LLM 生成改写，用确定性扰动
 
-为什么这个实验值得做（也是面试官会追问的点）：
+为什么这个实验值得做：
 
 1. **命中是否"正确"是可客观判定的**。意图分类有金标准标签：缓存返回的标签
    如果等于当前 query 的真实意图 → 命中正确；不等 → **误命中**。所以

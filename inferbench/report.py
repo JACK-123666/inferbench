@@ -1,4 +1,4 @@
-﻿"""报告生成：把实验结果组装成 Markdown（含内联 SVG 图与可写进简历的结论句）。
+﻿"""报告生成：把实验结果组装成 Markdown（含内联 SVG 图与可直接引用的结论）。
 
 图表实现在 inferbench/svg.py（零依赖内联 SVG，不引入 matplotlib）。
 本模块只负责：取数 → 判定 → 组织文案。**所有数字都从结果文件里取，
@@ -207,7 +207,7 @@ def build_quant_report(payload: dict) -> Path:
         md.append(f"| `{s['model']}` | {base} | {s['footprint_gb']:.2f} GB "
                   f"(VRAM {s.get('vram_gb', 0):.2f} GB) | {s['processor']} |")
     md.append("")
-    md.append("> **踩过的坑（面试可讲）**：Ollama 默认让最近用过的模型常驻显存。首次跑多档量化时，"
+    md.append("> **踩过的坑**：Ollama 默认让最近用过的模型常驻显存。首次跑多档量化时，"
               "多个模型同时占用 8GB 显存（实测 7836/8188 MiB），推理被迫退到 CPU/共享内存，"
               "解码速度从 **168 tok/s 掉到 0.59 tok/s（差 286 倍）**。"
               "现在每次测量前先 `unload_all()` 清空显存并记录 GPU 基线，"
@@ -215,7 +215,7 @@ def build_quant_report(payload: dict) -> Path:
               "否则测出来的「速度差异」是显存竞争，不是量化收益。")
     md.append("")
 
-    md.append("## 可写进简历的结论句（数字都是本次真实测量值）\n")
+    md.append("## 结论（可直接引用；数字都是本次真实测量值）\n")
     ladder = " / ".join(labels)
     md.append(f"> **量化-显存-精度三方权衡实验**：固定 num_ctx=4096、关闭思维链、temperature=0、"
               f"每档重复 {proto.get('repeats')} 次取中位数的统一口径下，"
@@ -364,7 +364,7 @@ def build_cache_report(payload: dict) -> Path:
             md.append(f"| {name} | {item.get('how', '')} | {item.get('result', '')} |")
         md.append("")
 
-    md.append("## 可写进简历的结论句\n")
+    md.append("## 结论（可直接引用）\n")
     md.append("> **语义缓存与成本治理（含误命中归因）**：以真实意图分布构造 1:N 语义改写请求流"
               f"（{meta.get('stream_size')} 条请求 / {meta.get('unique_texts')} 条唯一文本），"
               f"缓存正确性由金标准标签客观判定；扫描 8 档阈值后选中 {best['threshold']:.2f}："

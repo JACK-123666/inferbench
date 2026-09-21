@@ -22,6 +22,8 @@ def kind_of(payload: dict) -> str:
     """
     if payload.get("kind") == "recommend":            # 选型建议：自带 kind，最优先
         return "recommend"
+    if payload.get("kind") == "dataset":              # 语料体检报告：只有控制台形态
+        return "dataset"
     if payload.get("meta", {}).get("target"):
         return "spec"
     if payload.get("meta", {}).get("levels"):
@@ -63,6 +65,12 @@ def run(argv: list[str] | None = None) -> int:
         elif kind == "recommend":
             from inferbench import recommend
             out = recommend.build_report(payload)
+        elif kind == "dataset":
+            # 语料体检没有 Markdown 产物（每次跑都很快，不需要缓存成文件），这里重新打印
+            from inferbench import dataset
+            print(dataset.render(payload, path=str(payload.get("source_path", "?")),
+                                 fmt=str(payload.get("source_format", "?"))))
+            continue
         else:
             print(f"{path} 类型无法识别")
             continue

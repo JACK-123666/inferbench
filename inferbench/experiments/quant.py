@@ -10,7 +10,7 @@
 
     results/quant_<tag>.csv    单条请求级明细（可自己再切分统计）
     results/quant_<tag>.json   汇总 + 全量记录
-    results/quant_<tag>.md     报告（含三角表 + 简历可用结论句）
+    results/quant_<tag>.md     报告（含三角表 + 可直接引用的结论）
 """
 from __future__ import annotations
 

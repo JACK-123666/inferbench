@@ -145,7 +145,7 @@ def build_report(payload: dict) -> "object":
               f"并发连接数不是瓶颈，显存能装多大模型才是。")
     md.append("")
 
-    md.append("## 可写进简历的结论句\n")
+    md.append("## 结论（可直接引用）\n")
     if qps_gain < 1.2 and ttft_gain > 2.0:
         md.append(f"> **并发压测与容量规划**：用 httpx + asyncio 做**流式**并发梯度压测（并发 "
                   f"{xs[0]}→{xs[-1]}，实测首 token 到达时间而非 prefill 近似值），"

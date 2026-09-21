@@ -25,7 +25,7 @@
 
 因为投机解码的收益**完全取决于"目标模型的输出有多可预测"**。
 只测一个负载，你会得出"投机解码有用/没用"的片面结论——
-这正好对应 JD 里"理解每种手段的效果代价"。
+这正好对应「把每种手段的效果与代价讲清楚」这件事。
 
 ## 关键工程细节（四个坑，见 inferbench/llama.py 的注释）
 
@@ -379,7 +379,7 @@ def build_report(payload: dict) -> Path:
               "这是本实验特意加的对照——没有它，无法区分「投机解码引入的差异」和「服务端本身的不确定性」。")
     md.append("")
 
-    md.append("## 可写进简历的结论句\n")
+    md.append("## 结论（可直接引用）\n")
     if base:
         ng = runs.get("ngram", {}).get("workloads", {})
         acc_a = ng.get("A-结构化抽取", {}).get("accept_rate_median", 0)

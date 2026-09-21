@@ -288,7 +288,7 @@ def build_report(payload: dict) -> Path:
                   f"端到端准确率 {delta_acc:+.1f} 个百分点，成本 {delta_cost:+.1f} 个百分点、"
                   f"延迟 {lat_ratio:.1f} 倍。")
     md.append("")
-    md.append("## 面试怎么讲这个结果\n")
+    md.append("## 这组结果怎么用\n")
     md.append("> 「实验 2 我发现误命中 100% 来自「继承后端模型自己的错误」，"
               "于是加了自一致性门槛——同一条 query 采样 3 次、结果一致才允许写入缓存。"
               f"结果：{meta['unanimous_count']}/{meta['unique_texts']} 条文本采样 3 次完全一致，"

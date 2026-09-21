@@ -1,7 +1,7 @@
 # inferbench · 本地大模型推理实验台
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![tests](https://img.shields.io/badge/tests-51%20passed-brightgreen.svg)](#5-%E6%B5%8B%E9%87%8F%E5%8F%A3%E5%BE%84%E6%89%80%E6%9C%89%E6%95%B0%E5%AD%97%E9%83%BD%E6%8C%89%E8%BF%99%E4%B8%80%E5%A5%97%E4%BA%A7%E5%87%BA)
+[![tests](https://img.shields.io/badge/tests-103%20passed-brightgreen.svg)](#5-%E6%B5%8B%E9%87%8F%E5%8F%A3%E5%BE%84%E6%89%80%E6%9C%89%E6%95%B0%E5%AD%97%E9%83%BD%E6%8C%89%E8%BF%99%E4%B8%80%E5%A5%97%E4%BA%A7%E5%87%BA)
 [![python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](#)
 [![runtime deps](https://img.shields.io/badge/runtime%20deps-0-success.svg)](#)
 
@@ -22,7 +22,7 @@
 不是部署框架（K8s、多机推理不在范围内）。
 
 > 📖 **第一次接触？先看 [`TUTORIAL.md`](TUTORIAL.md)** —— 零基础教程（v2 完整版）：
-> 12 章 + 4 个附录，从"量化是什么"讲到"怎么把结果写进简历"，
+> 12 章 + 4 个附录，从"量化是什么"讲到"怎么把结论讲清楚"，
 > 含 19 个概念的四段式讲解、三个实验的手把手流程、8 类真实故障的排错手册、测量纪律检查清单。
 > 赶时间就看 **附录 D 三分钟速览**。
 
@@ -118,7 +118,7 @@ inferbench/
 │   ├── recommend.py           # 【收敛层】读结果文件 → 选型建议 + 代价（不产生新数据）
 │   └── experiments/           # 五个实验，每个暴露 run(argv) -> int
 │       ├── quant.py  cache_exp.py  gate.py  spec.py  load.py  report_cmd.py
-├── tests/                     # pytest：83 个用例，覆盖真实踩过的坑（回归测试）
+├── tests/                     # pytest：103 个用例，覆盖真实踩过的坑（回归测试）
 ├── data/                      # 评测集缓存（已入库，clone 即可复现）+ example_corpus.jsonl（格式样例）
 └── results/                   # CSV 明细 / JSON / Markdown 报告（已入库）
 ```
@@ -183,7 +183,7 @@ PowerShell / 记事本存出来的带 BOM 文件也能读。
 **内容指纹**（sha1 前 8 位），报告头部会印出来；`recommend` 一旦发现多份结果用了
 不同语料，会直接告警——跨语料的准确率横向对比是不成立的。
 
-跑完看 `results/` 下的 `.md`：除了表格和 SVG 图，最后一段是**可直接粘进简历的结论句**，
+跑完看 `results/` 下的 `.md`：除了表格和 SVG 图，最后一段是**可直接引用的结论**，
 数字全部自动取自本次运行。
 
 ---
@@ -420,7 +420,7 @@ A/B 用同一张采样表，唯一变量是门槛开关：
 3. **偏好对齐 DPO**：0.5B 玩具规模。
 
 > **暂不做的：多模态（VLM 单据抽取）**。理由：需下载约 12GB（`granite3.2-vision:2b` + `qwen3-vl:4b` +
-> `deepseek-ocr:3b`），按 2 MB/s 约 100 分钟，且要另备票据数据集；而它只命中 JD 的"范式选型"一角，
+> `deepseek-ocr:3b`），按 2 MB/s 约 100 分钟，且要另备票据数据集；而它只覆盖"多模态"一角，
 > 与现有五个实验也无法复用代码。**等有真实业务需求时再做多模态。**
 
 > 实验三（写入门槛）已给出干净的负结果（见 §6），**不建议**继续在缓存层做花样。

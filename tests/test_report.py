@@ -55,7 +55,7 @@ def test_build_quant_report_detects_non_monotonic_accuracy(quant_payload, tmp_pa
     # 必须同时给出"FP16 被支配"的选型结论，而不只是陈述现象
     assert "FP16 在纯推理场景被完全支配" in text
     # 三个必需小节
-    for section in ["## 三角表", "## 测量卫生", "## 可写进简历的结论句"]:
+    for section in ["## 三角表", "## 测量卫生", "## 结论（可直接引用；数字都是本次真实测量值）"]:
         assert section in text
 
 
@@ -71,7 +71,7 @@ def test_build_cache_report_mentions_attribution(cache_payload, tmp_path, monkey
     monkeypatch.setattr(rep.config, "RESULTS_DIR", tmp_path)
     text = Path(rep.build_cache_report(cache_payload)).read_text(encoding="utf-8")
     assert "继承后端模型" in text
-    assert "复现" in text or "可写进简历" in text
+    assert "复现" in text or "可直接引用" in text
 
 
 def test_report_files_are_valid_utf8_without_bom(quant_payload, tmp_path, monkeypatch):
